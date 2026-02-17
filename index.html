@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0D0A1A">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Sari's Sound Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{font-family:'Fredoka',sans-serif;background:#0D0A1A;color:#fff;overflow-x:hidden;
+-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh}
+button{font-family:'Fredoka',sans-serif;border:none;cursor:pointer;-webkit-appearance:none;color:#fff}
+#root{min-height:100vh;min-height:100dvh}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(255,59,139,.4)}50%{box-shadow:0 0 45px rgba(255,59,139,.8)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes sparkle{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.3)}}
+@keyframes rainbowBg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes popIn{0%{opacity:0;transform:scale(0)}70%{transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}
+@keyframes letterSmash{0%{opacity:0;transform:translateX(var(--sx,0)) scale(1.6)}60%{opacity:1;transform:translateX(0) scale(1.1)}80%{transform:translateX(0) scale(.95)}100%{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes stickerPop{0%{opacity:0;transform:scale(0) rotate(-20deg)}60%{transform:scale(1.3) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes megaConfetti{0%{opacity:1;transform:translateY(0) rotate(0) scale(1)}50%{opacity:1;transform:translateY(50vh) rotate(360deg) scale(1.2)}100%{opacity:0;transform:translateY(100vh) rotate(720deg) scale(.5)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.2/babel.min.js"></script>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback}=React;
+
+// ═══════════════════════════════
+//  SARI'S SOUND QUEST v3
+// ═══════════════════════════════
+
+// ── DATA ──
+const WORDS=[
+{word:"cat",img:"🐱",fam:"at"},{word:"bat",img:"🦇",fam:"at"},{word:"hat",img:"🎩",fam:"at"},
+{word:"mat",img:"🧹",fam:"at"},{word:"sat",img:"💺",fam:"at"},{word:"rat",img:"🐀",fam:"at"},
+{word:"pat",img:"👋",fam:"at"},
+{word:"dog",img:"🐶",fam:"og"},{word:"log",img:"🪵",fam:"og"},{word:"hog",img:"🐷",fam:"og"},
+{word:"fog",img:"🌫️",fam:"og"},{word:"jog",img:"🏃",fam:"og"},
+{word:"pig",img:"🐷",fam:"ig"},{word:"big",img:"🏔️",fam:"ig"},{word:"dig",img:"⛏️",fam:"ig"},
+{word:"wig",img:"💇",fam:"ig"},{word:"fig",img:"🍇",fam:"ig"},
+{word:"sun",img:"☀️",fam:"un"},{word:"run",img:"🏃",fam:"un"},{word:"fun",img:"🎉",fam:"un"},
+{word:"bun",img:"🍔",fam:"un"},
+{word:"cup",img:"☕",fam:"up"},{word:"pup",img:"🐶",fam:"up"},
+{word:"bed",img:"🛏️",fam:"ed"},{word:"red",img:"🔴",fam:"ed"},
+{word:"pen",img:"🖊️",fam:"en"},{word:"hen",img:"🐔",fam:"en"},{word:"ten",img:"🔟",fam:"en"},
+{word:"men",img:"👨",fam:"en"},
+{word:"hot",img:"🔥",fam:"ot"},{word:"pot",img:"🍲",fam:"ot"},{word:"dot",img:"⚫",fam:"ot"},
+{word:"got",img:"🎁",fam:"ot"},
+{word:"map",img:"🗺️",fam:"ap"},{word:"cap",img:"🧢",fam:"ap"},{word:"tap",img:"🚰",fam:"ap"},
+{word:"nap",img:"😴",fam:"ap"},
+{word:"fin",img:"🦈",fam:"in"},{word:"pin",img:"📌",fam:"in"},{word:"win",img:"🏆",fam:"in"},
+{word:"bin",img:"🗑️",fam:"in"},
+{word:"sit",img:"🪑",fam:"it"},{word:"hit",img:"💥",fam:"it"},{word:"bit",img:"🍪",fam:"it"},
+{word:"fit",img:"💪",fam:"it"},
+{word:"van",img:"🚐",fam:"an"},{word:"can",img:"🥫",fam:"an"},{word:"man",img:"🧑",fam:"an"},
+{word:"fan",img:"🌀",fam:"an"},{word:"pan",img:"🍳",fam:"an"},{word:"ran",img:"🏃",fam:"an"},
+{word:"bug",img:"🐛",fam:"ug"},{word:"hug",img:"🤗",fam:"ug"},{word:"mug",img:"☕",fam:"ug"},
+{word:"rug",img:"🟫",fam:"ug"},{word:"tug",img:"🚢",fam:"ug"},
+{word:"hop",img:"🐇",fam:"op"},{word:"pop",img:"🎈",fam:"op"},{word:"mop",img:"🧹",fam:"op"},
+{word:"top",img:"🔝",fam:"op"},
+];
+
+const LS={a:"aah",b:"buh",c:"kuh",d:"duh",e:"eh",f:"fuh",g:"guh",h:"huh",
+i:"ih",j:"juh",k:"kuh",l:"luh",m:"muh",n:"nuh",o:"aw",p:"puh",
+r:"ruh",s:"sss",t:"tuh",u:"uh",v:"vuh",w:"wuh",x:"ks",y:"yuh",z:"zzz"};
+const ALPHA="abcdefghijklmnopqrstuvwxyz".split("");
+
+const CHEERS=[
+"Mommy loves you SO much!","Daddy is SO proud of you!",
+"Mommy and Daddy are cheering!","Mommy says you're AMAZING!",
+"Daddy says that's his girl!","Mommy is jumping up and down!",
+"Daddy says WOW Sari WOW!","Mommy says you're the smartest!",
+"Bubby Feig is SO proud!","Bubby says that's my granddaughter!",
+"Bubby is shepping nachas!","Bubby Feig is clapping for you!",
+"Bubby says she knew you could do it!",
+"Kira next door says WOW!","Kira is cheering for you!",
+"Kira says you're SO smart!","Kira wants to celebrate!",
+"Abby says AMAZING!","Abby is so proud of you!",
+"Cousin Ahuvah is cheering!","Cousin Ahuvah says WOW Sari!",
+"Baby Talia is clapping for you!","Talia says YAY big sister!",
+"Mordechai Shapiro says INCREDIBLE!","Uncle Moishy is dancing for you!",
+"Zisha says you're a STAR!",
+"Bais Yaakov's smartest girl!","Like a swimming gold medal!",
+"Daniel Tiger says Grrreat job!","Ugga Mugga Sari!",
+"SUPERSTAR SARI!","PERFECT!","You're on FIRE!",
+];
+
+const TRIES=[
+"Almost! Mommy says try again!","So close! Daddy believes in you!",
+"Bubby says you're getting it!","Kira says you'll get the next one!",
+"Abby is cheering you on!","Cousin Ahuvah says you can do it!",
+"Baby Talia says try again big sister!","Mommy and Daddy are so proud you're trying!",
+"Bubby says winners keep going!","So close Sari! You're learning!",
+];
+
+const STICKERS=[
+"⭐","🌟","💫","✨","🦄","🌈","🦋","🎀","💎","👑",
+"🌸","🍭","🧁","🎠","🐬","🦩","🐯","🍕","🍦","🌭",
+"🏊‍♀️","🎵","🎶","💕","🦈","🐱","🐶","🎈","🍪","🌺",
+];
+
+const PRIZES=[
+{id:1,stars:10,emoji:"🍕",name:"Pizza Night Coupon!",type:"real"},
+{id:2,stars:20,emoji:"🎀",name:"Sparkle Sticker Pack!",type:"virtual"},
+{id:3,stars:35,emoji:"🍦",name:"Ice Cream Trip!",type:"real"},
+{id:4,stars:50,emoji:"🌭",name:"Hot Dog Party!",type:"real"},
+{id:5,stars:65,emoji:"🦄",name:"Unicorn Badge!",type:"virtual"},
+{id:6,stars:75,emoji:"🐯",name:"Daniel Tiger Movie Night!",type:"real"},
+{id:7,stars:100,emoji:"👑",name:"Reading Queen Crown!",type:"virtual"},
+{id:8,stars:125,emoji:"🌈",name:"Rainbow Super Sticker!",type:"virtual"},
+{id:9,stars:150,emoji:"🏊‍♀️",name:"Swimming Party with Kira!",type:"real"},
+{id:10,stars:200,emoji:"💕",name:"Special Date with Mommy and Daddy!",type:"real"},
+{id:11,stars:250,emoji:"💎",name:"Diamond Reader Badge!",type:"virtual"},
+{id:12,stars:300,emoji:"🎂",name:"MEGA CELEBRATION!",type:"real"},
+];
+
+const MODES=[
+{id:"sound",emoji:"🔊",name:"Sound Match",color:"#FF3B8B",desc:"Hear a sound, find the letter!"},
+{id:"rhyme",emoji:"🎵",name:"Rhyme Rocket",color:"#B44BFF",desc:"Find the word that rhymes!"},
+{id:"blend",emoji:"🚀",name:"Blend Blaster",color:"#00C2FF",desc:"Letters smash together!"},
+{id:"build",emoji:"🔨",name:"Word Builder",color:"#FF9500",desc:"Build the word letter by letter!"},
+];
+
+const ROUND=5;
+
+// ── HELPERS ──
+const shuf=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]]}return b};
+const pick=a=>a[0|Math.random()*a.length];
+const pickN=(a,n)=>shuf(a).slice(0,n);
+
+// ═══ VOICE ENGINE ═══
+// Find the best young female voice on any device
+let bestVoice=null;
+let voicesLoaded=false;
+
+const findBestVoice=()=>{
+  if(!window.speechSynthesis)return null;
+  const vs=window.speechSynthesis.getVoices();
+  if(!vs.length)return null;
+  
+  // Priority order: best young-sounding female voices
+  const prefs=[
+    // iOS / macOS — Samantha is the warm young female default
+    v=>v.name==='Samantha',
+    v=>v.name==='Samantha (Enhanced)',
+    // iOS newer voices
+    v=>v.name.includes('Ava'),
+    v=>v.name.includes('Zoe'),
+    v=>v.name.includes('Nicky'),
+    // Google voices (Android/Chrome)
+    v=>v.name==='Google US English'&&v.lang==='en-US',
+    v=>v.name.includes('Google US English'),
+    // Microsoft voices (Windows)
+    v=>v.name.includes('Zira'),
+    v=>v.name.includes('Jenny'),
+    v=>v.name.includes('Aria'),
+    // Generic: any en-US female
+    v=>v.lang&&v.lang.startsWith('en')&&v.name.toLowerCase().includes('female'),
+    // Any en-US voice
+    v=>v.lang==='en-US',
+    v=>v.lang&&v.lang.startsWith('en'),
+  ];
+  
+  for(const test of prefs){
+    const found=vs.find(test);
+    if(found)return found;
+  }
+  return vs[0];
+};
+
+const loadVoices=()=>{
+  bestVoice=findBestVoice();
+  voicesLoaded=!!bestVoice;
+};
+
+// Try immediately + on change
+if(window.speechSynthesis){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged=loadVoices;
+}
+
+const say=(text,rate)=>{
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  if(!voicesLoaded)loadVoices();
+  const u=new SpeechSynthesisUtterance(text);
+  if(bestVoice)u.voice=bestVoice;
+  u.rate=rate||0.92;
+  u.pitch=1.25; // higher pitch = younger sounding
+  u.lang="en-US";
+  window.speechSynthesis.speak(u);
+};
+
+const saySound=l=>say(LS[l]||l,0.75);
+
+const sayBlend=(word,cb)=>{
+  const ls=word.split("");let d=0;
+  ls.forEach(l=>{setTimeout(()=>say(LS[l]||l,0.7),d);d+=700});
+  setTimeout(()=>{say(word,0.88);if(cb)cb()},d+500);
+};
+
+const initSpeech=()=>{
+  if(window.speechSynthesis){
+    const u=new SpeechSynthesisUtterance('');u.volume=0.01;
+    window.speechSynthesis.speak(u);
+    setTimeout(loadVoices,100);
+  }
+};
+
+// ── STORAGE ──
+const SK="sari_quest_v3";
+const DFLT={stars:0,ok:0,played:0,streak:0,stickers:[]};
+const load=()=>{try{const d=localStorage.getItem(SK);return d?{...DFLT,...JSON.parse(d)}:{...DFLT}}catch{return{...DFLT}}};
+const save=p=>{try{localStorage.setItem(SK,JSON.stringify(p))}catch{}};
+
+// ── GENERATORS ──
+const genSound=()=>{
+  const w=pick(WORDS),tl=pick(w.word.split(""));
+  const wr=shuf(ALPHA.filter(l=>l!==tl)).slice(0,3);
+  return{type:"sound",letter:tl,opts:shuf([tl,...wr]),word:w};
+};
+const genRhyme=()=>{
+  const w=pick(WORDS),rh=WORDS.filter(x=>x.fam===w.fam&&x.word!==w.word);
+  if(!rh.length)return genRhyme();
+  const c=pick(rh),wr=pickN(WORDS.filter(x=>x.fam!==w.fam),2);
+  return{type:"rhyme",target:w,correct:c,opts:shuf([c,...wr])};
+};
+const genBlend=()=>{
+  const w=pick(WORDS),wr=pickN(WORDS.filter(x=>x.word!==w.word&&x.fam!==w.fam),2);
+  return{type:"blend",target:w,opts:shuf([w,...wr])};
+};
+const genBuild=()=>{
+  const w=pick(WORDS),ls=w.word.split("");
+  const ex=shuf(ALPHA.filter(l=>!ls.includes(l))).slice(0,3);
+  return{type:"build",target:w,tiles:shuf([...ls,...ex])};
+};
+const GEN={sound:genSound,rhyme:genRhyme,blend:genBlend,build:genBuild};
+
+// ── COMPONENTS ──
+const BG1="linear-gradient(180deg,#0D0A1A 0%,#1A0A2E 100%)";
+const BG2="linear-gradient(135deg,#0D0A1A 0%,#1A0A2E 50%,#0D1A2E 100%)";
+const CARD="linear-gradient(145deg,#2A1F3D,#1E1433)";
+const Glow=()=>React.createElement("div",{style:{position:"fixed",inset:0,pointerEvents:"none",zIndex:0,
+  background:"radial-gradient(ellipse at 30% 20%,rgba(255,59,139,.06) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(180,75,255,.06) 0%,transparent 50%)"}});
+
+// Confetti with emoji option
+const Confetti=({active,mega})=>{
+  if(!active)return null;
+  const cols=["#FF3B8B","#FFD700","#00FF88","#B44BFF","#00C2FF","#FF9500"];
+  const emojis=mega?["⭐","🌟","✨","💫","🎉","🎀","💎","🦄","🍕","🍦"]:null;
+  const count=mega?50:36;
+  return React.createElement("div",{style:{position:"fixed",inset:0,pointerEvents:"none",zIndex:999}},
+    Array.from({length:count}).map((_,i)=>{
+      if(emojis&&i%3===0){
+        return React.createElement("div",{key:i,style:{
+          position:"absolute",left:Math.random()*100+"%",top:"-8%",fontSize:20+Math.random()*16,
+          animation:`megaConfetti ${1+Math.random()*2}s ease-out forwards`,
+          animationDelay:Math.random()*.6+"s",opacity:0
+        }},pick(emojis));
+      }
+      return React.createElement("div",{key:i,style:{
+        position:"absolute",left:Math.random()*100+"%",top:"-5%",
+        width:6+Math.random()*10,height:6+Math.random()*10,
+        backgroundColor:pick(cols),borderRadius:Math.random()>.5?"50%":"2px",
+        animation:`confettiFall ${.6+Math.random()*1.4}s ease-out forwards`,
+        animationDelay:Math.random()*.5+"s",opacity:0
+      }});
+    })
+  );
+};
+
+// Sticker popup
+const StickerPopup=({sticker})=>{
+  if(!sticker)return null;
+  return React.createElement("div",{style:{position:"fixed",inset:0,pointerEvents:"none",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}},
+    React.createElement("div",{style:{fontSize:100,animation:"stickerPop .6s ease-out forwards"}},sticker)
+  );
+};
+
+// ═══ SOUND MATCH ═══
+const SoundGame=({q,onAns})=>{
+  const[sel,setSel]=useState(null);
+  const[res,setRes]=useState(null);
+  const[msg,setMsg]=useState("");
+
+  useEffect(()=>{
+    setSel(null);setRes(null);setMsg("");
+    const t=setTimeout(()=>{say("Which letter makes this sound?");setTimeout(()=>saySound(q.letter),2200)},300);
+    return()=>clearTimeout(t);
+  },[q]);
+
+  const tap=l=>{
+    if(sel)return;setSel(l);
+    const ok=l===q.letter;setRes(ok);
+    // PICK MESSAGE ONCE — use for both display AND audio
+    const m=ok?pick(CHEERS):("The letter was "+q.letter.toUpperCase()+". "+pick(TRIES));
+    setMsg(m);
+    setTimeout(()=>say(m),150);
+    setTimeout(()=>onAns(ok),ok?1600:2400);
+  };
+
+  return React.createElement("div",{style:{textAlign:"center",animation:"slideUp .4s ease-out"}},
+    React.createElement("div",{style:{fontSize:15,color:"rgba(255,255,255,.45)",marginBottom:10}},"Listen and find the letter!"),
+    React.createElement("button",{onClick:()=>saySound(q.letter),style:{
+      background:"linear-gradient(135deg,#FF3B8B,#FF6B8B)",borderRadius:50,
+      width:"clamp(90px,22vw,120px)",height:"clamp(90px,22vw,120px)",
+      fontSize:"clamp(40px,10vw,56px)",display:"flex",alignItems:"center",justifyContent:"center",
+      margin:"0 auto 24px",animation:"pulse 2s ease-in-out infinite",
+      boxShadow:"0 8px 35px rgba(255,59,139,.35)"
+    }},"🔊"),
+    React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"clamp(10px,3vw,16px)",maxWidth:320,margin:"0 auto"}},
+      ...q.opts.map((l,i)=>{
+        const isC=l===q.letter,isS=l===sel;
+        let bg=CARD,brd="2.5px solid rgba(255,255,255,.12)",anim=`popIn .3s ease-out ${i*.08}s both`;
+        if(res!==null&&isC){bg="linear-gradient(145deg,#00FF88,#00CC66)";brd="2.5px solid #00FF88"}
+        if(isS&&res===false){bg="linear-gradient(145deg,#FF6B6B,#FF4444)";brd="2.5px solid #FF6B6B";anim="shake .4s ease"}
+        return React.createElement("button",{key:l+i,onClick:()=>tap(l),style:{
+          width:"100%",height:"clamp(70px,18vw,88px)",borderRadius:18,display:"flex",alignItems:"center",justifyContent:"center",
+          fontSize:"clamp(30px,8vw,40px)",fontWeight:700,textTransform:"uppercase",
+          background:bg,border:brd,cursor:sel?"default":"pointer",animation:anim,transition:"all .12s"
+        }},l.toUpperCase());
+      })
+    ),
+    msg&&React.createElement("div",{style:{marginTop:18,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",
+      color:res?"#00FF88":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg)
+  );
+};
+
+// ═══ RHYME GAME ═══
+const RhymeGame=({q,onAns})=>{
+  const[sel,setSel]=useState(null);
+  const[res,setRes]=useState(null);
+  const[msg,setMsg]=useState("");
+
+  useEffect(()=>{
+    setSel(null);setRes(null);setMsg("");
+    const t=setTimeout(()=>{say("What rhymes with "+q.target.word+"?");setTimeout(()=>say(q.target.word,0.85),2200)},300);
+    return()=>clearTimeout(t);
+  },[q]);
+
+  const tap=w=>{
+    if(sel)return;setSel(w.word);
+    const ok=w.word===q.correct.word;setRes(ok);
+    const m=ok?(q.target.word+" and "+w.word+" rhyme! "+pick(CHEERS)):(q.target.word+" rhymes with "+q.correct.word+". "+pick(TRIES));
+    setMsg(m);
+    setTimeout(()=>say(m),150);
+    setTimeout(()=>onAns(ok),ok?1800:2600);
+  };
+
+  return React.createElement("div",{style:{textAlign:"center",animation:"slideUp .4s ease-out"}},
+    React.createElement("div",{style:{fontSize:15,color:"rgba(255,255,255,.45)",marginBottom:12}},"What rhymes with..."),
+    React.createElement("button",{onClick:()=>say(q.target.word,0.85),style:{
+      background:"linear-gradient(145deg,#B44BFF22,#B44BFF0A)",border:"2.5px solid #B44BFF44",borderRadius:22,
+      padding:"clamp(12px,3vw,18px) clamp(20px,5vw,32px)",display:"inline-flex",alignItems:"center",gap:10,marginBottom:24
+    }},
+      React.createElement("span",{style:{fontSize:"clamp(36px,9vw,48px)"}},q.target.img),
+      React.createElement("span",{style:{fontSize:"clamp(24px,7vw,34px)",fontWeight:700,textTransform:"uppercase"}},q.target.word),
+      React.createElement("span",{style:{fontSize:22}},"🔊")
+    ),
+    React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:12,maxWidth:340,margin:"0 auto"}},
+      ...q.opts.map((w,i)=>{
+        const isC=w.word===q.correct.word,isS=w.word===sel;
+        let bg=CARD,brd="2.5px solid rgba(255,255,255,.1)",anim=`popIn .3s ease-out ${i*.1}s both`;
+        if(res!==null&&isC){bg="linear-gradient(145deg,#00FF8822,#00CC6611)";brd="2.5px solid #00FF88"}
+        if(isS&&res===false){bg="linear-gradient(145deg,#FF6B6B22,#FF444411)";brd="2.5px solid #FF6B6B";anim="shake .4s ease"}
+        return React.createElement("button",{key:w.word,onClick:()=>tap(w),style:{
+          background:bg,border:brd,borderRadius:18,padding:"clamp(12px,3vw,16px) 18px",
+          display:"flex",alignItems:"center",gap:12,cursor:sel?"default":"pointer",animation:anim
+        }},
+          React.createElement("span",{style:{fontSize:"clamp(28px,8vw,38px)"}},w.img),
+          React.createElement("span",{style:{fontSize:"clamp(20px,5vw,26px)",fontWeight:600,textTransform:"uppercase"}},w.word)
+        );
+      })
+    ),
+    msg&&React.createElement("div",{style:{marginTop:18,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",
+      color:res?"#00FF88":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg)
+  );
+};
+
+// ═══ BLEND GAME ═══
+const BlendGame=({q,onAns})=>{
+  const[phase,setPhase]=useState("blend");
+  const[sel,setSel]=useState(null);
+  const[res,setRes]=useState(null);
+  const[msg,setMsg]=useState("");
+
+  useEffect(()=>{
+    setPhase("blend");setSel(null);setRes(null);setMsg("");
+    const t=setTimeout(()=>{
+      say("Watch the letters blend together!");
+      setTimeout(()=>sayBlend(q.target.word,()=>setPhase("pick")),2200);
+    },300);
+    return()=>clearTimeout(t);
+  },[q]);
+
+  const tap=w=>{
+    if(sel)return;setSel(w.word);
+    const ok=w.word===q.target.word;setRes(ok);
+    const m=ok?("Yes! "+w.word+"! "+pick(CHEERS)):("It was "+q.target.word+". "+pick(TRIES));
+    setMsg(m);
+    setTimeout(()=>say(m),150);
+    setTimeout(()=>onAns(ok),ok?1600:2400);
+  };
+
+  const ls=q.target.word.split("");
+
+  return React.createElement("div",{style:{textAlign:"center",animation:"slideUp .4s ease-out"}},
+    React.createElement("div",{style:{fontSize:15,color:"rgba(255,255,255,.45)",marginBottom:18}},"Watch the letters blend!"),
+    React.createElement("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",
+      gap:phase==="blend"?24:6,marginBottom:16,transition:"gap .7s cubic-bezier(.34,1.56,.64,1)",minHeight:90}},
+      ...ls.map((l,i)=>React.createElement("div",{key:i,style:{
+        fontSize:"clamp(40px,12vw,56px)",fontWeight:700,color:"#00C2FF",textTransform:"uppercase",
+        animation:`letterSmash .5s ease-out ${i*.45}s both`,
+        textShadow:"0 0 25px rgba(0,194,255,.5)","--sx":i===0?"-70px":i===ls.length-1?"70px":"0px"
+      }},l)),
+      phase==="pick"&&React.createElement("div",{style:{fontSize:22,color:"#FFD700",marginLeft:8,animation:"bounceIn .3s ease-out"}},"= ?")
+    ),
+    React.createElement("button",{onClick:()=>sayBlend(q.target.word),style:{
+      background:"none",border:"none",fontSize:15,color:"rgba(255,255,255,.4)",marginBottom:22,padding:"6px 14px",cursor:"pointer"
+    }},"🔊 Hear again"),
+    phase==="pick"&&React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:12,maxWidth:340,margin:"0 auto"}},
+      ...q.opts.map((w,i)=>{
+        const isC=w.word===q.target.word,isS=w.word===sel;
+        let bg=CARD,brd="2.5px solid rgba(255,255,255,.1)",anim=`popIn .3s ease-out ${i*.1}s both`;
+        if(res!==null&&isC){bg="linear-gradient(145deg,#00FF8822,#00CC6611)";brd="2.5px solid #00FF88"}
+        if(isS&&res===false){bg="linear-gradient(145deg,#FF6B6B22,#FF444411)";brd="2.5px solid #FF6B6B";anim="shake .4s ease"}
+        return React.createElement("button",{key:w.word,onClick:()=>tap(w),style:{
+          background:bg,border:brd,borderRadius:18,padding:"clamp(12px,3vw,16px) 18px",
+          display:"flex",alignItems:"center",gap:12,cursor:sel?"default":"pointer",animation:anim
+        }},
+          React.createElement("span",{style:{fontSize:"clamp(28px,8vw,38px)"}},w.img),
+          React.createElement("span",{style:{fontSize:"clamp(20px,5vw,26px)",fontWeight:600,textTransform:"uppercase"}},w.word)
+        );
+      })
+    ),
+    msg&&React.createElement("div",{style:{marginTop:18,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",
+      color:res?"#00FF88":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg)
+  );
+};
+
+// ═══ WORD BUILDER ═══
+const BuildGame=({q,onAns})=>{
+  const[built,setBuilt]=useState([]);
+  const[used,setUsed]=useState(new Set());
+  const[res,setRes]=useState(null);
+  const[msg,setMsg]=useState("");
+
+  useEffect(()=>{
+    setBuilt([]);setUsed(new Set());setRes(null);setMsg("");
+    const t=setTimeout(()=>{say("Build the word! Listen!");setTimeout(()=>say(q.target.word,0.85),2000)},300);
+    return()=>clearTimeout(t);
+  },[q]);
+
+  const tap=(l,idx)=>{
+    if(res!==null||used.has(idx))return;
+    const nb=[...built,l];const nu=new Set(used);nu.add(idx);
+    setBuilt(nb);setUsed(nu);saySound(l);
+    if(nb.length===q.target.word.length){
+      const ok=nb.join("")===q.target.word;setRes(ok);
+      const m=ok?("Yes! "+q.target.word+"! "+pick(CHEERS)):("The word was "+q.target.word+". "+pick(TRIES));
+      setMsg(m);
+      setTimeout(()=>say(m),200);
+      setTimeout(()=>onAns(ok),ok?1600:2600);
+    }
+  };
+
+  const undo=()=>{
+    if(!built.length||res!==null)return;
+    const ll=built[built.length-1];
+    const su=[...used].sort((a,b)=>b-a);
+    const rm=su.find(i=>q.tiles[i]===ll);
+    const nu=new Set(used);if(rm!==undefined)nu.delete(rm);
+    setBuilt(built.slice(0,-1));setUsed(nu);
+  };
+
+  return React.createElement("div",{style:{textAlign:"center",animation:"slideUp .4s ease-out"}},
+    React.createElement("div",{style:{fontSize:15,color:"rgba(255,255,255,.45)",marginBottom:10}},"Build the word!"),
+    React.createElement("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:16}},
+      React.createElement("button",{onClick:()=>say(q.target.word,0.85),style:{
+        background:"linear-gradient(135deg,#FF9500,#FFB347)",borderRadius:50,
+        width:"clamp(72px,18vw,90px)",height:"clamp(72px,18vw,90px)",
+        fontSize:"clamp(34px,9vw,44px)",display:"flex",alignItems:"center",justifyContent:"center",
+        boxShadow:"0 6px 24px rgba(255,149,0,.3)"
+      }},"🔊"),
+      React.createElement("span",{style:{fontSize:"clamp(40px,10vw,52px)"}},q.target.img)
+    ),
+    React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:"clamp(6px,2vw,10px)",marginBottom:24}},
+      ...Array.from({length:q.target.word.length}).map((_,i)=>React.createElement("div",{key:i,style:{
+        width:"clamp(52px,14vw,66px)",height:"clamp(58px,16vw,74px)",borderRadius:16,
+        background:built[i]?"linear-gradient(145deg,#FF950028,#FF950010)":"rgba(255,255,255,.04)",
+        border:built[i]?"2.5px solid #FF9500":"2.5px dashed rgba(255,255,255,.18)",
+        display:"flex",alignItems:"center",justifyContent:"center",
+        fontSize:"clamp(28px,7vw,36px)",fontWeight:700,textTransform:"uppercase",
+        animation:built[i]?"popIn .2s ease-out":undefined
+      }},built[i]||""))
+    ),
+    React.createElement("div",{style:{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:"clamp(8px,2vw,12px)",maxWidth:380,margin:"0 auto",marginBottom:18}},
+      ...q.tiles.map((l,i)=>{
+        const u=used.has(i);
+        return React.createElement("button",{key:i,onClick:()=>tap(l,i),style:{
+          width:"clamp(52px,14vw,66px)",height:"clamp(52px,14vw,66px)",borderRadius:16,
+          display:"flex",alignItems:"center",justifyContent:"center",
+          fontSize:"clamp(24px,6vw,32px)",fontWeight:700,textTransform:"uppercase",
+          background:u?"rgba(255,255,255,.02)":CARD,
+          border:u?"2.5px solid rgba(255,255,255,.04)":"2.5px solid rgba(255,255,255,.14)",
+          color:u?"rgba(255,255,255,.12)":"white",cursor:u||res!==null?"default":"pointer",
+          animation:`popIn .2s ease-out ${i*.05}s both`,userSelect:"none"
+        }},l.toUpperCase());
+      })
+    ),
+    built.length>0&&res===null&&React.createElement("button",{onClick:undo,style:{
+      background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.12)",
+      borderRadius:14,padding:"8px 22px",color:"rgba(255,255,255,.5)",fontSize:14
+    }},"⬅️ Undo"),
+    msg&&React.createElement("div",{style:{marginTop:18,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",
+      color:res?"#00FF88":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg)
+  );
+};
+
+// ═══ GAME SESSION ═══
+const Game=({mode,onFinish,onBack})=>{
+  const[qs]=useState(()=>Array.from({length:ROUND},()=>GEN[mode]()));
+  const[qi,setQi]=useState(0);
+  const[results,setResults]=useState([]);
+  const[conf,setConf]=useState(false);
+  const[sticker,setSticker]=useState(null);
+  const timerRef=useRef(null);
+  const mi=MODES.find(m=>m.id===mode);
+
+  const handleAns=ok=>{
+    const nr=[...results,ok];setResults(nr);
+    if(ok){
+      setConf(true);
+      // Random sticker popup on correct
+      if(Math.random()>.4){setSticker(pick(STICKERS));setTimeout(()=>setSticker(null),1200)}
+      setTimeout(()=>setConf(false),1600);
+    }
+    if(timerRef.current)clearTimeout(timerRef.current);
+    timerRef.current=setTimeout(()=>{
+      if(qi+1>=ROUND)onFinish(nr);
+      else setQi(qi+1);
+    },ok?1700:2700);
+  };
+
+  return React.createElement("div",{style:{minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 16px 40px",background:BG1}},
+    React.createElement(Glow),
+    React.createElement(Confetti,{active:conf}),
+    React.createElement(StickerPopup,{sticker}),
+    React.createElement("div",{style:{zIndex:2,width:"100%",maxWidth:440}},
+      React.createElement("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:22}},
+        React.createElement("button",{onClick:()=>{say("Going back!");setTimeout(onBack,400)},style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 16px",fontSize:15,color:"rgba(255,255,255,.5)"}},"← Back"),
+        React.createElement("button",{onClick:()=>say(mi.name),style:{display:"flex",alignItems:"center",gap:6,background:"none",padding:4}},
+          React.createElement("span",{style:{fontSize:20}},mi.emoji),
+          React.createElement("span",{style:{fontSize:13,color:"rgba(255,255,255,.4)",fontWeight:600}},mi.name)
+        ),
+        React.createElement("div",{style:{fontSize:13,color:"rgba(255,255,255,.35)",fontWeight:500}},qi+1," / ",ROUND)
+      ),
+      React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:9,marginBottom:28}},
+        ...Array.from({length:ROUND}).map((_,i)=>React.createElement("div",{key:i,style:{
+          width:"clamp(12px,3vw,16px)",height:"clamp(12px,3vw,16px)",borderRadius:8,
+          background:i<results.length?(results[i]?"#00FF88":"#FF6B6B"):i===qi?mi.color:"rgba(255,255,255,.12)",
+          transition:"all .3s",boxShadow:i===qi?`0 0 12px ${mi.color}55`:"none"
+        }}))
+      ),
+      mode==="sound"&&React.createElement(SoundGame,{q:qs[qi],onAns:handleAns}),
+      mode==="rhyme"&&React.createElement(RhymeGame,{q:qs[qi],onAns:handleAns}),
+      mode==="blend"&&React.createElement(BlendGame,{q:qs[qi],onAns:handleAns}),
+      mode==="build"&&React.createElement(BuildGame,{q:qs[qi],onAns:handleAns})
+    )
+  );
+};
+
+// ═══ RESULTS ═══
+const Results=({results,earned,newSticker,onHome,onAgain,prize})=>{
+  const ok=results.filter(Boolean).length;
+  const pct=Math.round(ok/results.length*100);
+  const[conf,setConf]=useState(false);
+
+  useEffect(()=>{
+    if(pct>=60){setConf(true);setTimeout(()=>setConf(false),4000)}
+    // SYNCED: pick once, say exactly that
+    const t=setTimeout(()=>{
+      const fam=pct===100?pick(["Mommy and Daddy are SO proud!","Bubby Feig can't believe it!","Kira is going to be amazed!"]):
+            pct>=60?pick(["Daddy says wow!","Mommy is so happy!","Bubby is clapping!","Kira says amazing!"]):
+            pick(["Mommy says keep going!","Daddy believes in you!","Bubby says practice makes perfect!"]);
+      say((pct===100?"Perfect score Sari! ":pct>=60?"Great job Sari! ":"Good try Sari! ")+fam+" You earned "+earned+" stars!");
+    },400);
+    return()=>clearTimeout(t);
+  },[]);
+
+  const em=pct===100?"👑":pct>=80?"🏆":pct>=60?"⭐":"💪";
+  const mg=pct===100?"PERFECT!":pct>=80?"AMAZING!":pct>=60?"GREAT JOB!":"KEEP GOING!";
+
+  return React.createElement("div",{style:{minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,background:BG1}},
+    React.createElement(Glow),
+    React.createElement(Confetti,{active:conf,mega:pct===100}),
+    React.createElement("div",{style:{zIndex:2,textAlign:"center",maxWidth:400,width:"100%"}},
+      React.createElement("div",{style:{fontSize:"clamp(64px,18vw,90px)",marginBottom:10,animation:"bounceIn .5s ease-out"}},em),
+      React.createElement("h2",{style:{fontSize:"clamp(28px,8vw,36px)",fontWeight:700,marginBottom:6,animation:"slideUp .5s ease-out"}},mg),
+      React.createElement("div",{style:{fontSize:18,color:"rgba(255,255,255,.55)",marginBottom:22,animation:"slideUp .6s ease-out"}},ok," out of ",results.length," correct"),
+      // Stars earned
+      React.createElement("div",{style:{background:"linear-gradient(145deg,rgba(255,215,0,.12),rgba(255,215,0,.04))",border:"1.5px solid rgba(255,215,0,.25)",borderRadius:20,padding:"14px 28px",display:"inline-flex",alignItems:"center",gap:10,marginBottom:22,animation:"bounceIn .7s ease-out"}},
+        React.createElement("span",{style:{fontSize:34}},"⭐"),
+        React.createElement("span",{style:{fontSize:26,fontWeight:700,color:"#FFD700"}},"+",earned),
+        React.createElement("span",{style:{fontSize:14,color:"rgba(255,215,0,.5)"}},"stars!")
+      ),
+      // New sticker?
+      newSticker&&React.createElement("div",{style:{background:"linear-gradient(145deg,rgba(180,75,255,.15),rgba(255,59,139,.08))",border:"1.5px solid rgba(180,75,255,.3)",borderRadius:20,padding:"14px 24px",marginBottom:18,animation:"bounceIn .75s ease-out",display:"inline-flex",alignItems:"center",gap:10}},
+        React.createElement("span",{style:{fontSize:40}},newSticker),
+        React.createElement("span",{style:{fontSize:15,fontWeight:600,color:"rgba(255,255,255,.7)"}},"New sticker!")
+      ),
+      // Prize unlock
+      prize&&React.createElement("div",{style:{background:"linear-gradient(145deg,rgba(255,59,139,.18),rgba(180,75,255,.08))",border:"2px solid #FF3B8B",borderRadius:22,padding:"20px 24px",marginBottom:22,animation:"bounceIn .8s ease-out"}},
+        React.createElement("div",{style:{fontSize:13,color:"#FF3B8B",fontWeight:600,marginBottom:8,letterSpacing:1}},"🎉 NEW PRIZE! 🎉"),
+        React.createElement("div",{style:{fontSize:44,marginBottom:6}},prize.emoji),
+        React.createElement("div",{style:{fontSize:19,fontWeight:700}},prize.name),
+        prize.type==="real"&&React.createElement("div",{style:{fontSize:12,color:"rgba(255,255,255,.4)",marginTop:4}},"Show Abba to redeem! 🎟️")
+      ),
+      React.createElement("div",{style:{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap",marginTop:8}},
+        React.createElement("button",{onClick:()=>{say("Let's play again!");setTimeout(onAgain,500)},style:{background:"linear-gradient(135deg,#FF3B8B,#FF6B8B)",borderRadius:20,padding:"16px 30px",fontSize:"clamp(17px,4vw,20px)",fontWeight:600,boxShadow:"0 6px 20px rgba(255,59,139,.3)"}},"🔄 Again!"),
+        React.createElement("button",{onClick:()=>{say("Going home!");setTimeout(onHome,500)},style:{background:"linear-gradient(135deg,#2A1F3D,#3A2F5D)",border:"1.5px solid rgba(255,255,255,.12)",borderRadius:20,padding:"16px 30px",fontSize:"clamp(17px,4vw,20px)",fontWeight:600}},"🏠 Home")
+      )
+    )
+  );
+};
+
+// ═══ PRIZES ═══
+const PrizesPage=({prog,onBack})=>{
+  useEffect(()=>{
+    const ul=PRIZES.filter(p=>p.stars<=prog.stars);
+    const t=setTimeout(()=>{
+      if(ul.length)say("Wow Sari! You unlocked "+ul.length+(ul.length===1?" prize!":" prizes!")+" Show Abba to redeem the real ones!");
+      else say("Play games to earn stars and unlock prizes! Your first prize is "+PRIZES[0].name+" at "+PRIZES[0].stars+" stars!");
+    },400);
+    return()=>clearTimeout(t);
+  },[]);
+
+  return React.createElement("div",{style:{minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 16px 40px",background:BG1}},
+    React.createElement(Glow),
+    React.createElement("div",{style:{zIndex:2,width:"100%",maxWidth:440}},
+      React.createElement("div",{style:{display:"flex",alignItems:"center",gap:14,marginBottom:20}},
+        React.createElement("button",{onClick:()=>{say("Going back!");setTimeout(onBack,400)},style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 16px",fontSize:15,color:"rgba(255,255,255,.5)"}},"← Back"),
+        React.createElement("h2",{style:{fontSize:22,fontWeight:700}},"🎁 Sari's Prizes")
+      ),
+      // Sticker collection
+      prog.stickers&&prog.stickers.length>0&&React.createElement("div",{style:{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.06)",borderRadius:18,padding:"14px 16px",marginBottom:18}},
+        React.createElement("div",{style:{fontSize:13,color:"rgba(255,255,255,.4)",marginBottom:8}},"🏆 My Sticker Collection"),
+        React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:6}},
+          ...prog.stickers.map((s,i)=>React.createElement("span",{key:i,style:{fontSize:26}},s))
+        )
+      ),
+      React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:12}},
+        ...PRIZES.map((p,i)=>{
+          const ok=prog.stars>=p.stars;
+          return React.createElement("button",{key:p.id,
+            onClick:()=>say(ok?(p.name+" Unlocked!"+(p.type==="real"?" Show Abba!":"")):(p.name+" You need "+p.stars+" stars. You have "+prog.stars)),
+            style:{
+              background:ok?"linear-gradient(145deg,rgba(255,215,0,.1),rgba(255,59,139,.06))":"rgba(255,255,255,.025)",
+              border:ok?"1.5px solid rgba(255,215,0,.25)":"1px solid rgba(255,255,255,.06)",
+              borderRadius:20,padding:"14px 18px",display:"flex",alignItems:"center",gap:12,
+              opacity:ok?1:.4,animation:`slideUp .4s ease-out ${i*.06}s both`,width:"100%",textAlign:"left"
+            }},
+            React.createElement("div",{style:{fontSize:"clamp(30px,8vw,42px)"}},ok?p.emoji:"🔒"),
+            React.createElement("div",{style:{flex:1}},
+              React.createElement("div",{style:{fontSize:15,fontWeight:600}},p.name),
+              React.createElement("div",{style:{fontSize:11,color:"rgba(255,255,255,.35)"}},
+                ok?"✅ "+(p.type==="real"?"Show Abba!":"Collected!"):p.stars+" stars needed"
+              )
+            ),
+            ok&&React.createElement("div",{style:{fontSize:20}},p.type==="real"?"🎟️":"✨")
+          );
+        })
+      ),
+      React.createElement("div",{style:{textAlign:"center",marginTop:24,color:"rgba(255,255,255,.2)",fontSize:12}},"Show Abba your prize coupons! 🎟️")
+    )
+  );
+};
+
+// ═══ SPLASH ═══
+const Splash=({onStart})=>{
+  const[show,setShow]=useState(false);
+  useEffect(()=>{setTimeout(()=>setShow(true),100)},[]);
+  useEffect(()=>{const t=setTimeout(()=>say("Sari's Sound Quest! Mommy and Daddy made this just for you! Tap Let's Go to start!"),800);return()=>clearTimeout(t)},[]);
+
+  return React.createElement("div",{style:{minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,background:BG2}},
+    React.createElement(Glow),
+    ...Array.from({length:14}).map((_,i)=>React.createElement("div",{key:i,style:{
+      position:"fixed",fontSize:8+Math.random()*16,zIndex:1,
+      left:5+Math.random()*90+"%",top:5+Math.random()*90+"%",
+      animation:`sparkle ${1.5+Math.random()*2.5}s ease-in-out infinite`,
+      animationDelay:Math.random()*3+"s",opacity:.4
+    }},["✨","⭐","💫","🌟"][i%4])),
+    React.createElement("div",{style:{zIndex:2,textAlign:"center",opacity:show?1:0,transform:show?"translateY(0)":"translateY(30px)",transition:"all .9s cubic-bezier(.34,1.56,.64,1)"}},
+      React.createElement("div",{style:{fontSize:68,marginBottom:10,animation:"float 3s ease-in-out infinite"}},"🌟"),
+      React.createElement("h1",{style:{fontSize:"clamp(36px,10vw,50px)",fontWeight:700,background:"linear-gradient(135deg,#FF3B8B,#FFD700,#B44BFF,#00C2FF)",backgroundSize:"300% 300%",animation:"rainbowBg 4s ease infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",lineHeight:1.1,marginBottom:6}},"SARI'S"),
+      React.createElement("h1",{style:{fontSize:"clamp(28px,8vw,42px)",fontWeight:700,letterSpacing:3,marginBottom:18,textShadow:"0 0 35px rgba(255,59,139,.5)"}},"SOUND QUEST"),
+      React.createElement("p",{style:{color:"rgba(255,255,255,.5)",fontSize:15,marginBottom:36}},"A reading adventure just for you! 🐯✨"),
+      React.createElement("button",{onClick:()=>{initSpeech();say("Let's go Sari! Mommy and Daddy love you!");setTimeout(onStart,1200)},style:{
+        background:"linear-gradient(135deg,#FF3B8B,#FF6B8B)",borderRadius:28,padding:"22px 56px",
+        fontSize:"clamp(24px,6vw,30px)",fontWeight:700,animation:"glow 2s ease-in-out infinite",
+        boxShadow:"0 8px 35px rgba(255,59,139,.4)"
+      }},"LET'S GO! 🚀")
+    )
+  );
+};
+
+// ═══ HOME ═══
+const Home=({prog,onMode,onPrizes})=>{
+  const nx=PRIZES.find(p=>p.stars>prog.stars)||PRIZES[PRIZES.length-1];
+  const ps=([...PRIZES].reverse().find(p=>p.stars<=prog.stars)||{stars:0}).stars;
+  const rng=nx.stars-ps;const pct=rng>0?Math.min(100,((prog.stars-ps)/rng)*100):100;
+
+  useEffect(()=>{
+    const greetings=[
+      "Welcome back Sari! Mommy and Daddy love you! You have "+prog.stars+" stars! Pick a game!",
+      "Hi Sari! Bubby Feig says go learn! You have "+prog.stars+" stars! Tap a game to play!",
+      "Sari's back! Kira is cheering for you! You have "+prog.stars+" stars! Pick a game!",
+      "Welcome Sari! Daddy says let's go! You have "+prog.stars+" stars! Choose a game!",
+    ];
+    const t=setTimeout(()=>say(pick(greetings)),400);
+    return()=>clearTimeout(t);
+  },[]);
+
+  return React.createElement("div",{style:{minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 16px 40px",background:BG1}},
+    React.createElement(Glow),
+    React.createElement("div",{style:{zIndex:2,width:"100%",maxWidth:440}},
+      React.createElement("div",{style:{textAlign:"center",marginBottom:14,animation:"slideUp .5s ease-out"}},
+        React.createElement("div",{style:{fontSize:17,color:"rgba(255,255,255,.4)",marginBottom:3}},"Welcome back"),
+        React.createElement("div",{style:{fontSize:"clamp(28px,8vw,36px)",fontWeight:700}},"Sari! 🌟")
+      ),
+      React.createElement("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:18,animation:"slideUp .6s ease-out"}},
+        React.createElement("button",{onClick:()=>say("You have "+prog.stars+" stars!"),style:{background:CARD,borderRadius:20,padding:"10px 26px",display:"flex",alignItems:"center",gap:8,border:"1px solid rgba(255,215,0,.18)"}},
+          React.createElement("span",{style:{fontSize:30}},"⭐"),
+          React.createElement("span",{style:{fontSize:30,fontWeight:700,color:"#FFD700"}},prog.stars)
+        ),
+        React.createElement("button",{onClick:()=>{say("Prizes!");setTimeout(onPrizes,400)},style:{background:CARD,border:"1px solid rgba(255,59,139,.25)",borderRadius:20,padding:"10px 20px",fontSize:30}},"🎁")
+      ),
+      React.createElement("button",{onClick:()=>say(Math.round(pct)+" percent to your next prize, "+nx.name),style:{background:"rgba(255,255,255,.04)",borderRadius:18,padding:"14px 18px",marginBottom:26,animation:"slideUp .7s ease-out",border:"1px solid rgba(255,255,255,.06)",width:"100%",textAlign:"left"}},
+        React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},
+          React.createElement("span",{style:{color:"rgba(255,255,255,.5)",fontSize:12}},"Next prize"),
+          React.createElement("span",{style:{fontSize:13,color:"rgba(255,255,255,.6)"}},nx.emoji," ",nx.stars," stars")
+        ),
+        React.createElement("div",{style:{background:"rgba(255,255,255,.08)",borderRadius:10,height:14,overflow:"hidden"}},
+          React.createElement("div",{style:{height:"100%",borderRadius:10,background:"linear-gradient(90deg,#FF3B8B,#FFD700)",width:pct+"%",transition:"width .6s ease",boxShadow:"0 0 12px rgba(255,59,139,.4)"}})
+        )
+      ),
+      React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,animation:"slideUp .8s ease-out"}},
+        ...MODES.map((m,i)=>React.createElement("button",{key:m.id,
+          onClick:()=>{say(m.name+"! "+m.desc);setTimeout(()=>onMode(m.id),1200)},
+          onTouchStart:e=>{e.currentTarget.style.transform="scale(.93)"},
+          onTouchEnd:e=>{e.currentTarget.style.transform="scale(1)"},
+          style:{background:`linear-gradient(145deg,${m.color}18,${m.color}08)`,border:`2.5px solid ${m.color}44`,borderRadius:24,
+            padding:"clamp(16px,4vw,24px) 10px",display:"flex",flexDirection:"column",alignItems:"center",gap:6,
+            animation:`bounceIn .5s ease-out ${.08*i}s both`,transition:"transform .12s"}
+        },
+          React.createElement("div",{style:{fontSize:"clamp(36px,10vw,50px)"}},m.emoji),
+          React.createElement("div",{style:{fontSize:"clamp(15px,4vw,18px)",fontWeight:700,textAlign:"center",lineHeight:1.2}},m.name),
+          React.createElement("div",{style:{fontSize:10,color:"rgba(255,255,255,.4)",textAlign:"center"}},m.desc)
+        ))
+      ),
+      prog.played>0&&React.createElement("div",{style:{textAlign:"center",marginTop:20,color:"rgba(255,255,255,.25)",fontSize:12,animation:"slideUp 1s ease-out"}},
+        prog.ok," words correct! 📚",prog.streak>0&&(" · Best streak: "+prog.streak+" 🔥")
+      )
+    )
+  );
+};
+
+// ═══ APP ═══
+const App=()=>{
+  const[scr,setScr]=useState("splash");
+  const[mode,setMode]=useState(null);
+  const[rr,setRR]=useState([]);
+  const[earned,setEarned]=useState(0);
+  const[prize,setPrize]=useState(null);
+  const[newSticker,setNewSticker]=useState(null);
+  const[prog,setProg]=useState(load());
+
+  const start=m=>{setMode(m);setRR([]);setEarned(0);setPrize(null);setNewSticker(null);setScr("game")};
+
+  const finish=results=>{
+    const ok=results.filter(Boolean).length;
+    const e=ok*3;const nt=prog.stars+e;
+    const np=PRIZES.find(p=>p.stars<=nt&&p.stars>prog.stars);
+    const streak=ok===ROUND?(prog.streak||0)+1:0;
+    // Award random sticker on 3+ correct
+    let ns=null;const stickers=[...(prog.stickers||[])];
+    if(ok>=3){ns=pick(STICKERS);stickers.push(ns)}
+    const newP={stars:nt,ok:prog.ok+ok,played:prog.played+ROUND,streak:Math.max(prog.streak||0,streak),stickers};
+    setProg(newP);save(newP);
+    setRR(results);setEarned(e);setPrize(np||null);setNewSticker(ns);setScr("results");
+    if(np)setTimeout(()=>say("Wow! You unlocked a new prize! "+np.name+(np.type==="real"?" Show Mommy and Daddy!":"")),600);
+  };
+
+  if(scr==="splash")return React.createElement(Splash,{onStart:()=>setScr("home")});
+  if(scr==="home")return React.createElement(Home,{prog,onMode:start,onPrizes:()=>setScr("prizes")});
+  if(scr==="game")return React.createElement(Game,{mode,onFinish:finish,onBack:()=>setScr("home")});
+  if(scr==="results")return React.createElement(Results,{results:rr,earned,newSticker,onHome:()=>setScr("home"),onAgain:()=>start(mode),prize});
+  if(scr==="prizes")return React.createElement(PrizesPage,{prog,onBack:()=>setScr("home")});
+  return null;
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
