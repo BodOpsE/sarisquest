@@ -1,8 +1,0 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/api/claude", "destination": "/api/claude" },
-    { "source": "/dashboard", "destination": "/dashboard.html" },
-    { "source": "/", "destination": "/index.html" }
-  ]
-}
