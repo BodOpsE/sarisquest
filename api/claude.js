@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -17,7 +16,7 @@ export default async function handler(req, res) {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
-        'anthropic-version': '2024-10-22'
+        'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
         model: model || 'claude-sonnet-4-6',
@@ -31,7 +30,6 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       console.error('Claude API error:', response.status, JSON.stringify(data));
-      // Pass the actual error to frontend for debugging
       return res.status(response.status).json({ error: data.error?.message || 'API error: ' + response.status, detail: data });
     }
 
