@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sari's Quest">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0D0B1A">
+<meta name="theme-color" content="#FF7EB3">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
@@ -16,24 +16,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{font-family:'Fredoka',sans-serif;background:#0D0A1A;color:#fff;overflow-x:hidden;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;overscroll-behavior:none;-webkit-overflow-scrolling:touch;position:fixed;width:100%;height:100%}
-button{font-family:'Fredoka',sans-serif;border:none;cursor:pointer;-webkit-appearance:none;color:#fff;touch-action:manipulation}
+html,body{font-family:'Fredoka',sans-serif;background:#FFF0F5;color:#4A2040;overflow-x:hidden;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;overscroll-behavior:none;-webkit-overflow-scrolling:touch;position:fixed;width:100%;height:100%}
+button{font-family:'Fredoka',sans-serif;border:none;cursor:pointer;-webkit-appearance:none;color:#4A2040;touch-action:manipulation}
 input{font-family:'Fredoka',sans-serif;touch-action:manipulation}
 #root{min-height:100vh;min-height:100dvh;height:100%;overflow-y:auto;overscroll-behavior:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 @keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
 @keyframes megaFall{0%{opacity:1;transform:translateY(0) rotate(0) scale(1)}50%{opacity:1}100%{opacity:0;transform:translateY(100vh) rotate(720deg) scale(.5)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(255,59,139,.4)}50%{box-shadow:0 0 45px rgba(255,59,139,.8)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(255,59,139,.3)}50%{box-shadow:0 0 35px rgba(255,59,139,.5)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
 @keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-@keyframes sparkle{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.3)}}
+@keyframes sparkle{0%,100%{opacity:.3;transform:scale(.7)}50%{opacity:1;transform:scale(1.3)}}
+@keyframes heartFloat{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:.6}80%{opacity:.4}100%{opacity:0;transform:translateY(-80vh) scale(1) rotate(15deg)}}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
 @keyframes rainbowBg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes popIn{0%{opacity:0;transform:scale(0)}70%{transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}
 @keyframes letterSmash{0%{opacity:0;transform:translateX(var(--sx,0)) scale(1.6)}60%{opacity:1;transform:translateX(0) scale(1.1)}80%{transform:translateX(0) scale(.95)}100%{transform:translateX(0) scale(1)}}
 @keyframes stickerPop{0%{opacity:0;transform:scale(0) rotate(-20deg)}60%{transform:scale(1.3) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
 @keyframes starPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15);filter:brightness(1.3)}}
+@keyframes starFly{0%{opacity:1;transform:translateY(0) scale(1)}50%{opacity:1;transform:translateY(-60px) scale(1.4)}100%{opacity:0;transform:translateY(-120px) scale(.5)}}
 button:active{transform:scale(.95)!important;transition:transform .1s ease!important}
 .quest-btn{transition:transform .2s ease,filter .2s ease,box-shadow .2s ease}
 .quest-btn:hover{transform:scale(1.03)!important;filter:brightness(1.15)!important;box-shadow:0 12px 45px rgba(255,59,139,.5)!important}
@@ -116,6 +119,8 @@ const yd=()=>{const d=new Date();d.setDate(d.getDate()-1);return d.getFullYear()
 // ═══ VOICE ═══
 let bv=null;const XI_VOICES={"Rachel":"21m00Tcm4TlvDq8ikWAM","Aria":"9BWtsMINqrJLrRacOk9x","Sarah":"EXAVITQu4vr4xnSDxMaL","Charlotte":"XB0fDUnXU5powFXDhCwa","Lily":"pFZP5JQG7iQjIQuC4Bku"};
 const audioCache=new Map();let curAudio=null;
+// Strip emojis from text before reading aloud
+const stripEmoji=(t)=>t.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{27BF}\u{2B50}-\u{2BFF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2702}-\u{27B0}\u{200D}\u{20E3}\u{FE0F}\u{E0020}-\u{E007F}\u{2300}-\u{23FF}\u{2934}-\u{2935}\u{25AA}-\u{25FE}\u{2190}-\u{21FF}\u{2139}\u{3030}\u{303D}]/gu,"").replace(/\s{2,}/g," ").trim();
 const fv=()=>{if(!window.speechSynthesis)return;const vs=speechSynthesis.getVoices();if(!vs.length)return;
 // Priority: warm female voices across all platforms
 const ts=[
@@ -146,8 +151,8 @@ bv=vs.find(v=>v.lang&&v.lang.startsWith('en'))||vs[0];console.log("Voice fallbac
 // Chrome Android: voices load async, retry until found
 if(window.speechSynthesis){fv();speechSynthesis.onvoiceschanged=fv;
 if(!bv)setTimeout(fv,100);if(!bv)setTimeout(fv,500);if(!bv)setTimeout(fv,1000)}
-const fbSay=(t,r)=>{if(!window.speechSynthesis)return;speechSynthesis.cancel();
-setTimeout(()=>{if(!bv)fv();const u=new SpeechSynthesisUtterance(t);if(bv)u.voice=bv;u.rate=r||.78;u.pitch=1.05;u.volume=1;u.lang="en-US";
+const fbSay=(t,r)=>{if(!window.speechSynthesis)return;const clean=stripEmoji(t);if(!clean)return;speechSynthesis.cancel();
+setTimeout(()=>{if(!bv)fv();const u=new SpeechSynthesisUtterance(clean);if(bv)u.voice=bv;u.rate=r||.78;u.pitch=1.05;u.volume=1;u.lang="en-US";
 if(speechSynthesis.paused)speechSynthesis.resume();
 speechSynthesis.speak(u)},50)};
 const say=async t=>{fbSay(t,.78)};
@@ -162,15 +167,22 @@ const SB_URL="https://bkzmrxklmdnjtiurvixm.supabase.co";const SB_KEY="eyJhbGciOi
 let sb=null;if(window.supabase)sb=window.supabase.createClient(SB_URL,SB_KEY);
 
 // ═══ STORAGE ═══
-const SK="sq6";const DF={stars:0,ok:0,played:0,streak:0,stk:[],storiesUnlocked:[],last:null,days:0};
+const SK="sq6";const DF={stars:0,ok:0,played:0,streak:0,stk:[],storiesUnlocked:[],last:null,days:0,timerDate:null,timerSecs:0};
 const ld=()=>{try{
 const p={...DF,...JSON.parse(localStorage.getItem(SK))};
 // Migration v2: clear last date in local AND cloud so quest shows correctly
 if(localStorage.getItem("sq6_tz_fix")!=="2"){p.last=null;localStorage.setItem("sq6_tz_fix","2");localStorage.setItem(SK,JSON.stringify(p));
 if(sb)sb.from("progress").update({last_date:null}).eq("player_id",SB_P)}
+// Reset timer if it's a new day
+if(p.timerDate!==td()){p.timerDate=td();p.timerSecs=0}
 return p}catch{return{...DF}}};
 const sv=p=>{try{localStorage.setItem(SK,JSON.stringify(p))}catch{};
-if(sb)sb.from("progress").update({stars:p.stars,correct:p.ok,played:p.played,streak:p.streak,stickers:p.stk||[],stories_unlocked:p.storiesUnlocked||[],last_date:p.last,days_played:p.days}).eq("player_id",SB_P).then(r=>{if(r.error)console.warn("sync err",r.error)})};
+if(sb)sb.from("progress").update({stars:p.stars,correct:p.ok,played:p.played,streak:p.streak,stickers:p.stk||[],stories_unlocked:p.storiesUnlocked||[],last_date:p.last,days_played:p.days,timer_date:p.timerDate||td(),timer_seconds:p.timerSecs||0}).eq("player_id",SB_P).then(r=>{if(r.error)console.warn("sync err",r.error)})};
+// Lightweight timer-only save (called every 10s, doesn't save all fields)
+const svTimer=(secs)=>{
+try{const p=JSON.parse(localStorage.getItem(SK)||"{}");p.timerDate=td();p.timerSecs=secs;localStorage.setItem(SK,JSON.stringify(p))}catch{}
+if(sb)sb.from("progress").update({timer_date:td(),timer_seconds:secs}).eq("player_id",SB_P).then(()=>{})
+};
 
 const recordSession=(results,details,earned,sticker,practice)=>{
 if(!sb)return;
@@ -180,7 +192,11 @@ if(details&&details.length){const rows=details.map((d,i)=>({player_id:SB_P,sessi
 sb.from("answers").insert(rows)}};
 
 const syncCloud=async set=>{if(!sb)return;try{const{data}=await sb.from("progress").select("*").eq("player_id",SB_P).single();
-if(data&&data.stars!==undefined){const l=ld();const c={stars:data.stars,ok:data.correct,played:data.played,streak:data.streak,stk:data.stickers||[],storiesUnlocked:data.stories_unlocked||[],last:l.last,days:data.days_played};
+if(data&&data.stars!==undefined){const l=ld();
+// Timer: use cloud value if it's for today, otherwise reset
+const cloudTimerDate=data.timer_date||null;
+const cloudTimerSecs=(cloudTimerDate===td())?(data.timer_seconds||0):0;
+const c={stars:data.stars,ok:data.correct,played:data.played,streak:data.streak,stk:data.stickers||[],storiesUnlocked:data.stories_unlocked||[],last:l.last,days:data.days_played,timerDate:td(),timerSecs:Math.max(l.timerSecs||0,cloudTimerSecs)};
 if(c.stars>=l.stars){localStorage.setItem(SK,JSON.stringify(c));set(c)}}}catch{}};
 
 // ── GENERATORS ──
@@ -191,9 +207,11 @@ const gW=()=>{const w=pick(WDS),ls=w.w.split(""),ex=shuf(AZ.filter(l=>!ls.includ
 const buildQ=()=>[gS(),gS(),gS(),gS(),gS(),gR(),gR(),gR(),gR(),gR(),gB(),gB(),gB(),gB(),gB(),gW(),gW(),gW(),gW(),gW()];
 
 // ── UI ──
-const BG="linear-gradient(180deg,#0D0A1A 0%,#1A0A2E 100%)";const CD="linear-gradient(145deg,#2A1F3D,#1E1433)";
-const Glow=()=>React.createElement("div",{style:{position:"fixed",inset:0,pointerEvents:"none",zIndex:0,background:"radial-gradient(ellipse at 30% 20%,rgba(255,59,139,.06) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(180,75,255,.06) 0%,transparent 50%)"}});
-const Conf=({on,mega})=>{if(!on)return null;const n=mega?50:30;return React.createElement("div",{style:{position:"fixed",inset:0,pointerEvents:"none",zIndex:999}},Array.from({length:n}).map((_,i)=>React.createElement("div",{key:i,style:{position:"absolute",left:Math.random()*100+"%",top:"-5%",width:6+Math.random()*10,height:6+Math.random()*10,backgroundColor:["#FF3B8B","#FFD700","#00FF88","#B44BFF","#00C2FF"][i%5],borderRadius:Math.random()>.5?"50%":"2px",animation:`confettiFall ${.6+Math.random()*1.4}s ease-out forwards`,animationDelay:Math.random()*.5+"s",opacity:0}})))};
+const BG="linear-gradient(180deg,#FFE8F0 0%,#FFF0F8 50%,#FFE0EE 100%)";const CD="linear-gradient(145deg,#FFFFFF,#FFF5F8)";
+const Glow=()=>React.createElement("div",{style:{position:"fixed",inset:0,pointerEvents:"none",zIndex:0,background:"radial-gradient(ellipse at 30% 20%,rgba(255,105,180,.15) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(200,100,255,.1) 0%,transparent 50%)"}},
+// Floating hearts
+...[0,1,2,3,4,5].map(i=>React.createElement("div",{key:i,style:{position:"absolute",left:(10+i*15)+"%",bottom:"-5%",fontSize:[16,12,20,14,18,10][i],animation:`heartFloat ${8+i*2}s ease-in-out ${i*1.5}s infinite`,opacity:.15}},["💖","💗","✨","💕","⭐","🩷"][i])));
+const Conf=({on,mega})=>{if(!on)return null;const n=mega?50:30;return React.createElement("div",{style:{position:"fixed",inset:0,pointerEvents:"none",zIndex:999}},Array.from({length:n}).map((_,i)=>React.createElement("div",{key:i,style:{position:"absolute",left:Math.random()*100+"%",top:"-5%",width:6+Math.random()*10,height:6+Math.random()*10,backgroundColor:["#FF3B8B","#FFD700","#22BB66","#B44BFF","#00C2FF"][i%5],borderRadius:Math.random()>.5?"50%":"2px",animation:`confettiFall ${.6+Math.random()*1.4}s ease-out forwards`,animationDelay:Math.random()*.5+"s",opacity:0}})))};
 const SPop=({s})=>{if(!s)return null;return React.createElement("div",{style:{position:"fixed",inset:0,pointerEvents:"none",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}},React.createElement("div",{style:{fontSize:120,animation:"stickerPop .6s ease-out forwards"}},s))};
 
 // ═══ PIN LOGIN (tap numbers — no keyboard!) ═══
@@ -210,15 +228,15 @@ React.createElement(Glow),
 React.createElement("div",{style:{zIndex:2,textAlign:"center",maxWidth:340,width:"100%"}},
 React.createElement("div",{style:{fontSize:60,marginBottom:10,animation:"float 3s ease-in-out infinite"}},"🌟"),
 React.createElement("h2",{style:{fontSize:26,fontWeight:700,marginBottom:6}},"Hi Sari!"),
-React.createElement("p",{style:{color:"rgba(255,255,255,.4)",fontSize:14,marginBottom:24}},"Tap your secret numbers"),
+React.createElement("p",{style:{color:"rgba(120,40,80,.5)",fontSize:14,marginBottom:24}},"Tap your secret numbers"),
 React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:12,marginBottom:28}},
-...[0,1,2,3].map(i=>React.createElement("div",{key:i,style:{width:48,height:48,borderRadius:14,background:i<pin.length?"linear-gradient(135deg,#FF3B8B,#FF6B8B)":"rgba(255,255,255,.06)",border:i<pin.length?"2px solid #FF3B8B":"2px solid rgba(255,255,255,.12)",transition:"all .2s"}}))),
+...[0,1,2,3].map(i=>React.createElement("div",{key:i,style:{width:48,height:48,borderRadius:14,background:i<pin.length?"linear-gradient(135deg,#FF3B8B,#FF6B8B)":"rgba(255,255,255,.75)",border:i<pin.length?"2px solid #FF3B8B":"2px solid rgba(220,120,170,.25)",transition:"all .2s"}}))),
 err&&React.createElement("div",{style:{color:"#FF6B6B",fontSize:15,marginBottom:12,animation:"shake .4s ease"}},err),
 React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,maxWidth:260,margin:"0 auto"}},
 ...[1,2,3,4,5,6,7,8,9,"",0,"⬅"].map(n=>
 n===""?React.createElement("div",{key:"empty"}):
-React.createElement("button",{key:n,onClick:()=>n==="⬅"?del():tap(String(n)),style:{width:"100%",height:64,borderRadius:18,fontSize:n==="⬅"?24:28,fontWeight:600,background:n==="⬅"?"rgba(255,255,255,.04)":CD,border:"1.5px solid rgba(255,255,255,.1)"}},n))),
-React.createElement("button",{onClick:()=>{window.location.href="/dashboard"},style:{background:"none",border:"none",color:"rgba(255,255,255,.15)",fontSize:12,marginTop:24,padding:8}},"Parent Dashboard →")
+React.createElement("button",{key:n,onClick:()=>n==="⬅"?del():tap(String(n)),style:{width:"100%",height:64,borderRadius:18,fontSize:n==="⬅"?24:28,fontWeight:600,background:n==="⬅"?"rgba(255,255,255,.6)":CD,border:"1.5px solid rgba(255,255,255,.1)"}},n))),
+React.createElement("button",{onClick:()=>{window.location.href="/dashboard"},style:{background:"none",border:"none",color:"rgba(220,120,170,.25)",fontSize:12,marginTop:24,padding:8}},"Parent Dashboard →")
 ))};
 
 // ═══ STORY READER ═══
@@ -228,14 +246,14 @@ useEffect(()=>{setTimeout(()=>{say("Story time! "+story.title);setReading(true);
 return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 16px 40px",background:BG}},
 React.createElement(Glow),
 React.createElement("div",{style:{zIndex:2,width:"100%",maxWidth:440}},
-React.createElement("button",{onClick:()=>{if(speechSynthesis)speechSynthesis.cancel();if(curAudio){curAudio.pause();curAudio=null}onBack()},style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 16px",fontSize:15,color:"rgba(255,255,255,.5)",marginBottom:20}},"← Back"),
+React.createElement("button",{onClick:()=>{if(speechSynthesis)speechSynthesis.cancel();if(curAudio){curAudio.pause();curAudio=null}onBack()},style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 16px",fontSize:15,color:"rgba(120,40,80,.6)",marginBottom:20}},"← Back"),
 React.createElement("div",{style:{textAlign:"center",marginBottom:24}},
 React.createElement("div",{style:{fontSize:72,marginBottom:12,animation:"bounceIn .5s ease-out"}},story.emoji),
 React.createElement("h2",{style:{fontSize:"clamp(22px,6vw,28px)",fontWeight:700,animation:"slideUp .5s ease-out"}},story.title)),
-React.createElement("div",{style:{background:"rgba(255,255,255,.04)",borderRadius:22,padding:"24px 20px",fontSize:17,lineHeight:1.8,color:"rgba(255,255,255,.8)",animation:"slideUp .6s ease-out"}},story.text),
+React.createElement("div",{style:{background:"rgba(255,255,255,.6)",borderRadius:22,padding:"24px 20px",fontSize:17,lineHeight:1.8,color:"rgba(80,30,60,.8)",animation:"slideUp .6s ease-out"}},story.text),
 React.createElement("div",{style:{display:"flex",gap:12,justifyContent:"center",marginTop:24}},
 React.createElement("button",{onClick:()=>say(story.text),style:{background:"linear-gradient(135deg,#B44BFF,#8B3BCF)",borderRadius:18,padding:"14px 28px",fontSize:16,fontWeight:600}},"🔊 Read Again"),
-React.createElement("button",{onClick:onBack,style:{background:CD,border:"1.5px solid rgba(255,255,255,.12)",borderRadius:18,padding:"14px 28px",fontSize:16,fontWeight:600}},"🏠 Home"))))};
+React.createElement("button",{onClick:onBack,style:{background:CD,border:"1.5px solid rgba(220,120,170,.25)",borderRadius:18,padding:"14px 28px",fontSize:16,fontWeight:600}},"🏠 Home"))))};
 
 // ═══ GAME COMPONENTS (with detail tracking) ═══
 const SoundG=({q,onA})=>{const[sel,setSel]=useState(null);const[res,setRes]=useState(null);const[msg,setMsg]=useState("");
@@ -246,13 +264,13 @@ setTimeout(()=>{const optText="Is it "+q.opts.map(l=>l.toUpperCase()).join(", or
 const tap=l=>{if(sel)return;setSel(l);const ok=l===q.letter;setRes(ok);const m=ok?pick(CHEERS):("The letter was "+q.letter.toUpperCase()+". "+pick(TRIES));setMsg(m);setTimeout(()=>say(m),250);
 setTimeout(()=>onA(ok,{mode:"sound",tw:q.word.w,tl:q.letter,fam:q.word.f,ok,ua:l,ca:q.letter}),ok?1800:2600)};
 return React.createElement("div",{style:{textAlign:"center",animation:"slideUp .4s ease-out"}},
-React.createElement("div",{style:{fontSize:15,color:"rgba(255,255,255,.45)",marginBottom:10}},"Listen and find the letter!"),
+React.createElement("div",{style:{fontSize:15,color:"rgba(120,40,80,.55)",marginBottom:10}},"Listen and find the letter!"),
 React.createElement("button",{onClick:()=>sayL(q.letter),style:{background:"linear-gradient(135deg,#FF3B8B,#FF6B8B)",borderRadius:50,width:"clamp(100px,24vw,130px)",height:"clamp(100px,24vw,130px)",fontSize:"clamp(44px,11vw,60px)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 28px",animation:"pulse 2s ease-in-out infinite",boxShadow:"0 8px 35px rgba(255,59,139,.35)"}},"🔊"),
 React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"clamp(12px,3vw,18px)",maxWidth:320,margin:"0 auto"}},
-...q.opts.map((l,i)=>{const isC=l===q.letter,isS=l===sel;let bg=CD,bd="2.5px solid rgba(255,255,255,.12)",an=`popIn .3s ease-out ${i*.09}s both`;
-if(res!==null&&isC){bg="linear-gradient(145deg,#00FF88,#00CC66)";bd="2.5px solid #00FF88"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B,#FF4444)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
+...q.opts.map((l,i)=>{const isC=l===q.letter,isS=l===sel;let bg=CD,bd="2.5px solid rgba(220,120,170,.25)",an=`popIn .3s ease-out ${i*.09}s both`;
+if(res!==null&&isC){bg="linear-gradient(145deg,#22BB66,#1FA055)";bd="2.5px solid #22BB66"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B,#FF4444)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
 return React.createElement("button",{key:l+i,onClick:()=>tap(l),style:{width:"100%",height:"clamp(74px,19vw,92px)",borderRadius:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(32px,9vw,44px)",fontWeight:700,textTransform:"uppercase",background:bg,border:bd,cursor:sel?"default":"pointer",animation:an}},l.toUpperCase())})),
-msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#00FF88":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
+msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#22BB66":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
 
 const RhymeG=({q,onA})=>{const[sel,setSel]=useState(null);const[res,setRes]=useState(null);const[msg,setMsg]=useState("");
 useEffect(()=>{setSel(null);setRes(null);setMsg("");setTimeout(()=>{
@@ -261,15 +279,15 @@ fbSay("What rhymes with "+q.target.w+"? ... "+optText,.75)},400)},[q]);
 const tap=x=>{if(sel)return;setSel(x.w);const ok=x.w===q.correct.w;setRes(ok);const m=ok?(q.target.w+" and "+x.w+" rhyme! "+pick(CHEERS)):(q.target.w+" rhymes with "+q.correct.w+". "+pick(TRIES));setMsg(m);setTimeout(()=>say(m),250);
 setTimeout(()=>onA(ok,{mode:"rhyme",tw:q.target.w,fam:q.target.f,ok,ua:x.w,ca:q.correct.w}),ok?2000:2800)};
 return React.createElement("div",{style:{textAlign:"center",animation:"slideUp .4s ease-out"}},
-React.createElement("div",{style:{fontSize:15,color:"rgba(255,255,255,.45)",marginBottom:12}},"What rhymes with..."),
+React.createElement("div",{style:{fontSize:15,color:"rgba(120,40,80,.55)",marginBottom:12}},"What rhymes with..."),
 React.createElement("button",{onClick:()=>sayW(q.target.w),style:{background:"linear-gradient(145deg,#B44BFF22,#B44BFF0A)",border:"2.5px solid #B44BFF44",borderRadius:22,padding:"clamp(14px,3vw,20px) clamp(22px,5vw,36px)",display:"inline-flex",alignItems:"center",gap:12,marginBottom:28}},
 React.createElement("span",{style:{fontSize:"clamp(40px,10vw,52px)"}},q.target.i),React.createElement("span",{style:{fontSize:"clamp(26px,7vw,36px)",fontWeight:700,textTransform:"uppercase"}},q.target.w),React.createElement("span",{style:{fontSize:24}},"🔊")),
 React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:14,maxWidth:340,margin:"0 auto"}},
 ...q.opts.map((x,i)=>{const isC=x.w===q.correct.w,isS=x.w===sel;let bg=CD,bd="2.5px solid rgba(255,255,255,.1)",an=`popIn .3s ease-out ${i*.1}s both`;
-if(res!==null&&isC){bg="linear-gradient(145deg,#00FF8822,#00CC6611)";bd="2.5px solid #00FF88"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B22,#FF444411)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
+if(res!==null&&isC){bg="linear-gradient(145deg,#22BB6622,#1FA05511)";bd="2.5px solid #22BB66"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B22,#FF444411)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
 return React.createElement("button",{key:x.w,onClick:()=>tap(x),style:{background:bg,border:bd,borderRadius:20,padding:"clamp(14px,3vw,18px) 20px",display:"flex",alignItems:"center",gap:14,cursor:sel?"default":"pointer",animation:an}},
 React.createElement("span",{style:{fontSize:"clamp(32px,9vw,42px)"}},x.i),React.createElement("span",{style:{fontSize:"clamp(22px,6vw,28px)",fontWeight:600,textTransform:"uppercase"}},x.w))})),
-msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#00FF88":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
+msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#22BB66":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
 
 const BlendG=({q,onA})=>{const[ph,setPh]=useState("bl");const[sel,setSel]=useState(null);const[res,setRes]=useState(null);const[msg,setMsg]=useState("");
 useEffect(()=>{setPh("bl");setSel(null);setRes(null);setMsg("");setTimeout(()=>{say("Watch the letters blend together!");setTimeout(()=>sayBlend(q.target.w,()=>{setPh("pk");
@@ -279,17 +297,17 @@ const tap=x=>{if(sel)return;setSel(x.w);const ok=x.w===q.target.w;setRes(ok);con
 setTimeout(()=>onA(ok,{mode:"blend",tw:q.target.w,fam:q.target.f,ok,ua:x.w,ca:q.target.w}),ok?1800:2600)};
 const ls=q.target.w.split("");
 return React.createElement("div",{style:{textAlign:"center",animation:"slideUp .4s ease-out"}},
-React.createElement("div",{style:{fontSize:15,color:"rgba(255,255,255,.45)",marginBottom:18}},"Watch the letters blend!"),
+React.createElement("div",{style:{fontSize:15,color:"rgba(120,40,80,.55)",marginBottom:18}},"Watch the letters blend!"),
 React.createElement("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:ph==="bl"?28:6,marginBottom:20,transition:"gap .8s cubic-bezier(.34,1.56,.64,1)",minHeight:90}},
 ...ls.map((l,i)=>React.createElement("div",{key:i,style:{fontSize:"clamp(44px,13vw,60px)",fontWeight:700,color:"#00C2FF",textTransform:"uppercase",animation:`letterSmash .6s ease-out ${i*.5}s both`,textShadow:"0 0 25px rgba(0,194,255,.5)","--sx":i===0?"-80px":i===ls.length-1?"80px":"0px"}},l)),
 ph==="pk"&&React.createElement("div",{style:{fontSize:24,color:"#FFD700",marginLeft:10,animation:"bounceIn .3s ease-out"}},"= ?")),
-React.createElement("button",{onClick:()=>sayBlend(q.target.w),style:{background:"none",border:"none",fontSize:15,color:"rgba(255,255,255,.4)",marginBottom:24,padding:"8px 16px"}},"🔊 Hear again"),
+React.createElement("button",{onClick:()=>sayBlend(q.target.w),style:{background:"none",border:"none",fontSize:15,color:"rgba(120,40,80,.5)",marginBottom:24,padding:"8px 16px"}},"🔊 Hear again"),
 ph==="pk"&&React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:14,maxWidth:340,margin:"0 auto"}},
 ...q.opts.map((x,i)=>{const isC=x.w===q.target.w,isS=x.w===sel;let bg=CD,bd="2.5px solid rgba(255,255,255,.1)",an=`popIn .3s ease-out ${i*.1}s both`;
-if(res!==null&&isC){bg="linear-gradient(145deg,#00FF8822,#00CC6611)";bd="2.5px solid #00FF88"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B22,#FF444411)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
+if(res!==null&&isC){bg="linear-gradient(145deg,#22BB6622,#1FA05511)";bd="2.5px solid #22BB66"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B22,#FF444411)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
 return React.createElement("button",{key:x.w,onClick:()=>tap(x),style:{background:bg,border:bd,borderRadius:20,padding:"clamp(14px,3vw,18px) 20px",display:"flex",alignItems:"center",gap:14,cursor:sel?"default":"pointer",animation:an}},
 React.createElement("span",{style:{fontSize:"clamp(32px,9vw,42px)"}},x.i),React.createElement("span",{style:{fontSize:"clamp(22px,6vw,28px)",fontWeight:600,textTransform:"uppercase"}},x.w))})),
-msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#00FF88":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
+msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#22BB66":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
 
 const BuildG=({q,onA})=>{const[blt,setBlt]=useState([]);const[usd,setUsd]=useState(new Set());const[res,setRes]=useState(null);const[msg,setMsg]=useState("");
 useEffect(()=>{setBlt([]);setUsd(new Set());setRes(null);setMsg("");setTimeout(()=>{say("Build the word! Listen!");setTimeout(()=>sayW(q.target.w),2800)},400)},[q]);
@@ -298,27 +316,33 @@ if(nb.length===q.target.w.length){const built=nb.join("");const ok=built===q.tar
 setTimeout(()=>onA(ok,{mode:"build",tw:q.target.w,fam:q.target.f,ok,ua:built,ca:q.target.w}),ok?1800:2800)}};
 const undo=()=>{if(!blt.length||res!==null)return;const ll=blt[blt.length-1];const su=[...usd].sort((a,b)=>b-a);const rm=su.find(i=>q.tiles[i]===ll);const nu=new Set(usd);if(rm!==undefined)nu.delete(rm);setBlt(blt.slice(0,-1));setUsd(nu)};
 return React.createElement("div",{style:{textAlign:"center",animation:"slideUp .4s ease-out"}},
-React.createElement("div",{style:{fontSize:15,color:"rgba(255,255,255,.45)",marginBottom:10}},"Build the word!"),
+React.createElement("div",{style:{fontSize:15,color:"rgba(120,40,80,.55)",marginBottom:10}},"Build the word!"),
 React.createElement("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:18}},
 React.createElement("button",{onClick:()=>sayW(q.target.w),style:{background:"linear-gradient(135deg,#FF9500,#FFB347)",borderRadius:50,width:"clamp(80px,20vw,100px)",height:"clamp(80px,20vw,100px)",fontSize:"clamp(38px,10vw,48px)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 6px 24px rgba(255,149,0,.3)"}},"🔊"),
 React.createElement("span",{style:{fontSize:"clamp(44px,12vw,56px)"}},q.target.i)),
 React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:"clamp(8px,2vw,12px)",marginBottom:26}},
-...Array.from({length:q.target.w.length}).map((_,i)=>React.createElement("div",{key:i,style:{width:"clamp(56px,15vw,70px)",height:"clamp(62px,17vw,78px)",borderRadius:18,background:blt[i]?"linear-gradient(145deg,#FF950028,#FF950010)":"rgba(255,255,255,.04)",border:blt[i]?"2.5px solid #FF9500":"2.5px dashed rgba(255,255,255,.18)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(30px,8vw,38px)",fontWeight:700,textTransform:"uppercase",animation:blt[i]?"popIn .2s ease-out":undefined}},blt[i]||""))),
+...Array.from({length:q.target.w.length}).map((_,i)=>React.createElement("div",{key:i,style:{width:"clamp(56px,15vw,70px)",height:"clamp(62px,17vw,78px)",borderRadius:18,background:blt[i]?"linear-gradient(145deg,#FF950028,#FF950010)":"rgba(255,255,255,.6)",border:blt[i]?"2.5px solid #FF9500":"2.5px dashed rgba(220,120,170,.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(30px,8vw,38px)",fontWeight:700,textTransform:"uppercase",animation:blt[i]?"popIn .2s ease-out":undefined}},blt[i]||""))),
 React.createElement("div",{style:{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:"clamp(8px,2vw,12px)",maxWidth:400,margin:"0 auto",marginBottom:18}},
-...q.tiles.map((l,i)=>{const u=usd.has(i);return React.createElement("button",{key:i,onClick:()=>tap(l,i),style:{width:"clamp(56px,15vw,68px)",height:"clamp(56px,15vw,68px)",borderRadius:18,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(26px,7vw,34px)",fontWeight:700,textTransform:"uppercase",background:u?"rgba(255,255,255,.02)":CD,border:u?"2.5px solid rgba(255,255,255,.04)":"2.5px solid rgba(255,255,255,.14)",color:u?"rgba(255,255,255,.12)":"white",cursor:u||res!==null?"default":"pointer",animation:`popIn .2s ease-out ${i*.05}s both`}},l.toUpperCase())})),
-blt.length>0&&res===null&&React.createElement("button",{onClick:undo,style:{background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.12)",borderRadius:14,padding:"10px 24px",color:"rgba(255,255,255,.5)",fontSize:15}},"⬅️ Undo"),
-msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#00FF88":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
+...q.tiles.map((l,i)=>{const u=usd.has(i);return React.createElement("button",{key:i,onClick:()=>tap(l,i),style:{width:"clamp(56px,15vw,68px)",height:"clamp(56px,15vw,68px)",borderRadius:18,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(26px,7vw,34px)",fontWeight:700,textTransform:"uppercase",background:u?"rgba(120,40,80,.5)":CD,border:u?"2.5px solid rgba(255,255,255,.6)":"2.5px solid rgba(220,120,170,.2)",color:u?"rgba(220,120,170,.25)":"white",cursor:u||res!==null?"default":"pointer",animation:`popIn .2s ease-out ${i*.05}s both`}},l.toUpperCase())})),
+blt.length>0&&res===null&&React.createElement("button",{onClick:undo,style:{background:"rgba(255,255,255,.07)",border:"1px solid rgba(220,120,170,.25)",borderRadius:14,padding:"10px 24px",color:"rgba(120,40,80,.6)",fontSize:15}},"⬅️ Undo"),
+msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#22BB66":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
 
 // ═══ STAGE INTRO ═══
 const StgIntro=({si,onGo})=>{const s=STG[si];
-useEffect(()=>{setTimeout(()=>say(si===0?"Let's start! First up... "+s.nm+"!":"Great job! Next... "+s.nm+"!"),500)},[si]);
+const intros=[
+["First up...","Let's hear those sounds!"],
+["You're doing great! Next...","Find the rhyming words!"],
+["Halfway there!","Blend those letters!"],
+["Last one!","Build the words!"]
+];
+useEffect(()=>{setTimeout(()=>say(intros[si][0]+" "+s.nm+"! "+intros[si][1]),500)},[si]);
 return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,background:BG}},
 React.createElement(Glow),React.createElement("div",{style:{zIndex:2,textAlign:"center"}},
 React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:12,marginBottom:32}},
-...STG.map((st,i)=>React.createElement("div",{key:st.id,style:{width:52,height:52,borderRadius:16,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,background:i<si?"linear-gradient(145deg,#00FF8833,#00FF8811)":i===si?`linear-gradient(145deg,${st.cl}44,${st.cl}22)`:"rgba(255,255,255,.05)",border:i===si?`2.5px solid ${st.cl}`:"2px solid rgba(255,255,255,.08)",animation:i===si?"pulse 1.5s ease-in-out infinite":undefined}},i<si?"✅":st.em))),
+...STG.map((st,i)=>React.createElement("div",{key:st.id,style:{width:52,height:52,borderRadius:16,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,background:i<si?"linear-gradient(145deg,#22BB6633,#22BB6611)":i===si?`linear-gradient(145deg,${st.cl}44,${st.cl}22)`:"rgba(255,255,255,.65)",border:i===si?`2.5px solid ${st.cl}`:"2px solid rgba(220,120,170,.18)",animation:i===si?"pulse 1.5s ease-in-out infinite":undefined}},i<si?"✅":st.em))),
 React.createElement("div",{style:{fontSize:68,marginBottom:12,animation:"bounceIn .5s ease-out"}},s.em),
 React.createElement("h2",{style:{fontSize:"clamp(28px,8vw,38px)",fontWeight:700,marginBottom:8,color:s.cl}},s.nm),
-React.createElement("p",{style:{fontSize:16,color:"rgba(255,255,255,.5)",marginBottom:36}},"5 questions!"),
+React.createElement("p",{style:{fontSize:16,color:"rgba(120,40,80,.6)",marginBottom:36}},"5 questions!"),
 React.createElement("button",{onClick:()=>{say("Let's go!");setTimeout(onGo,500)},style:{background:`linear-gradient(135deg,${s.cl},${s.cl}CC)`,borderRadius:24,padding:"20px 52px",fontSize:"clamp(22px,6vw,28px)",fontWeight:700,boxShadow:`0 8px 30px ${s.cl}44`,animation:"glow 2s ease-in-out infinite"}},"LET'S GO! 🚀")))};
 
 // ═══ QUEST ═══
@@ -333,13 +357,13 @@ return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexD
 React.createElement(Glow),React.createElement(Conf,{on:cf}),React.createElement(SPop,{s:stk}),
 React.createElement("div",{style:{zIndex:2,width:"100%",maxWidth:440}},
 React.createElement("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}},
-React.createElement("button",{onClick:()=>{say("Going back!");setTimeout(onBack,400)},style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 14px",fontSize:14,color:"rgba(255,255,255,.5)"}},"←"),
+React.createElement("button",{onClick:()=>{say("Going back!");setTimeout(onBack,400)},style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 14px",fontSize:14,color:"rgba(120,40,80,.6)"}},"←"),
 React.createElement("button",{onClick:()=>say(st.nm),style:{display:"flex",alignItems:"center",gap:6,background:"none",padding:4}},React.createElement("span",{style:{fontSize:18}},st.em),React.createElement("span",{style:{fontSize:13,color:st.cl,fontWeight:600}},st.nm)),
-React.createElement("div",{style:{fontSize:12,color:"rgba(255,255,255,.3)"}},(qi+1)+"/20")),
-React.createElement("div",{style:{display:"flex",gap:4,marginBottom:8}},...STG.map((s,i)=>React.createElement("div",{key:s.id,style:{flex:1,height:6,borderRadius:3,overflow:"hidden",background:"rgba(255,255,255,.08)"}},
+React.createElement("div",{style:{fontSize:12,color:"rgba(120,40,80,.4)"}},(qi+1)+"/20")),
+React.createElement("div",{style:{display:"flex",gap:4,marginBottom:8}},...STG.map((s,i)=>React.createElement("div",{key:s.id,style:{flex:1,height:6,borderRadius:3,overflow:"hidden",background:"rgba(220,120,170,.18)"}},
 React.createElement("div",{style:{height:"100%",borderRadius:3,background:s.cl,width:(i<si?100:i===si?(sq/5*100):0)+"%",transition:"width .5s ease"}})))),
 React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:10,marginBottom:28}},...Array.from({length:5}).map((_,i)=>{const gi=si*5+i;
-return React.createElement("div",{key:i,style:{width:16,height:16,borderRadius:9,background:gi<res.length?(res[gi]?"#00FF88":"#FF6B6B"):gi===qi?st.cl:"rgba(255,255,255,.12)",transition:"all .3s",boxShadow:gi===qi?`0 0 12px ${st.cl}55`:"none"}})})),
+return React.createElement("div",{key:i,style:{width:16,height:16,borderRadius:9,background:gi<res.length?(res[gi]?"#22BB66":"#FF6B6B"):gi===qi?st.cl:"rgba(220,120,170,.25)",transition:"all .3s",boxShadow:gi===qi?`0 0 12px ${st.cl}55`:"none"}})})),
 q.m==="sound"&&React.createElement(SoundG,{q,onA}),q.m==="rhyme"&&React.createElement(RhymeG,{q,onA}),q.m==="blend"&&React.createElement(BlendG,{q,onA}),q.m==="build"&&React.createElement(BuildG,{q,onA})))};
 
 // ═══ QUEST DONE ═══
@@ -352,10 +376,10 @@ React.createElement(Glow),React.createElement(Conf,{on:cf,mega:pct>=80}),
 React.createElement("div",{style:{zIndex:2,textAlign:"center",maxWidth:420,width:"100%"}},
 React.createElement("div",{style:{fontSize:"clamp(70px,20vw,100px)",marginBottom:10,animation:"bounceIn .5s ease-out"}},pct===100?"👑":pct>=80?"🏆":"⭐"),
 React.createElement("h2",{style:{fontSize:"clamp(26px,7vw,34px)",fontWeight:700,marginBottom:4}},pct===100?"PERFECT!":pct>=80?"AMAZING!":"GREAT JOB!"),
-React.createElement("div",{style:{fontSize:17,color:"rgba(255,255,255,.55)",marginBottom:8}},ok," out of 20 correct"),
+React.createElement("div",{style:{fontSize:17,color:"rgba(120,40,80,.55)",marginBottom:8}},ok," out of 20 correct"),
 streak>0&&React.createElement("div",{style:{fontSize:16,color:"#FFD700",marginBottom:16}},"🔥 ",streak," day streak!"),
 React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:8,marginBottom:20}},...STG.map((s,i)=>{const sr=res.slice(i*5,i*5+5).filter(Boolean).length;
-return React.createElement("div",{key:s.id,style:{background:"rgba(255,255,255,.05)",borderRadius:16,padding:"10px 14px",textAlign:"center",border:`1px solid ${s.cl}33`}},
+return React.createElement("div",{key:s.id,style:{background:"rgba(255,255,255,.65)",borderRadius:16,padding:"10px 14px",textAlign:"center",border:`1px solid ${s.cl}33`}},
 React.createElement("div",{style:{fontSize:24}},s.em),React.createElement("div",{style:{fontSize:13,fontWeight:600,color:s.cl}},sr+"/5"))})),
 React.createElement("div",{style:{background:"linear-gradient(145deg,rgba(255,215,0,.12),rgba(255,215,0,.04))",border:"1.5px solid rgba(255,215,0,.25)",borderRadius:20,padding:"14px 28px",display:"inline-flex",alignItems:"center",gap:10,marginBottom:20}},
 React.createElement("span",{style:{fontSize:36,animation:"starPulse 1.5s ease-in-out infinite"}},"⭐"),React.createElement("span",{style:{fontSize:28,fontWeight:700,color:"#FFD700"}},"+",earned)),
@@ -363,7 +387,7 @@ ns&&React.createElement("div",{style:{display:"inline-flex",alignItems:"center",
 prize&&React.createElement("div",{style:{background:"linear-gradient(145deg,rgba(255,59,139,.18),rgba(180,75,255,.08))",border:"2px solid #FF3B8B",borderRadius:22,padding:"20px 24px",marginBottom:20}},
 React.createElement("div",{style:{fontSize:13,color:"#FF3B8B",fontWeight:600,letterSpacing:1}},"🎉 NEW PRIZE! 🎉"),
 React.createElement("div",{style:{fontSize:48,margin:"8px 0"}},prize.e),React.createElement("div",{style:{fontSize:19,fontWeight:700}},prize.n),
-prize.t==="real"&&React.createElement("div",{style:{fontSize:12,color:"rgba(255,255,255,.4)",marginTop:4}},"Show Abba to redeem! 🎟️"),
+prize.t==="real"&&React.createElement("div",{style:{fontSize:12,color:"rgba(120,40,80,.5)",marginTop:4}},"Show Abba to redeem! 🎟️"),
 prize.t==="story"&&React.createElement("div",{style:{fontSize:12,color:"#B44BFF",marginTop:4}},"📖 A new story to listen to!")),
 React.createElement("button",{onClick:()=>{say("See you tomorrow!");setTimeout(onHome,600)},style:{background:"linear-gradient(135deg,#FF3B8B,#FF6B8B)",borderRadius:22,padding:"18px 44px",fontSize:"clamp(18px,5vw,22px)",fontWeight:700,boxShadow:"0 6px 25px rgba(255,59,139,.3)"}},"🏠 Done!")))};
 
@@ -373,17 +397,17 @@ useEffect(()=>{const ul=PRIZES.filter(p=>p.s<=prog.stars);setTimeout(()=>say(ul.
 return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 16px 40px",background:BG}},
 React.createElement(Glow),React.createElement("div",{style:{zIndex:2,width:"100%",maxWidth:440}},
 React.createElement("div",{style:{display:"flex",alignItems:"center",gap:14,marginBottom:20}},
-React.createElement("button",{onClick:onBack,style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 16px",fontSize:15,color:"rgba(255,255,255,.5)"}},"← Back"),
+React.createElement("button",{onClick:onBack,style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 16px",fontSize:15,color:"rgba(120,40,80,.6)"}},"← Back"),
 React.createElement("h2",{style:{fontSize:22,fontWeight:700}},"🎁 Prizes")),
-prog.stk&&prog.stk.length>0&&React.createElement("div",{style:{background:"rgba(255,255,255,.04)",borderRadius:18,padding:"14px 16px",marginBottom:18}},
-React.createElement("div",{style:{fontSize:13,color:"rgba(255,255,255,.4)",marginBottom:8}},"🏆 Stickers ("+prog.stk.length+")"),
+prog.stk&&prog.stk.length>0&&React.createElement("div",{style:{background:"rgba(255,255,255,.6)",borderRadius:18,padding:"14px 16px",marginBottom:18}},
+React.createElement("div",{style:{fontSize:13,color:"rgba(120,40,80,.5)",marginBottom:8}},"🏆 Stickers ("+prog.stk.length+")"),
 React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:6}},...prog.stk.map((s,i)=>React.createElement("span",{key:i,style:{fontSize:24}},s)))),
 React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:12}},...PRIZES.map((p,i)=>{const ok=prog.stars>=p.s;
 return React.createElement("button",{key:p.id,onClick:()=>{if(ok&&p.t==="story"){const st=STORIES.find(s=>s.id===p.sid);if(st)onStory(st)}else say(ok?(p.n+(p.t==="real"?" Show Abba!":"")):(p.n+" Need "+p.s+" stars"))},
-style:{background:ok?"linear-gradient(145deg,rgba(255,215,0,.1),rgba(255,59,139,.06))":"rgba(255,255,255,.025)",border:ok?"1.5px solid rgba(255,215,0,.25)":"1px solid rgba(255,255,255,.06)",borderRadius:20,padding:"14px 18px",display:"flex",alignItems:"center",gap:12,opacity:ok?1:.4,animation:`slideUp .3s ease-out ${i*.05}s both`,width:"100%",textAlign:"left"}},
+style:{background:ok?"linear-gradient(145deg,rgba(255,215,0,.1),rgba(255,59,139,.06))":"rgba(255,255,255,.025)",border:ok?"1.5px solid rgba(255,215,0,.25)":"1px solid rgba(255,255,255,.75)",borderRadius:20,padding:"14px 18px",display:"flex",alignItems:"center",gap:12,opacity:ok?1:.4,animation:`slideUp .3s ease-out ${i*.05}s both`,width:"100%",textAlign:"left"}},
 React.createElement("div",{style:{fontSize:"clamp(30px,8vw,42px)"}},ok?p.e:"🔒"),
 React.createElement("div",{style:{flex:1}},React.createElement("div",{style:{fontSize:15,fontWeight:600}},p.n),
-React.createElement("div",{style:{fontSize:11,color:"rgba(255,255,255,.35)"}},ok?(p.t==="real"?"Show Abba! 🎟️":p.t==="story"?"📖 Tap to listen!":"Collected!"):p.s+" stars")),
+React.createElement("div",{style:{fontSize:11,color:"rgba(120,40,80,.45)"}},ok?(p.t==="real"?"Show Abba! 🎟️":p.t==="story"?"📖 Tap to listen!":"Collected!"):p.s+" stars")),
 ok&&p.t==="story"&&React.createElement("div",{style:{fontSize:18}},"▶️"))}))))};
 
 // ═══ MORAH AI TUTOR ═══
@@ -513,7 +537,7 @@ Story ideas (pick one randomly, make it original each time):
 Make the language simple (6-year-old level), warm, and funny. Use emojis throughout the text.`},
 
 numbers:{
-name:"Numbers",emoji:"🔢",color:"#00FF88",
+name:"Numbers",emoji:"🔢",color:"#22BB66",
 prompt:`MODE: NUMBERS (counting & simple math)
 
 CRITICAL DISPLAY RULE: The "emoji" field is shown BIG on screen. For counting questions, put ALL the emojis to count in the "emoji" field. Example: if asking "how many stars?", set emoji to "⭐⭐⭐⭐" (4 stars). The child counts what she SEES.
@@ -633,7 +657,205 @@ STRUCTURE:
 5. IMMEDIATELY move to a completely DIFFERENT scenario type and DIFFERENT people
 
 Use her real people (Kira, Talia, Abby, Mommy Minky, Abba Eli, Bubby Feig, Morah at school, cousin Ahuvah, cousin Chayala, cousin Chaya Fireman, Uncle Aryeh, Rivkah, Asher).
-Labels should be short actions: "SHARE", "WAIT", "HELP", "THANK YOU", "TELL TRUTH", "LISTEN".`}
+Labels should be short actions: "SHARE", "WAIT", "HELP", "THANK YOU", "TELL TRUTH", "LISTEN".`},
+
+friends:{
+name:"Friends",emoji:"🤝",color:"#FF6B9D",
+prompt:`MODE: BEIN ADAM L'CHAVERO (relationships — being a good friend, sister, daughter)
+You are teaching Sari how to build and maintain beautiful relationships with the people in her life. This is DIFFERENT from Middos — Middos teaches general character traits, this mode teaches the SKILL of relating to specific people in her life.
+
+CRITICAL: Each scenario should feel REAL and specific to Sari's daily life. Use her actual family and friends. Make Sari think about how the OTHER person feels.
+
+CATEGORIES (pick randomly, never repeat the same category twice in a row):
+
+BEING A BIG SISTER (Talia):
+- "Baby Talia is crying and reaching for YOUR toy. She looks at you with big eyes." → "LET HER HOLD IT" / "SAY NO MINE"
+- "Talia just learned to say your name! She keeps saying 'Sari! Sari!' while you're playing." → "PLAY WITH HER" / "TELL HER STOP"
+- "Mommy asks you to sing to Talia while she makes dinner. Talia loves your voice!" → "SING TO HER" / "SAY I'M BUSY"
+- "Talia knocked over your block tower by accident. She didn't mean to." → "IT'S OKAY" / "GET MAD"
+- "Talia is trying to walk and keeps falling. She looks scared." → "HOLD HER HAND" / "LAUGH"
+
+BEING A GOOD FRIEND (Kira, Abby, school friends):
+- "Kira wants to play house but you want to play school." → "TAKE TURNS" / "ONLY MY WAY"
+- "A new girl joined your class and she doesn't know anyone yet." → "INVITE HER OVER" / "STAY WITH MY FRIENDS"
+- "Abby told you a secret and asked you not to share it." → "KEEP THE SECRET" / "TELL EVERYONE"
+- "You and Kira both want to be the Morah in pretend play." → "SHE GOES FIRST" / "I ALWAYS GO FIRST"
+- "Your friend got a better grade than you on a test." → "SAY GREAT JOB" / "FEEL BAD"
+- "Kira accidentally broke your crayon. She feels terrible about it." → "IT'S JUST A CRAYON" / "DON'T TALK TO HER"
+
+KIBUD AV V'EM (honoring parents):
+- "Mommy had a really long day and looks tired when she comes home." → "GIVE HER A HUG" / "ASK FOR A TREAT"
+- "Abba asks you to come to the table for dinner but you're in the middle of playing." → "COME RIGHT AWAY" / "SAY 5 MORE MINUTES"
+- "Mommy and Abba are talking to each other about something important." → "WAIT QUIETLY" / "INTERRUPT THEM"
+- "Abba made you a lunch but it's not exactly what you wanted." → "SAY THANK YOU" / "SAY I DON'T WANT THIS"
+
+DAN L'KAF ZCHUS (judging favorably):
+- "Kira walked right past you without saying hi at school today." → "MAYBE SHE DIDN'T SEE ME" / "SHE'S BEING MEAN"
+- "Your friend didn't invite you to her birthday party." → "MAYBE SMALL PARTY" / "SHE DOESN'T LIKE ME"
+- "Morah didn't call on you even though your hand was up first." → "SHE'LL CALL ME NEXT TIME" / "IT'S NOT FAIR"
+
+MAKING UP & FORGIVENESS:
+- "You said something that hurt Kira's feelings and she looks sad." → "SAY I'M SORRY" / "PRETEND I DIDN'T"
+- "Abby said sorry for bumping into you. She looks worried." → "I FORGIVE YOU" / "STAY MAD"
+- "You and your friend had a fight yesterday. Today is a new day." → "SAY LET'S BE FRIENDS" / "IGNORE HER"
+
+HOSTING & BEING A GUEST:
+- "Cousin Ahuvah is coming over and she's never been to your house before." → "SHOW HER AROUND" / "PLAY BY MYSELF"
+- "You're at Chayala's house and she offers you a snack you don't love." → "SAY THANK YOU" / "SAY I DON'T LIKE THAT"
+
+STRUCTURE:
+1. Describe a REAL, relatable scenario with emojis (2-3 sentences max, paint a vivid picture)
+2. Ask "What should Sari do?" or "How should Sari handle this?"
+3. Give 2 choices — one builds the relationship, one hurts it
+4. If she picks right: celebrate and explain WHY it helps the relationship! "When we let our little sister hold our toy, it makes her feel SO loved! Talia thinks you're the best big sister ever!"
+5. If she picks wrong: gently explain how the other person would feel: "If someone walked past US without saying hi, we might feel sad too. Maybe Kira was just in a rush!"
+6. Name the Torah concept when relevant: "That's dan l'kaf zchus — judging people favorably!"
+
+Use her real people: Kira (next door), Abby (friend), baby Talia (sister), Mommy Minky, Abba Eli, Bubby Feig, cousin Ahuvah, cousin Chayala, cousin Chaya Fireman, Uncle Aryeh, Rivkah, Asher.
+Labels: short clear actions like "SAY SORRY", "TAKE TURNS", "FORGIVE HER", "HOLD HER HAND", "SHARE", "WAIT".`},
+
+parsha:{
+name:"Parsha",emoji:"🕎",color:"#C4A265",
+prompt:`MODE: PARSHA (Weekly Torah Portion)
+Teach Sari a fun, kid-friendly story from this week's Parsha (Torah portion).
+
+STRUCTURE:
+1. First message: "This week's Parsha is [name]! Let me tell you an AMAZING story!" + a short exciting setup (2 sentences). Then ask an easy question about what she already knows.
+2. Tell the story in kid-friendly chunks, with questions every 2 messages
+3. Questions should be about the story: "What did Hashem tell Noach to build?" → "A TEIVAH" / "A HOUSE" / "A TENT"
+4. Connect to her life: "Just like Avraham was kind to guests, we can be kind to guests too! Just like when cousin Ahuvah comes over!"
+5. Mix story questions with middos connections
+6. End with: "Now you can tell Abba at the Shabbos table!"
+
+PARSHA CYCLE (pick based on time of year, or use the seed to vary):
+Bereishis, Noach, Lech Lecha, Vayeira, Chayei Sarah, Toldos, Vayeitzei, Vayishlach, Vayeishev, Mikeitz, Vayigash, Vayechi, Shemos, Va'eira, Bo, Beshalach, Yisro, Mishpatim, Terumah, Tetzaveh, Ki Sisa, Vayakhel, Pekudei, Vayikra, Tzav, Shmini, Tazria, Metzora, Acharei Mos, Kedoshim, Emor, Behar, Bechukosai, Bamidbar, Naso, Beha'aloscha, Shelach, Korach, Chukas, Balak, Pinchas, Mattos, Masei, Devarim, Va'eschanan, Eikev, Re'eh, Shoftim, Ki Seitzei, Ki Savo, Nitzavim, Vayelech, Haazinu, V'Zos HaBracha
+
+KEY STORIES kids love: Noach's teivah, Avraham's hachnasas orchim, Yaakov's ladder dream, Yosef's coat, Moshe in the basket, Krias Yam Suf, Matan Torah, the Mishkan
+
+Keep it SIMPLE — she's 6. Use names she knows from school.
+Labels: short answers like "A TEIVAH", "MOSHE", "HASHEM", "10 MAKOS", "SHABBOS".`},
+
+brachos:{
+name:"Brachos",emoji:"🍎",color:"#4CAF50",
+prompt:`MODE: BRACHOS (Blessings on Food)
+Teach Sari which bracha to make on different foods. This is practical — she does this every day!
+
+THE 6 BRACHOS:
+- HAMOTZI: Bread, challah, rolls, pita
+- MEZONOS: Cake, cookies, pasta, cereal, crackers, pretzels, pizza crust, oatmeal
+- HA'EITZ: Fruits that grow on trees (apples, oranges, grapes, cherries, pears, peaches, plums)
+- HA'ADAMAH: Vegetables & things from the ground (carrots, potatoes, bananas, strawberries, watermelon, corn, peanuts)
+- SHEHAKOL: Meat, fish, eggs, milk, water, juice, candy, chocolate, ice cream, cheese
+- HA'GAFEN: Grape juice, wine
+
+ACTIVITY TYPES (mix it up):
+1. WHAT BRACHA: Show a food → "What bracha on an apple?" → "HA'EITZ" / "HA'ADAMAH" / "SHEHAKOL"
+2. WHICH FOOD: "Which food is Ha'Adamah?" → "CARROT" / "APPLE" / "COOKIE"
+3. TRICKY ONES: "Banana grows on a plant, not a tree! So it's..." → "HA'ADAMAH" / "HA'EITZ"
+4. SHABBOS TABLE: "Abba makes kiddush on grape juice. What bracha?" → "HA'GAFEN"
+5. STORY: "Mommy packed Sari's lunch: a sandwich, an apple, and juice. Which bracha does she make FIRST?" → "HAMOTZI" (bread always first!)
+6. ORDER: "After eating bread, do you need separate brachos on other foods?" → "NO" / "YES" (Hamotzi covers the meal!)
+
+Use her family: "Bubby's famous kugel — what bracha?" (Mezonos) "Abba's Shabbos challah?" (Hamotzi)
+Put the food emoji in the "emoji" field.
+Labels: bracha names like "HAMOTZI", "MEZONOS", "HA'EITZ", "HA'ADAMAH", "SHEHAKOL", "HA'GAFEN" or food names.`},
+
+riddles:{
+name:"Riddles",emoji:"🧩",color:"#FF5252",
+prompt:`MODE: RIDDLES & BRAIN GAMES (pure fun!)
+This is the FUN mode. Sari should giggle and feel clever. Mix riddles, patterns, and brain teasers.
+
+ACTIVITY TYPES (pick randomly):
+1. CLASSIC RIDDLE: "I'm yellow, I'm curved, monkeys love me. What am I?" → "BANANA" / "MOON" / "CHEESE"
+2. WHAT AM I: "I have hands but can't clap. I have a face but can't smile. What am I?" → "CLOCK" / "DOLL" / "ROBOT"
+3. PATTERN: "Red, Blue, Red, Blue, Red, ___?" → "BLUE" / "GREEN" / "RED"
+4. WHICH DOESN'T BELONG: "Apple, Banana, Chair, Orange — which one doesn't belong?" → "CHAIR"
+5. COUNTING RIDDLE: "I have 4 legs but I'm not alive. What am I?" → "TABLE" / "DOG" / "SPIDER"
+6. SILLY QUESTION: "What has ears but can't hear?" → "CORN" / "RABBIT" / "CAT"
+7. NUMBER PUZZLE: "If you have 5 fingers on one hand, how many on two hands?" → "10" / "5" / "15"
+8. JEWISH RIDDLE: "I'm round and braided, I'm on every Shabbos table. What am I?" → "CHALLAH" / "KUGEL" / "PLATE"
+9. WHAT COMES NEXT: "Monday, Tuesday, Wednesday, ___?" → "THURSDAY" / "FRIDAY" / "SATURDAY"
+10. LOGIC: "Sari is taller than Talia. Kira is taller than Sari. Who is tallest?" → "KIRA" / "SARI" / "TALIA"
+
+Make her feel SMART when she gets it right. Use lots of excitement.
+When she gets it wrong, give a hint and make it fun: "Good guess! Here's a hint..."
+Labels: short answers, 1-2 words max.`},
+
+imagine:{
+name:"Imagine",emoji:"🎨",color:"#E040FB",
+prompt:`MODE: IMAGINE (Creative Collaborative Storytelling)
+This is DIFFERENT from Book Time. In Book Time, Morah tells the story. In Imagine, SARI creates the story and Morah builds around her choices!
+
+STRUCTURE:
+1. First message: "Let's make a story TOGETHER! You pick and I'll tell it!"
+   Give a fun choice: "Who should our story be about?"
+   Options: "A MAGIC BUNNY" / "PRINCESS SARI" / "A TALKING FISH" / "A BRAVE KITTEN"
+   (all correct:true — she picks the plot!)
+
+2. Next: "Where should [character] go?"
+   Options: "THE MOON" / "A CASTLE" / "ERETZ YISRAEL" / "PIZZA LAND"
+   (all correct:true)
+
+3. Then: "Oh no! Something happened! What?"
+   Options: "LOST THE WAY" / "FOUND A TREASURE" / "MET A DRAGON"
+   (all correct:true)
+
+4. Morah weaves a 3-4 sentence paragraph incorporating Sari's choice, then asks the next creative question.
+
+5. After 4-5 choices: "How should the story end?"
+   Options: "HAPPY PARTY" / "FOUND A FRIEND" / "WENT HOME TO FAMILY"
+   (all correct:true)
+
+6. Final message: Wrap up the story beautifully, mention Sari as the author: "And that's the story SARI wrote! You're an amazing author!"
+
+CRITICAL: ALL options should be correct:true since these are creative choices, not right/wrong answers.
+Make it silly, imaginative, and personal. Reference her real life when it fits naturally.
+Labels: short creative choices, fun and exciting.`},
+
+world:{
+name:"Hashem's World",emoji:"🌍",color:"#26C6DA",
+prompt:`MODE: HASHEM'S WORLD (Science & Nature through a Torah lens)
+Teach Sari amazing facts about the world Hashem created. Every fact connects to Hashem's wisdom and design.
+
+ACTIVITY TYPES:
+1. AMAZING FACT + QUESTION: "Did you know a giraffe's tongue is 18 inches long? Why did Hashem give giraffes such long tongues?" → "TO REACH LEAVES" / "TO LICK FRIENDS"
+2. TRUE OR FALSE STYLE: "Penguins can fly. True or false?" → "FALSE" / "TRUE"
+3. WHICH ONE: "Which animal can sleep standing up?" → "HORSE" / "CAT" / "FISH"
+4. BODY WONDERS: "Your heart beats about 100,000 times a day! What does your heart pump?" → "BLOOD" / "WATER" / "AIR"
+5. NATURE: "What do bees make that we put on challah?" → "HONEY" / "BUTTER" / "JAM"
+6. SEASONS: "In winter, trees lose their leaves. In spring they grow back! What makes the leaves green?" → "SUNLIGHT" / "RAIN" / "WIND"
+7. SPACE: "How long does it take Earth to go around the sun?" → "ONE YEAR" / "ONE DAY" / "ONE WEEK"
+8. COMPARE: "Which is bigger, the Earth or the Moon?" → "EARTH" / "MOON"
+
+TORAH CONNECTION: After EVERY answer (right or wrong), connect to Hashem:
+- "Isn't it incredible how Hashem designed giraffes to reach the tallest leaves?"
+- "Hashem made your body SO amazing! It works even while you sleep!"
+- "The whole beautiful world is Hashem's gift to us!"
+
+Use simple language. She's 6 — keep facts WOW-worthy but easy to understand.
+Put a relevant emoji in the "emoji" field (animal, nature, body part).
+Labels: short answers.`},
+
+sing:{
+name:"Sing Along",emoji:"🎵",color:"#FF7043",
+prompt:`MODE: SING ALONG (Jewish Songs & Music)
+Test Sari's knowledge of songs she sings at school, shul, and Shabbos table.
+
+ACTIVITY TYPES:
+1. FILL THE BLANK: "Modeh Ani lefanecha, melech ___ v'kayam" → "CHAI" / "GADOL" / "ECHAD"
+2. WHAT SONG: "Shalom Aleichem, Shalom Aleichem, Shalom Aleichem — who are we greeting?" → "MALACHIM" / "FRIENDS" / "MOMMY"
+3. WHEN DO WE SING: "When do we sing Ma Nishtana?" → "PESACH" / "SHABBOS" / "CHANUKAH"
+4. SONG KNOWLEDGE: "How many candles do we light on the LAST night of Chanukah?" → "8" / "7" / "9"
+5. MATCH THE HOLIDAY: "Dreidel dreidel dreidel — which holiday?" → "CHANUKAH" / "PURIM" / "SUKKOS"
+6. FINISH THE LINE: "Torah Torah Torah... Torah tziva lanu ___" → "MOSHE" / "AVRAHAM" / "HASHEM"
+7. WHO SINGS IT: "Who is Sari's FAVORITE singer?" → "MORDECHAI SHAPIRO" / "UNCLE MOISHY" / "AVRAHAM FRIED"
+8. SHABBOS SONGS: "Lecha Dodi — we welcome the ___" → "SHABBOS QUEEN" / "MORNING" / "GUESTS"
+
+Songs she knows: Modeh Ani, Shema, Shalom Aleichem, Lecha Dodi, Ma Nishtana, Dayenu, Dreidel, Torah Torah Torah, Al Hanisim themes, Adon Olam, Birkas Hamazon songs, Mordechai Shapiro's Abba, Dovy Meisels songs
+
+Keep it fun and musical! Say "Let's sing!" and use musical emojis.
+When she gets it right: "You could be a chazzan! Well... a chazzanit!"
+Labels: short answers.`}
 };
 
 const MorahMenu=({onPick,onBack,questDone})=>{
@@ -645,34 +867,34 @@ if(data){const map={};data.forEach(a=>{if(a.target_word){const w=a.target_word.t
 const weak=[];Object.entries(map).forEach(([w,s])=>{if(s.total>=2&&s.ok/s.total<0.7)weak.push({word:w,pct:Math.round(s.ok/s.total*100)})});
 weak.sort((a,b)=>a.pct-b.pct);setWw(weak.slice(0,8))}})
 },[]);
-const modes=["sound","rhyme","numbers","alefbeis","middos"];if(questDone)modes.push("book");
-const modeDesc={sound:"Blend & read words",rhyme:"Rhyming words",numbers:"Counting & math",alefbeis:"Nekudos & reading",middos:"Kindness & mitzvos",book:"Story time!"};
+const modes=["sound","rhyme","numbers","alefbeis","middos","friends","parsha","brachos","riddles","imagine","world","sing"];if(questDone)modes.push("book");
+const modeDesc={sound:"Blend & read words",rhyme:"Rhyming words",numbers:"Counting & math",alefbeis:"Nekudos & reading",middos:"Kindness & mitzvos",friends:"Family & friends",parsha:"Weekly Torah story",brachos:"Blessings on food",riddles:"Brain games & fun",imagine:"Create stories",world:"Science & nature",sing:"Songs & music",book:"Story time!"};
 return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 16px 40px",background:BG,overflowY:"auto"}},
 React.createElement(Glow),
 React.createElement("div",{style:{zIndex:2,textAlign:"center",maxWidth:400,width:"100%"}},
 React.createElement("div",{style:{width:72,height:72,borderRadius:36,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:40,margin:"0 auto 12px"}},"👩‍🏫"),
 React.createElement("h2",{style:{fontSize:24,fontWeight:700,marginBottom:4}},"Ask Morah"),
-React.createElement("p",{style:{color:"rgba(255,255,255,.4)",fontSize:14,marginBottom:22}},"Pick an activity!"),
+React.createElement("p",{style:{color:"rgba(120,40,80,.5)",fontSize:14,marginBottom:22}},"Pick an activity!"),
 // Weak words banner
 ww.length>0&&React.createElement("div",{style:{background:"rgba(255,107,107,.08)",border:"1px solid rgba(255,107,107,.2)",borderRadius:16,padding:"12px 16px",marginBottom:18,textAlign:"left"}},
 React.createElement("div",{style:{fontSize:12,color:"rgba(255,107,107,.8)",fontWeight:600,marginBottom:8}},"📝 Morah is focusing on these:"),
 React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:6}},
-...ww.map(w=>React.createElement("span",{key:w.word,style:{background:"rgba(255,107,107,.12)",border:"1px solid rgba(255,107,107,.2)",borderRadius:10,padding:"4px 10px",fontSize:12,color:"rgba(255,255,255,.7)"}},w.word," ",React.createElement("span",{style:{color:"rgba(255,107,107,.7)"}},w.pct+"%"))))),
+...ww.map(w=>React.createElement("span",{key:w.word,style:{background:"rgba(255,107,107,.12)",border:"1px solid rgba(255,107,107,.2)",borderRadius:10,padding:"4px 10px",fontSize:12,color:"rgba(120,40,80,.7)"}},w.word," ",React.createElement("span",{style:{color:"rgba(255,107,107,.7)"}},w.pct+"%"))))),
 // Mode grid
 React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
 ...modes.map((m,i)=>{const md=MORAH_MODES[m];return React.createElement("button",{key:m,onClick:()=>{say(md.name+"!");setTimeout(()=>onPick(m),400)},style:{background:`linear-gradient(135deg,${md.color}18,${md.color}08)`,border:`1.5px solid ${md.color}44`,borderRadius:20,padding:"16px 14px",display:"flex",flexDirection:"column",alignItems:"center",gap:6,textAlign:"center",animation:`slideUp .3s ease-out ${i*.06}s both`}},
 React.createElement("div",{style:{fontSize:32}},md.emoji),
 React.createElement("div",{style:{fontSize:14,fontWeight:700}},md.name),
-React.createElement("div",{style:{fontSize:11,color:"rgba(255,255,255,.35)"}},modeDesc[m]))}),
-!questDone&&React.createElement("div",{style:{background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",borderRadius:20,padding:"16px 14px",display:"flex",flexDirection:"column",alignItems:"center",gap:6,opacity:.35}},
+React.createElement("div",{style:{fontSize:11,color:"rgba(120,40,80,.45)"}},modeDesc[m]))}),
+!questDone&&React.createElement("div",{style:{background:"rgba(120,40,80,.6)",border:"1px solid rgba(255,255,255,.75)",borderRadius:20,padding:"16px 14px",display:"flex",flexDirection:"column",alignItems:"center",gap:6,opacity:.35}},
 React.createElement("div",{style:{fontSize:32}},"📚"),
 React.createElement("div",{style:{fontSize:14,fontWeight:700}},"Book Time"),
-React.createElement("div",{style:{fontSize:11,color:"rgba(255,255,255,.35)"}},"Finish quest 🔒"))),
-React.createElement("button",{onClick:onBack,style:{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:16,padding:"14px 28px",fontSize:15,marginTop:14,gridColumn:"1 / -1"}},"← Back to Home")))};
+React.createElement("div",{style:{fontSize:11,color:"rgba(120,40,80,.45)"}},"Finish quest 🔒"))),
+React.createElement("button",{onClick:onBack,style:{background:"rgba(255,255,255,.75)",border:"1px solid rgba(255,255,255,.1)",borderRadius:16,padding:"14px 28px",fontSize:15,marginTop:14,gridColumn:"1 / -1"}},"← Back to Home")))};
 const MorahChat=({mode,onBack})=>{
 const[msgs,setMsgs]=useState([]);const[cur,setCur]=useState(null);const[loading,setLoading]=useState(true);const[done,setDone]=useState(false);const[result,setResult]=useState(null);
-const chatRef=useRef(null);const histRef=useRef([]);const qCount=useRef(0);const qCorrect=useRef(0);
-const QLIMIT=mode==="book"?999:8;
+const chatRef=useRef(null);const histRef=useRef([]);const qCount=useRef(0);const qCorrect=useRef(0);const initCalled=useRef(false);
+const QLIMIT=(mode==="book"||mode==="imagine")?999:8;
 const md=MORAH_MODES[mode];
 
 const callClaude=async(userMsg)=>{
@@ -681,10 +903,14 @@ const sysMsg=MORAH_BASE+"\n\n"+md.prompt+(wwRef.current.length?"\n\nSARI'S WEAK 
 const newHist=[...histRef.current];
 if(userMsg)newHist.push({role:"user",content:userMsg});
 const rSeed=Math.floor(Math.random()*100);
-const startMsg=mode==="book"?"Hi Morah! Read me a story! [seed:"+rSeed+"]":mode==="rhyme"?"Hi Morah! Let's do rhymes! [seed:"+rSeed+"]":mode==="numbers"?"Hi Morah! Let's practice numbers! [seed:"+rSeed+"]":mode==="alefbeis"?"Hi Morah! Let's read Hebrew! [seed:"+rSeed+"]":mode==="middos"?"Hi Morah! Teach me about middos! [seed:"+rSeed+"]":"Hi Morah! Let's read some words! [seed:"+rSeed+"]";
+const startMsg=mode==="book"?"Hi Morah! Read me a story! [seed:"+rSeed+"]":mode==="rhyme"?"Hi Morah! Let's do rhymes! [seed:"+rSeed+"]":mode==="numbers"?"Hi Morah! Let's practice numbers! [seed:"+rSeed+"]":mode==="alefbeis"?"Hi Morah! Let's read Hebrew! [seed:"+rSeed+"]":mode==="middos"?"Hi Morah! Teach me about middos! [seed:"+rSeed+"]":mode==="friends"?"Hi Morah! Let's learn about being a good friend and sister! [seed:"+rSeed+"]":mode==="parsha"?"Hi Morah! Tell me about this week's Parsha! [seed:"+rSeed+"]":mode==="brachos"?"Hi Morah! Let's practice brachos! [seed:"+rSeed+"]":mode==="riddles"?"Hi Morah! Tell me a riddle! [seed:"+rSeed+"]":mode==="imagine"?"Hi Morah! Let's make up a story together! [seed:"+rSeed+"]":mode==="world"?"Hi Morah! Tell me something amazing about Hashem's world! [seed:"+rSeed+"]":mode==="sing"?"Hi Morah! Let's do songs! [seed:"+rSeed+"]":"Hi Morah! Let's read some words! [seed:"+rSeed+"]";
+// If no history yet, start with the greeting
+const msgsToSend=newHist.length?newHist:[{role:"user",content:startMsg}];
+// Sonnet 4.6: conversation MUST end with user message
+if(msgsToSend[msgsToSend.length-1].role!=="user"){msgsToSend.push({role:"user",content:"Next question please!"})}
 const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},
 signal:AbortSignal.timeout(15000),
-body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:mode==="book"?800:300,system:sysMsg,messages:newHist.length?newHist:[{role:"user",content:startMsg}]})});
+body:JSON.stringify({model:"claude-sonnet-4-5-20250929",max_tokens:mode==="book"?800:300,system:sysMsg,messages:msgsToSend})});
 if(!r.ok){const e=await r.json();console.error("Morah API error:",e);setCur({say:e.error==="API key not configured"?"Ask Abba to add the AI key in Vercel settings!":"Oops! "+e.error,emoji:"🧠"});setLoading(false);return}
 const d=await r.json();
 const txt=d.content?d.content.map(c=>c.text||"").join(""):"";
@@ -713,7 +939,7 @@ else{parsed={say:"Let's try another one!",emoji:"📖"}}
 }
 }catch{parsed={say:"Let's try another one!",emoji:"📖"}}
 const assistMsg={role:"assistant",content:JSON.stringify(parsed)};
-histRef.current=[...newHist,assistMsg];setCur(parsed);setLoading(false);
+histRef.current=[...msgsToSend,assistMsg];setCur(parsed);setLoading(false);
 if(parsed.say){
 // Combine question + options into ONE utterance (iOS can't queue multiple)
 if(parsed.options&&parsed.options.length>1){
@@ -740,11 +966,11 @@ wwLoaded.current=true})
 },[]);
 
 useEffect(()=>{
-const check=setInterval(()=>{if(wwLoaded.current){clearInterval(check);callClaude(null)}},200);
+const check=setInterval(()=>{if(wwLoaded.current&&!initCalled.current){clearInterval(check);initCalled.current=true;callClaude(null)}},200);
 // Safety: force start after 4s no matter what
-const safety=setTimeout(()=>{clearInterval(check);if(!cur&&loading)callClaude(null)},4000);
+const safety=setTimeout(()=>{clearInterval(check);if(!initCalled.current){initCalled.current=true;callClaude(null)}},4000);
 return()=>{clearInterval(check);clearTimeout(safety)}},[]);
-useEffect(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight},[msgs,cur]);
+useEffect(()=>{if(chatRef.current){setTimeout(()=>{chatRef.current.scrollTop=chatRef.current.scrollHeight},100)}},[msgs,cur,loading,result]);
 
 const tap=(opt)=>{
 if(speechSynthesis)speechSynthesis.cancel();
@@ -785,101 +1011,257 @@ React.createElement("div",{style:{zIndex:2,animation:"bounceIn .5s ease-out"}},
 React.createElement("div",{style:{fontSize:72,marginBottom:12,animation:"float 2s ease-in-out infinite"}},pct>=90?"🏆":pct>=70?"🌟":"⭐"),
 React.createElement("div",{style:{fontSize:28,fontWeight:700,marginBottom:8}},pct>=90?"SUPERSTAR!":pct>=70?"Great Job!":"Good Try!"),
 React.createElement("div",{style:{fontSize:48,fontWeight:700,color:md.color,marginBottom:6}},qCorrect.current+"/"+QLIMIT),
-React.createElement("div",{style:{fontSize:16,color:"rgba(255,255,255,.5)",marginBottom:28}},pct+"% correct · "+md.name+" session done!"),
+React.createElement("div",{style:{fontSize:16,color:"rgba(120,40,80,.6)",marginBottom:28}},pct+"% correct · "+md.name+" session done!"),
 React.createElement("div",{style:{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}},
 React.createElement("button",{className:"quest-btn",onClick:()=>{qCount.current=0;qCorrect.current=0;histRef.current=[];setMsgs([]);setCur(null);setDone(false);setLoading(true);setTimeout(()=>callClaude(null),300)},style:{background:`linear-gradient(135deg,${md.color},${md.color}CC)`,borderRadius:20,padding:"16px 28px",fontSize:17,fontWeight:600,transition:"transform .2s ease"}},"🔄 Play Again!"),
-React.createElement("button",{onClick:()=>{if(speechSynthesis)speechSynthesis.cancel();onBack()},style:{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.12)",borderRadius:20,padding:"16px 24px",fontSize:15,transition:"transform .2s ease"}},"🏠 Home"))))}
+React.createElement("button",{onClick:()=>{if(speechSynthesis)speechSynthesis.cancel();onBack()},style:{background:"rgba(255,255,255,.75)",border:"1px solid rgba(220,120,170,.25)",borderRadius:20,padding:"16px 24px",fontSize:15,transition:"transform .2s ease"}},"🏠 Home"))))}
 
 return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",background:BG}},
 React.createElement(Glow),
 // Header
 React.createElement("div",{style:{zIndex:2,display:"flex",alignItems:"center",gap:12,padding:"14px 16px 8px",flexShrink:0}},
-React.createElement("button",{onClick:()=>{if(speechSynthesis)speechSynthesis.cancel();if(curAudio){curAudio.pause();curAudio=null}onBack()},style:{background:"rgba(255,255,255,.07)",borderRadius:12,padding:"8px 14px",fontSize:14,color:"rgba(255,255,255,.5)"}},"← Back"),
-React.createElement("div",{style:{display:"flex",alignItems:"center",gap:8}},
-React.createElement("div",{style:{width:36,height:36,borderRadius:18,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}},"👩‍🏫"),
-React.createElement("div",null,React.createElement("div",{style:{fontSize:15,fontWeight:700}},"Morah"),React.createElement("div",{style:{fontSize:11,color:md.color}},md.emoji," ",md.name,mode!=="book"?" · "+Math.min(qCount.current,QLIMIT)+"/"+QLIMIT:"")))),
+React.createElement("button",{onClick:()=>{if(speechSynthesis)speechSynthesis.cancel();if(curAudio){curAudio.pause();curAudio=null}onBack()},style:{background:"rgba(220,120,170,.18)",borderRadius:14,width:44,height:44,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}},"🏠"),
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:8,flex:1}},
+React.createElement("div",{style:{width:40,height:40,borderRadius:20,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}},"👩‍🏫"),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:16,fontWeight:700}},"Morah"),React.createElement("div",{style:{fontSize:12,color:md.color}},md.emoji," ",md.name,(mode!=="book"&&mode!=="imagine")?" · "+Math.min(qCount.current,QLIMIT)+"/"+QLIMIT:"")))),
 // Scrollable content area - messages + buttons together
 React.createElement("div",{ref:chatRef,style:{flex:1,overflowY:"auto",WebkitOverflowScrolling:"touch",padding:"8px 16px",zIndex:2,display:"flex",flexDirection:"column"}},
 // History
 ...msgs.map((m,i)=>m.role==="morah"?
-React.createElement("div",{key:i,style:{display:"flex",gap:10,marginBottom:12}},
-React.createElement("div",{style:{width:32,height:32,borderRadius:16,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}},"👩‍🏫"),
-React.createElement("div",{style:{background:"rgba(255,255,255,.06)",borderRadius:"4px 16px 16px 16px",padding:"10px 14px",maxWidth:"82%"}},
-m.emoji&&React.createElement("div",{style:{fontSize:32,marginBottom:4}},m.emoji),
-React.createElement("div",{style:{fontSize:14,lineHeight:1.5}},m.text))):
-React.createElement("div",{key:i,style:{display:"flex",justifyContent:"flex-end",marginBottom:12}},
-React.createElement("div",{style:{background:`linear-gradient(135deg,${md.color}22,${md.color}11)`,border:`1px solid ${md.color}44`,borderRadius:"16px 4px 16px 16px",padding:"8px 16px",fontSize:15,fontWeight:600}},m.text))),
+React.createElement("div",{key:i,style:{display:"flex",gap:10,marginBottom:14}},
+React.createElement("div",{style:{width:36,height:36,borderRadius:18,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}},"👩‍🏫"),
+React.createElement("div",{style:{background:"rgba(255,255,255,.75)",borderRadius:"4px 18px 18px 18px",padding:"12px 16px",maxWidth:"82%"}},
+m.emoji&&React.createElement("div",{style:{fontSize:34,marginBottom:4}},m.emoji),
+React.createElement("div",{style:{fontSize:16,lineHeight:1.6}},m.text))):
+React.createElement("div",{key:i,style:{display:"flex",justifyContent:"flex-end",marginBottom:14}},
+React.createElement("div",{style:{background:`linear-gradient(135deg,${md.color}22,${md.color}11)`,border:`1px solid ${md.color}44`,borderRadius:"18px 4px 18px 18px",padding:"10px 18px",fontSize:16,fontWeight:600}},m.text))),
 // Current message
-cur&&React.createElement("div",{style:{display:"flex",gap:10,marginBottom:12,animation:"slideUp .3s ease-out"}},
-React.createElement("div",{style:{width:32,height:32,borderRadius:16,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}},"👩‍🏫"),
-React.createElement("div",{style:{background:"rgba(255,255,255,.06)",borderRadius:"4px 16px 16px 16px",padding:"10px 14px",maxWidth:"85%"}},
-cur.emoji&&React.createElement("div",{style:{fontSize:44,marginBottom:4}},cur.emoji),
-React.createElement("div",{style:{fontSize:15,lineHeight:1.6}},cur.say))),
-// Loading bubble
+cur&&React.createElement("div",{style:{display:"flex",gap:10,marginBottom:14,animation:"slideUp .3s ease-out"}},
+React.createElement("div",{style:{width:36,height:36,borderRadius:18,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}},"👩‍🏫"),
+React.createElement("div",{style:{background:"rgba(255,255,255,.75)",borderRadius:"4px 18px 18px 18px",padding:"12px 16px",maxWidth:"85%"}},
+cur.emoji&&React.createElement("div",{style:{fontSize:48,marginBottom:6}},cur.emoji),
+React.createElement("div",{style:{fontSize:17,lineHeight:1.7}},cur.say))),
+// Loading bubble with animated messages
 loading&&React.createElement("div",{style:{display:"flex",gap:10,marginBottom:12}},
-React.createElement("div",{style:{width:32,height:32,borderRadius:16,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}},"👩‍🏫"),
-React.createElement("div",{style:{background:"rgba(255,255,255,.06)",borderRadius:"4px 16px 16px 16px",padding:"12px 18px",fontSize:20}},
-React.createElement("span",{style:{animation:"pulse 1s ease-in-out infinite"}},"💭"))),
+React.createElement("div",{style:{width:36,height:36,borderRadius:18,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0,animation:"pulse 1.5s ease-in-out infinite"}},"👩‍🏫"),
+React.createElement("div",{style:{background:"rgba(255,255,255,.75)",borderRadius:"4px 18px 18px 18px",padding:"14px 18px",display:"flex",alignItems:"center",gap:10}},
+React.createElement("span",{style:{fontSize:14,color:"rgba(120,40,80,.6)",animation:"pulse 1.5s ease-in-out infinite"}},pick(["Morah is thinking...","Getting ready...","Almost there...","One moment..."])),
+React.createElement("span",{style:{display:"flex",gap:4}},...[0,1,2].map(d=>React.createElement("span",{key:d,style:{width:8,height:8,borderRadius:4,background:md.color,opacity:.6,animation:`pulse 1s ease-in-out ${d*.2}s infinite`}}))))),
 // Buttons — right after message, inside scroll area
 !loading&&cur&&React.createElement("div",{style:{padding:"8px 0 24px"}},
-cur.options?React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:10,justifyContent:"center"}},
+cur.options?React.createElement("div",null,
+React.createElement("div",{style:{textAlign:"center",fontSize:13,color:"rgba(120,40,80,.45)",marginBottom:10,animation:"pulse 2s ease-in-out infinite"}},"Tap your answer!"),
+React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:10,maxWidth:360,margin:"0 auto"}},
 ...cur.options.map((opt,i)=>{
 const isCorrect=result&&opt.correct;
 const isWrong=result&&opt.label===result.picked&&!opt.correct;
 const dim=result&&!isCorrect&&!isWrong;
-return React.createElement("button",{key:i,onClick:()=>tap(opt),style:{background:isCorrect?"linear-gradient(145deg,#1a3d1a,#0f2f0f)":isWrong?"linear-gradient(145deg,#3d1a1a,#2f0f0f)":"linear-gradient(145deg,#2A1F3D,#1E1433)",
-border:isCorrect?"2.5px solid #00FF88":isWrong?"2.5px solid #FF4444":`2.5px solid ${md.color}44`,
-borderRadius:20,padding:"14px 20px",fontSize:opt.label.length>3?"clamp(16px,5vw,22px)":"clamp(22px,7vw,30px)",fontWeight:700,minWidth:74,
-animation:isCorrect?"pulse .5s ease-in-out":isWrong?"shake .5s ease-in-out":`popIn .3s ease-out ${i*.12}s both`,
-transition:"transform .2s ease,border-color .2s ease,background .2s ease",display:"flex",alignItems:"center",gap:10,
+return React.createElement("button",{key:i,onClick:()=>tap(opt),style:{background:isCorrect?"linear-gradient(145deg,#d4f5d4,#b8eab8)":isWrong?"linear-gradient(145deg,#f5d4d4,#eab8b8)":"linear-gradient(145deg,#FFFFFF,#FFF0F5)",
+border:isCorrect?"2.5px solid #22BB66":isWrong?"2.5px solid #DD4444":`2.5px solid ${md.color}44`,
+borderRadius:20,padding:"16px 20px",fontSize:"clamp(18px,5vw,24px)",fontWeight:700,minHeight:56,width:"100%",
+animation:isCorrect?"pulse .5s ease-in-out":isWrong?"shake .5s ease-in-out":`popIn .3s ease-out ${i*.1}s both`,
+transition:"transform .2s ease,border-color .2s ease,background .2s ease",display:"flex",alignItems:"center",gap:12,
 opacity:dim?.4:1,pointerEvents:result?"none":"auto"}},
-React.createElement("span",{style:{fontSize:11,fontWeight:600,color:isCorrect?"#00FF88":isWrong?"#FF4444":md.color,opacity:.6}},String.fromCharCode(65+i)),
-opt.label,
-isCorrect&&React.createElement("span",{style:{fontSize:18,marginLeft:4}},"✅"),
-isWrong&&React.createElement("span",{style:{fontSize:18,marginLeft:4}},"❌"))})):
+React.createElement("span",{style:{fontSize:13,fontWeight:700,color:isCorrect?"#22BB66":isWrong?"#FF4444":md.color,opacity:.7,minWidth:20}},String.fromCharCode(65+i)),
+React.createElement("span",{style:{flex:1,textAlign:"left"}},opt.label),
+isCorrect&&React.createElement("span",{style:{fontSize:22}},"✅"),
+isWrong&&React.createElement("span",{style:{fontSize:22}},"❌"))}))):
 React.createElement("div",{style:{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}},
-React.createElement("button",{onClick:tapContinue,style:{background:`linear-gradient(135deg,${md.color},${md.color}CC)`,borderRadius:18,padding:"14px 28px",fontSize:16,fontWeight:600,animation:"popIn .3s ease-out"}},mode==="book"?"Keep reading! 📖":"Next! 🚀"),
-React.createElement("button",{onClick:()=>{say("Bye Sari! Great job!");setTimeout(onBack,1500)},style:{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.12)",borderRadius:18,padding:"14px 22px",fontSize:14}},"Done ✅"))))
+React.createElement("button",{onClick:tapContinue,style:{background:`linear-gradient(135deg,${md.color},${md.color}CC)`,borderRadius:20,padding:"18px 32px",fontSize:18,fontWeight:600,minHeight:56,animation:"popIn .3s ease-out"}},mode==="book"||mode==="imagine"?"Keep going!":"Next!"),
+React.createElement("button",{onClick:()=>{say("Bye Sari! Great job!");setTimeout(onBack,1500)},style:{background:"rgba(255,255,255,.75)",border:"1px solid rgba(220,120,170,.25)",borderRadius:20,padding:"18px 24px",fontSize:15,minHeight:56}},"Done"))))
 )
 };
 
-// ═══ HOME ═══
-const Home=({prog,onQ,onP,onMorah,onBook})=>{const dn=prog.last===td();const nx=PRIZES.find(p=>p.s>prog.stars)||PRIZES[PRIZES.length-1];const ps=([...PRIZES].reverse().find(p=>p.s<=prog.stars)||{s:0}).s;const rng=nx.s-ps;const pct=rng>0?Math.min(100,((prog.stars-ps)/rng)*100):100;
-const modes=[{id:"sound",emoji:"📖",name:"Read Words",desc:"Blend & read",color:"#FF3B8B"},{id:"rhyme",emoji:"🎵",name:"Rhyme Time",desc:"Rhyming words",color:"#B44BFF"},{id:"numbers",emoji:"🔢",name:"Numbers",desc:"Counting & math",color:"#00FF88"},{id:"alefbeis",emoji:"✡️",name:"Alef-Beis",desc:"Nekudos & reading",color:"#E8D44D"},{id:"middos",emoji:"💛",name:"Middos",desc:"Kindness & mitzvos",color:"#FFB347"},{id:"book",emoji:"📚",name:"Book Time",desc:"Story time!",color:"#FF9500"}];
-useEffect(()=>{const g=["Welcome back Sari! Mommy and Abba love you!","Hi Sari! Bubby says go learn!","Sari's back! Kira is cheering!","Welcome Sari! Abba says let's go!"];
+// ═══ HOME — SARI'S PLAYHOUSE ═══
+// Daily rotation: pick 4 modes based on date
+const ROOM_OBJECTS={
+sound:{obj:"🔤",spot:"ABC Blocks",where:"floor-left"},
+rhyme:{obj:"🎶",spot:"Music Box",where:"shelf-right"},
+numbers:{obj:"🧮",spot:"Counting Beads",where:"desk-left"},
+alefbeis:{obj:"📝",spot:"Chalkboard",where:"wall-right"},
+middos:{obj:"💛",spot:"Heart Frame",where:"wall-left"},
+friends:{obj:"👯",spot:"Friends Photo",where:"shelf-left"},
+parsha:{obj:"📜",spot:"Torah Scroll",where:"shelf-right"},
+brachos:{obj:"🍪",spot:"Cookie Plate",where:"table"},
+riddles:{obj:"🧩",spot:"Puzzle",where:"floor-right"},
+imagine:{obj:"🖍️",spot:"Crayons",where:"art-corner"},
+world:{obj:"🌎",spot:"Globe",where:"desk-right"},
+sing:{obj:"🎹",spot:"Piano",where:"floor-left"},
+book:{obj:"📖",spot:"Storybook",where:"nook"}
+};
+const MODE_CATS={learning:["sound","rhyme","numbers","alefbeis"],jewish:["middos","friends","parsha","brachos","sing"],fun:["riddles","imagine","world"]};
+const getDailyModes=(dateStr,questDone)=>{
+// Better hash: multiply by primes for each category
+let h=0;for(let i=0;i<dateStr.length;i++)h=((h<<5)-h)+dateStr.charCodeAt(i);h=Math.abs(h);
+const pickFrom=(arr,seed)=>arr[Math.abs(seed)%arr.length];
+const m1=pickFrom(MODE_CATS.learning,h*7);
+const m2=pickFrom(MODE_CATS.jewish,h*13+3);
+const m3=pickFrom(MODE_CATS.fun,h*19+7);
+// Wildcard: pick from all, avoid duplicates
+const all=[...MODE_CATS.learning,...MODE_CATS.jewish,...MODE_CATS.fun].filter(m=>m!==m1&&m!==m2&&m!==m3);
+const m4=pickFrom(all,h*31+11);
+const result=[m1,m2,m3,m4];
+if(questDone&&!result.includes("book")){result[3]="book"}
+return result};
+
+// 20-minute timer helper
+const TIMER_LIMIT=1200; // 20 minutes in seconds
+
+const Home=({prog,onQ,onP,onMorah})=>{
+const dn=prog.last===td();
+const nx=PRIZES.find(p=>p.s>prog.stars)||PRIZES[PRIZES.length-1];
+const ps=([...PRIZES].reverse().find(p=>p.s<=prog.stars)||{s:0}).s;
+const rng=nx.s-ps;const pct=rng>0?Math.min(100,((prog.stars-ps)/rng)*100):100;
+const dailyModes=getDailyModes(td(),dn);
+// Read timer from localStorage (fresh) instead of props (stale after navigation)
+const getTimerSecs=()=>{try{const p=JSON.parse(localStorage.getItem(SK)||"{}");return(p.timerDate===td())?(p.timerSecs||0):0}catch{return 0}};
+const initSecs=getTimerSecs();
+const[timer,setTimer]=useState(initSecs);
+const[timeUp,setTimeUp]=useState(initSecs>=TIMER_LIMIT);
+const[showAll,setShowAll]=useState(false);
+const timerRef=useRef(null);
+const saveCountRef=useRef(0);
+const timeUpFired=useRef(initSecs>=TIMER_LIMIT);
+
+// Timer tick — saves to Supabase every 10 seconds
+useEffect(()=>{
+if(timeUpFired.current){setTimeUp(true);return}
+timerRef.current=setInterval(()=>{
+setTimer(prev=>{
+const cur=prev+1;
+saveCountRef.current++;
+if(saveCountRef.current>=10){saveCountRef.current=0;svTimer(cur)}
+if(cur>=TIMER_LIMIT&&!timeUpFired.current){timeUpFired.current=true;setTimeUp(true);svTimer(cur);say("Amazing day Sari! Morah says see you tomorrow!");clearInterval(timerRef.current);timerRef.current=null}
+return cur});
+},1000);
+return()=>{if(timerRef.current)clearInterval(timerRef.current)}},[]);
+
+const fiveMore=()=>{say("5 more minutes!");setTimeUp(false);timeUpFired.current=false;
+const newT=Math.max(0,timer-300);setTimer(newT);svTimer(newT);
+// Restart interval if it was stopped
+if(!timerRef.current){timerRef.current=setInterval(()=>{
+setTimer(prev=>{const cur=prev+1;saveCountRef.current++;
+if(saveCountRef.current>=10){saveCountRef.current=0;svTimer(cur)}
+if(cur>=TIMER_LIMIT&&!timeUpFired.current){timeUpFired.current=true;setTimeUp(true);svTimer(cur);say("Amazing day Sari! Morah says see you tomorrow!");clearInterval(timerRef.current);timerRef.current=null}
+return cur});},1000)}};
+
+useEffect(()=>{const g=["Welcome to your playhouse Sari!","Hi Sari! Morah left surprises for you!","Sari's back! Let's see what's here today!","Welcome home Sari!"];
 setTimeout(()=>say(pick(g)+" You have "+prog.stars+" stars!"),500)},[]);
-return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",padding:"16px 16px 32px",background:BG,overflowY:"auto"}},
-React.createElement(Glow),React.createElement("div",{style:{zIndex:2,width:"100%",maxWidth:440}},
-React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}},
-React.createElement("div"),
-React.createElement("div",{style:{textAlign:"center"}},React.createElement("div",{style:{fontSize:14,color:"rgba(255,255,255,.4)"}},"Welcome back"),React.createElement("div",{style:{fontSize:"clamp(24px,7vw,32px)",fontWeight:700}},"Sari! 🌟")),
-React.createElement("button",{onClick:()=>{window.location.href="/dashboard"},style:{background:"rgba(255,255,255,.06)",borderRadius:12,width:38,height:38,fontSize:17,display:"flex",alignItems:"center",justifyContent:"center"}},"⚙️")),
-React.createElement("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:12,flexWrap:"wrap"}},
-React.createElement("button",{onClick:()=>say("You have "+prog.stars+" stars!"),style:{background:CD,borderRadius:18,padding:"8px 18px",display:"flex",alignItems:"center",gap:6,border:"1px solid rgba(255,215,0,.18)"}},React.createElement("span",{style:{fontSize:24}},"⭐"),React.createElement("span",{style:{fontSize:24,fontWeight:700,color:"#FFD700"}},prog.stars)),
-prog.streak>0&&React.createElement("div",{style:{background:CD,borderRadius:18,padding:"8px 14px",display:"flex",alignItems:"center",gap:5,border:"1px solid rgba(255,149,0,.2)"}},React.createElement("span",{style:{fontSize:20}},"🔥"),React.createElement("span",{style:{fontSize:18,fontWeight:700,color:"#FF9500"}},prog.streak)),
-React.createElement("button",{onClick:()=>{say("Prizes!");setTimeout(onP,400)},style:{background:CD,border:"1px solid rgba(255,59,139,.25)",borderRadius:18,padding:"8px 14px",fontSize:24}},"🎁")),
-React.createElement("button",{onClick:()=>say(Math.round(pct)+"% to "+nx.n),style:{background:"rgba(255,255,255,.04)",borderRadius:14,padding:"10px 14px",marginBottom:16,border:"1px solid rgba(255,255,255,.06)",width:"100%",textAlign:"left"}},
-React.createElement("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:6}},React.createElement("span",{style:{color:"rgba(255,255,255,.5)",fontSize:11}},"Next prize"),React.createElement("span",{style:{fontSize:12,color:"rgba(255,255,255,.6)"}},nx.e," ",nx.s,"⭐")),
-React.createElement("div",{style:{background:"rgba(255,255,255,.08)",borderRadius:8,height:12,overflow:"hidden"}},React.createElement("div",{style:{height:"100%",borderRadius:8,background:"linear-gradient(90deg,#FF3B8B,#FFD700)",width:pct+"%",boxShadow:"0 0 12px rgba(255,59,139,.4)"}}))),
-dn?React.createElement("div",{style:{background:"rgba(255,255,255,.04)",borderRadius:24,padding:"20px",textAlign:"center",border:"1px solid rgba(255,255,255,.08)",marginBottom:18}},
-React.createElement("div",{style:{fontSize:44,marginBottom:6}},"✅"),
-React.createElement("div",{style:{fontSize:18,fontWeight:700,marginBottom:8}},"Today's Quest Done!"),
-React.createElement("button",{className:"quest-btn",onClick:()=>{say("Practice time!");setTimeout(onQ,600)},style:{background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.12)",borderRadius:16,padding:"12px 24px",fontSize:15,color:"rgba(255,255,255,.6)",transition:"transform .15s ease,filter .15s ease"}},"🔄 Practice Again"))
-:React.createElement("button",{className:"quest-btn",onClick:()=>{say("Let's go!");setTimeout(onQ,600)},style:{background:"linear-gradient(135deg,#FF3B8B,#B44BFF)",borderRadius:24,padding:"22px 20px",width:"100%",textAlign:"center",boxShadow:"0 8px 35px rgba(255,59,139,.3)",animation:"glow 2.5s ease-in-out infinite",marginBottom:18,transition:"transform .15s ease,filter .15s ease"}},
-React.createElement("div",{style:{fontSize:42,marginBottom:4}},"🚀"),React.createElement("div",{style:{fontSize:"clamp(20px,6vw,26px)",fontWeight:700}},"Start Today's Quest!"),
-React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:8,opacity:.7,marginTop:4}},...STG.map(s=>React.createElement("span",{key:s.id,style:{fontSize:20}},s.em))),
-React.createElement("div",{style:{fontSize:12,color:"rgba(255,255,255,.5)",marginTop:4}},"4 games · 20 questions · earn stars!")),
-React.createElement("div",{style:{display:"flex",alignItems:"center",gap:8,marginBottom:10}},
-React.createElement("div",{style:{width:32,height:32,borderRadius:16,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}},"👩‍🏫"),
-React.createElement("div",{style:{fontSize:16,fontWeight:700}},"Learn with Morah"),
-React.createElement("div",{style:{flex:1,height:1,background:"rgba(255,255,255,.08)",marginLeft:6}})),
+
+const sunPct=Math.min(100,timer/TIMER_LIMIT*100);
+const minsLeft=Math.max(0,Math.ceil((TIMER_LIMIT-timer)/60));
+
+// All modes for parent "See All" panel
+const allModes=[{id:"sound",emoji:"📖",name:"Read Words",color:"#FF3B8B"},{id:"rhyme",emoji:"🎵",name:"Rhyme Time",color:"#B44BFF"},{id:"numbers",emoji:"🔢",name:"Numbers",color:"#22BB66"},{id:"alefbeis",emoji:"✡️",name:"Alef-Beis",color:"#E8D44D"},{id:"middos",emoji:"💛",name:"Middos",color:"#FFB347"},{id:"friends",emoji:"🤝",name:"Friends",color:"#FF6B9D"},{id:"parsha",emoji:"🕎",name:"Parsha",color:"#C4A265"},{id:"brachos",emoji:"🍎",name:"Brachos",color:"#4CAF50"},{id:"riddles",emoji:"🧩",name:"Riddles",color:"#FF5252"},{id:"imagine",emoji:"🎨",name:"Imagine",color:"#E040FB"},{id:"world",emoji:"🌍",name:"Hashem's World",color:"#26C6DA"},{id:"sing",emoji:"🎵",name:"Sing Along",color:"#FF7043"},{id:"book",emoji:"📚",name:"Book Time",color:"#FF9500"}];
+
+// Time's up celebration
+if(timeUp&&!showAll){return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,background:"linear-gradient(180deg,#FFD6EC 0%,#FFF0F8 50%,#E8D0FF 100%)",textAlign:"center"}},
+React.createElement(Glow),
+React.createElement("div",{style:{zIndex:2,maxWidth:400}},
+React.createElement("div",{style:{fontSize:80,marginBottom:16,animation:"bounceIn .5s ease-out"}},"🌙"),
+React.createElement("h2",{style:{fontSize:28,fontWeight:700,marginBottom:8,color:"#C050A0"}},"Amazing Day Sari! 💖"),
+React.createElement("div",{style:{fontSize:16,color:"rgba(180,60,120,.6)",marginBottom:8}},"You played for 20 minutes today!"),
+React.createElement("div",{style:{fontSize:16,color:"rgba(180,60,120,.6)",marginBottom:28}},"Morah says see you tomorrow! 🌟"),
+React.createElement("div",{style:{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}},
+React.createElement("button",{onClick:fiveMore,style:{background:"rgba(255,255,255,.8)",border:"1.5px solid rgba(255,105,180,.3)",borderRadius:20,padding:"14px 24px",fontSize:15,boxShadow:"0 2px 8px rgba(255,105,180,.15)"}},"5 more minutes? 💕"),
+React.createElement("button",{onClick:()=>{window.location.href="/dashboard"},style:{background:"rgba(255,255,255,.6)",border:"1px solid rgba(220,120,170,.2)",borderRadius:20,padding:"14px 24px",fontSize:13,color:"rgba(120,40,80,.5)"}},"Parent Dashboard"))))}}
+
+// Parent "See All" panel
+if(showAll){return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",padding:"20px 16px 40px",background:BG,overflowY:"auto"}},
+React.createElement(Glow),
+React.createElement("div",{style:{zIndex:2,width:"100%",maxWidth:440,margin:"0 auto"}},
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:12,marginBottom:20}},
+React.createElement("button",{onClick:()=>setShowAll(false),style:{background:"rgba(220,120,170,.18)",borderRadius:14,width:44,height:44,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}},"🏠"),
+React.createElement("h2",{style:{fontSize:20,fontWeight:700}},"All Activities")),
 React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}},
-...modes.map((m,i)=>{const locked=m.id==="book"&&!dn;
-return React.createElement("button",{key:m.id,className:"mode-btn",onClick:()=>{if(locked){say("Finish today's quest first!");return}say(m.name+"!");setTimeout(()=>onMorah(m.id),400)},style:{background:locked?"rgba(255,255,255,.02)":"linear-gradient(135deg,"+m.color+"14,"+m.color+"06)",border:locked?"1px solid rgba(255,255,255,.04)":"1.5px solid "+m.color+"33",borderRadius:16,padding:"14px 8px",display:"flex",flexDirection:"column",alignItems:"center",gap:4,textAlign:"center",opacity:locked?.35:1,animation:"slideUp .3s ease-out "+i*.05+"s both",transition:"transform .15s ease,filter .15s ease"}},
+...allModes.map((m,i)=>{const locked=m.id==="book"&&!dn;
+return React.createElement("button",{key:m.id,className:"mode-btn",onClick:()=>{if(locked){say("Finish quest first!");return}say(m.name+"!");setTimeout(()=>onMorah(m.id),400)},style:{background:locked?"rgba(120,40,80,.5)":"linear-gradient(135deg,"+m.color+"14,"+m.color+"06)",border:locked?"1px solid rgba(255,255,255,.6)":"1.5px solid "+m.color+"33",borderRadius:16,padding:"14px 8px",display:"flex",flexDirection:"column",alignItems:"center",gap:4,textAlign:"center",opacity:locked?.35:1,animation:"slideUp .3s ease-out "+i*.04+"s both",transition:"transform .15s ease,filter .15s ease"}},
 React.createElement("div",{style:{fontSize:28}},m.emoji),
-React.createElement("div",{style:{fontSize:12,fontWeight:700,lineHeight:1.2}},m.name),
-React.createElement("div",{style:{fontSize:10,color:"rgba(255,255,255,.3)",lineHeight:1.2}},locked?"Finish quest 🔒":m.desc))})),
-prog.days>0&&React.createElement("div",{style:{textAlign:"center",marginTop:16,color:"rgba(255,255,255,.2)",fontSize:11}},prog.days," days · ",prog.ok," correct 📚")))};
+React.createElement("div",{style:{fontSize:12,fontWeight:700,lineHeight:1.2}},m.name))})),
+React.createElement("button",{onClick:()=>{window.location.href="/dashboard"},style:{background:"rgba(255,255,255,.6)",border:"1px solid rgba(220,120,170,.18)",borderRadius:16,padding:"14px 28px",fontSize:13,marginTop:16,width:"100%",color:"rgba(120,40,80,.5)"}},"Parent Dashboard")))}
+
+// ═══ THE PLAYHOUSE ═══
+const objPositions=[
+{top:"2%",left:"8%",delay:0},  // top-left
+{top:"2%",right:"8%",delay:.1}, // top-right
+{bottom:"2%",left:"8%",delay:.2}, // bottom-left
+{bottom:"2%",right:"8%",delay:.3}  // bottom-right
+];
+
+return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",background:"linear-gradient(180deg,#FFD6EC 0%,#FFF0F8 30%,#FFE8F5 60%,#FFD6EC 100%)",position:"relative",overflow:"hidden"}},
+
+// ── Floating sparkle dots ──
+React.createElement("div",{style:{position:"absolute",inset:0,zIndex:0,pointerEvents:"none"}},
+...[0,1,2,3,4,5,6,7,8,9].map(i=>React.createElement("div",{key:i,style:{position:"absolute",left:Math.floor((i*17+5)%100)+"%",top:Math.floor((i*23+10)%90)+"%",width:4+i%3*3,height:4+i%3*3,borderRadius:"50%",background:["#FF69B4","#FFB6C1","#FF85C8","#DDA0DD","#FFD700","#FF69B4","#C875FF","#FFB6C1","#FF69B4","#FFD700"][i],animation:`sparkle ${2+i*.4}s ease-in-out ${i*.5}s infinite`,opacity:.4}}))),
+
+// ── Top bar with hearts ──
+React.createElement("div",{style:{zIndex:3,display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 16px 0",flexShrink:0}},
+React.createElement("button",{onClick:()=>setShowAll(true),style:{background:"rgba(255,255,255,.7)",borderRadius:14,width:40,height:40,fontSize:16,display:"flex",alignItems:"center",justifyContent:"center",border:"1.5px solid rgba(255,105,180,.2)",boxShadow:"0 2px 8px rgba(255,105,180,.1)"}},"⚙️"),
+React.createElement("div",{style:{textAlign:"center"}},
+React.createElement("div",{style:{fontSize:11,color:"rgba(180,60,120,.5)",fontWeight:600}},"💖 Sari's Playhouse 💖"),
+React.createElement("div",{style:{fontSize:22,fontWeight:700,background:"linear-gradient(90deg,#FF69B4,#FFD700,#FF69B4)",backgroundSize:"200% auto",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",animation:"shimmer 3s linear infinite"}},"⭐ ",prog.stars," stars")),
+React.createElement("div",{style:{display:"flex",gap:6}},
+prog.streak>0&&React.createElement("div",{style:{background:"rgba(255,255,255,.8)",borderRadius:12,padding:"4px 10px",display:"flex",alignItems:"center",gap:3,border:"1.5px solid rgba(255,149,0,.25)",boxShadow:"0 2px 6px rgba(255,149,0,.1)"}},React.createElement("span",{style:{fontSize:14}},"🔥"),React.createElement("span",{style:{fontSize:14,fontWeight:700,color:"#FF6B00"}},prog.streak)),
+React.createElement("button",{onClick:()=>{say("Prizes!");setTimeout(onP,400)},style:{background:"rgba(255,255,255,.8)",borderRadius:12,padding:"4px 10px",border:"1.5px solid rgba(255,59,139,.25)",fontSize:18,boxShadow:"0 2px 6px rgba(255,59,139,.1)"}},"🎁"))),
+
+// ── TIMER BAR — big, visible, pink gradient ──
+React.createElement("div",{style:{margin:"10px 16px 0",zIndex:2}},
+React.createElement("div",{style:{background:"rgba(255,255,255,.7)",borderRadius:16,padding:"10px 14px",border:"1.5px solid rgba(255,105,180,.2)",boxShadow:"0 2px 10px rgba(255,105,180,.08)"}},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}},
+React.createElement("span",{style:{fontSize:20}},sunPct<100?"☀️":"🌙"),
+React.createElement("span",{style:{fontSize:12,fontWeight:700,color:"rgba(180,60,120,.6)"}},minsLeft>0?minsLeft+" min left":"Time's up!"),
+React.createElement("span",{style:{fontSize:11,color:"rgba(180,60,120,.35)"}},Math.floor(timer/60)+"m played")),
+React.createElement("div",{style:{background:"rgba(255,182,193,.3)",borderRadius:8,height:10,overflow:"hidden"}},
+React.createElement("div",{style:{height:"100%",borderRadius:8,background:"linear-gradient(90deg,#FF69B4,#FF85C8,#C875FF)",width:sunPct+"%",transition:"width 1s linear",boxShadow:"0 0 8px rgba(255,105,180,.4)"}})))),
+
+// ── Main playhouse area ──
+React.createElement("div",{style:{flex:1,position:"relative",zIndex:2,padding:"8px 16px",display:"flex",flexDirection:"column",justifyContent:"center",gap:14,minHeight:0}},
+
+// ── Prize progress (compact with hearts) ──
+React.createElement("button",{onClick:()=>say(Math.round(pct)+"% to "+nx.n),style:{background:"rgba(255,255,255,.85)",borderRadius:14,padding:"10px 14px",border:"1.5px solid rgba(255,105,180,.2)",width:"100%",textAlign:"left",boxShadow:"0 2px 10px rgba(255,105,180,.08)"}},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:5}},
+React.createElement("span",{style:{color:"rgba(180,60,120,.5)",fontSize:11,fontWeight:600}},"💫 Next prize"),
+React.createElement("span",{style:{fontSize:12,color:"rgba(180,60,120,.7)",fontWeight:600}},nx.e," ",nx.s,"⭐")),
+React.createElement("div",{style:{background:"rgba(255,182,193,.3)",borderRadius:6,height:10,overflow:"hidden"}},
+React.createElement("div",{style:{height:"100%",borderRadius:6,background:"linear-gradient(90deg,#FF69B4,#FFD700)",width:pct+"%",boxShadow:"0 0 10px rgba(255,105,180,.4)"}}))),
+
+// ── The Door (Quest) ──
+dn?React.createElement("button",{className:"quest-btn",onClick:()=>{say("Practice time!");setTimeout(onQ,600)},style:{background:"rgba(255,255,255,.85)",borderRadius:22,padding:"16px",textAlign:"center",border:"1.5px solid rgba(34,187,102,.3)",boxShadow:"0 3px 12px rgba(34,187,102,.1)",transition:"transform .15s ease"}},
+React.createElement("div",{style:{fontSize:36,marginBottom:4}},"✅"),
+React.createElement("div",{style:{fontSize:16,fontWeight:700,color:"#1FA055"}},"Quest Done! 🎉"),
+React.createElement("div",{style:{fontSize:12,color:"rgba(120,80,40,.5)",marginTop:2}},"Tap to practice again"))
+:React.createElement("button",{className:"quest-btn",onClick:()=>{say("Let's go!");setTimeout(onQ,600)},style:{background:"linear-gradient(135deg,#FF69B4,#FF85C8,#C875FF)",borderRadius:22,padding:"18px 16px",width:"100%",textAlign:"center",border:"2px solid rgba(255,255,255,.4)",boxShadow:"0 6px 25px rgba(255,105,180,.35),inset 0 1px 0 rgba(255,255,255,.3)",animation:"glow 2.5s ease-in-out infinite",transition:"transform .15s ease",color:"#fff"}},
+React.createElement("div",{style:{fontSize:40,marginBottom:4,animation:"float 3s ease-in-out infinite"}},"🚪"),
+React.createElement("div",{style:{fontSize:18,fontWeight:700,color:"#fff"}},"✨ Today's Quest! ✨"),
+React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:6,opacity:.8,marginTop:4}},...STG.map(s=>React.createElement("span",{key:s.id,style:{fontSize:16}},s.em))),
+React.createElement("div",{style:{fontSize:11,color:"rgba(255,255,255,.7)",marginTop:2}},"4 games · earn stars!")),
+
+// ── Morah's Surprise Label ──
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:8}},
+React.createElement("div",{style:{width:30,height:30,borderRadius:15,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,boxShadow:"0 2px 6px rgba(255,149,0,.2)"}},"👩‍🏫"),
+React.createElement("div",{style:{fontSize:13,fontWeight:700,color:"rgba(180,60,120,.6)"}},"💝 Morah left these for you!"),
+React.createElement("div",{style:{flex:1,height:1,background:"rgba(255,105,180,.15)"}})),
+
+// ── 4 Daily Objects (2x2 grid) — pink white cards ──
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+...dailyModes.map((mId,i)=>{const md=MORAH_MODES[mId];const ro=ROOM_OBJECTS[mId];const locked=mId==="book"&&!dn;
+return React.createElement("button",{key:mId,className:"mode-btn",onClick:()=>{if(locked){say("Finish quest first!");return}say(md.name+"!");setTimeout(()=>onMorah(mId),400)},
+style:{background:locked?"rgba(200,180,190,.3)":"rgba(255,255,255,.85)",
+border:locked?"1.5px solid rgba(200,180,190,.3)":`2px solid ${md.color}44`,
+borderRadius:22,padding:"18px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:6,textAlign:"center",
+opacity:locked?.4:1,animation:`slideUp .4s ease-out ${i*.08}s both`,
+transition:"transform .2s ease,filter .2s ease",
+boxShadow:locked?"none":`0 4px 15px ${md.color}20`}},
+React.createElement("div",{style:{fontSize:42,animation:`float ${2.5+i*.3}s ease-in-out infinite`}},ro.obj),
+React.createElement("div",{style:{fontSize:14,fontWeight:700,lineHeight:1.2,color:md.color}},md.name),
+React.createElement("div",{style:{fontSize:10,color:"rgba(120,40,80,.4)"}},locked?"Finish quest 🔒":ro.spot))})),
+
+// ── Bottom: See All link ──
+React.createElement("button",{onClick:()=>setShowAll(true),style:{background:"none",border:"none",fontSize:12,color:"rgba(120,40,80,.25)",padding:8,textAlign:"center"}},"See all activities")),
+
+// ── Days counter ──
+prog.days>0&&React.createElement("div",{style:{textAlign:"center",padding:"4px 0 12px",color:"rgba(220,120,170,.25)",fontSize:10,zIndex:2}},prog.days," days played"))
+};
 // ═══ APP ═══
 const App=()=>{const[scr,setScr]=useState("login");const[prog,setProg]=useState(ld());const[qr,setQr]=useState([]);const[earn,setEarn]=useState(0);const[prz,setPrz]=useState(null);const[ns,setNs]=useState(null);const[curStory,setCurStory]=useState(null);const[morahMode,setMorahMode]=useState(null);
 
@@ -897,7 +1279,7 @@ if(np)setTimeout(()=>say("New prize! "+np.n),900)};
 useEffect(()=>{syncCloud(setProg)},[]);
 
 if(scr==="login")return React.createElement(PinLogin,{onLogin:handleLogin});
-if(scr==="home")return React.createElement(Home,{prog,onQ:()=>setScr("quest"),onP:()=>setScr("prizes"),onMorah:m=>{setMorahMode(m);setScr("morahchat")},onBook:()=>{setMorahMode("book");setScr("morahchat")}});
+if(scr==="home")return React.createElement(Home,{prog,onQ:()=>setScr("quest"),onP:()=>setScr("prizes"),onMorah:m=>{setMorahMode(m);setScr("morahchat")}});
 if(scr==="morahmenu")return React.createElement(MorahMenu,{questDone:prog.last===td(),onPick:m=>{setMorahMode(m);setScr("morahchat")},onBack:()=>setScr("home")});
 if(scr==="morahchat"&&morahMode)return React.createElement(MorahChat,{mode:morahMode,onBack:()=>setScr("home")});
 if(scr==="quest")return React.createElement(Quest,{onDone:finish,onBack:()=>setScr("home")});
