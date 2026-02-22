@@ -3,55 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sari's Dashboard — Parent View</title>
+<title>Sari's Playhouse — Parent Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Fredoka',sans-serif;background:#0D0A1A;color:#fff;min-height:100vh;padding:0}
-button{font-family:'Fredoka',sans-serif;border:none;cursor:pointer;color:#fff}
+body{font-family:'Fredoka',sans-serif;background:linear-gradient(180deg,#FFD6EC,#FFF0F8,#FFE8F5);color:#4A2040;min-height:100vh;padding:0}
+button{font-family:'Fredoka',sans-serif;border:none;cursor:pointer;color:#4A2040}
 input{font-family:'Fredoka',sans-serif}
 .ctr{max-width:820px;margin:0 auto;padding:20px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:24px}
-.stat{background:linear-gradient(145deg,#2A1F3D,#1E1433);border-radius:20px;padding:18px;text-align:center;border:1px solid rgba(255,255,255,.06)}
+.stat{background:rgba(255,255,255,.85);border-radius:20px;padding:18px;text-align:center;border:1px solid rgba(220,120,170,.15);box-shadow:0 2px 10px rgba(255,105,180,.06)}
 .stat .ic{font-size:32px;margin-bottom:6px}
-.stat .val{font-size:28px;font-weight:700;color:#FFD700}
-.stat .lbl{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px}
-.sec{background:linear-gradient(145deg,#2A1F3D,#1E1433);border-radius:20px;padding:22px;margin-bottom:18px;border:1px solid rgba(255,255,255,.06)}
-.sec h3{font-size:17px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.stat .val{font-size:28px;font-weight:700;color:#D4145A}
+.stat .lbl{font-size:12px;color:rgba(120,40,80,.45);margin-top:2px}
+.sec{background:rgba(255,255,255,.85);border-radius:20px;padding:22px;margin-bottom:18px;border:1px solid rgba(220,120,170,.15);box-shadow:0 2px 10px rgba(255,105,180,.06)}
+.sec h3{font-size:17px;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#4A2040}
 .bar-r{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.bar-l{width:90px;font-size:13px;color:rgba(255,255,255,.6);text-align:right}
-.bar-t{flex:1;height:22px;background:rgba(255,255,255,.06);border-radius:11px;overflow:hidden}
-.bar-f{height:100%;border-radius:11px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:11px;font-weight:600;min-width:2px}
-.bar-p{width:40px;font-size:13px;font-weight:600;color:rgba(255,255,255,.5)}
-.sess{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.bar-l{width:90px;font-size:13px;color:rgba(120,40,80,.6);text-align:right}
+.bar-t{flex:1;height:22px;background:rgba(255,182,193,.25);border-radius:11px;overflow:hidden}
+.bar-f{height:100%;border-radius:11px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:11px;font-weight:600;min-width:2px;color:#fff}
+.bar-p{width:40px;font-size:13px;font-weight:600;color:rgba(120,40,80,.5)}
+.sess{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid rgba(220,120,170,.1)}
 .sess:last-child{border-bottom:none}
-.sess .dt{font-size:13px;color:rgba(255,255,255,.5);width:85px}
+.sess .dt{font-size:13px;color:rgba(120,40,80,.45);width:85px}
 .sess .sc{font-size:17px;font-weight:700;width:60px}
 .sess .bd{flex:1;display:flex;gap:5px;flex-wrap:wrap}
 .sess .bd .ch{font-size:11px;border-radius:7px;padding:3px 7px}
 .tbl{width:100%;border-collapse:collapse;margin-top:10px}
-.tbl th{text-align:left;font-size:12px;color:rgba(255,255,255,.4);padding:8px;border-bottom:1px solid rgba(255,255,255,.06);font-weight:500}
-.tbl td{font-size:14px;padding:8px;border-bottom:1px solid rgba(255,255,255,.03)}
-.tbl .good{color:#00FF88}.tbl .bad{color:#FF6B6B}.tbl .mid{color:#FFD700}
+.tbl th{text-align:left;font-size:12px;color:rgba(120,40,80,.4);padding:8px;border-bottom:1px solid rgba(220,120,170,.12);font-weight:500}
+.tbl td{font-size:14px;padding:8px;border-bottom:1px solid rgba(220,120,170,.06);color:#4A2040}
+.tbl .good{color:#1FA055}.tbl .bad{color:#E03060}.tbl .mid{color:#D4145A}
 .trend{display:flex;align-items:flex-end;gap:3px;height:110px;margin-top:10px}
 .trend-b{flex:1;border-radius:5px 5px 0 0;min-height:3px;position:relative;cursor:pointer}
-.trend-b:hover::after{content:attr(data-t);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#2A1F3D;border:1px solid rgba(255,255,255,.15);border-radius:7px;padding:3px 7px;font-size:10px;white-space:nowrap}
+.trend-b:hover::after{content:attr(data-t);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#fff;border:1px solid rgba(220,120,170,.2);border-radius:7px;padding:3px 7px;font-size:10px;white-space:nowrap;color:#4A2040;box-shadow:0 2px 8px rgba(255,105,180,.1)}
 .tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-.tab{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px 16px;font-size:14px;cursor:pointer;font-family:'Fredoka',sans-serif;color:rgba(255,255,255,.5)}
-.tab.on{background:rgba(255,59,139,.15);border-color:#FF3B8B;color:#FF3B8B}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:10px}
-.topbar h1{font-size:20px;display:flex;align-items:center;gap:8px}
+.tab{background:rgba(255,255,255,.7);border:1px solid rgba(220,120,170,.15);border-radius:12px;padding:8px 16px;font-size:14px;cursor:pointer;font-family:'Fredoka',sans-serif;color:rgba(120,40,80,.45)}
+.tab.on{background:rgba(255,59,139,.12);border-color:#FF3B8B;color:#FF3B8B}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(220,120,170,.12);margin-bottom:10px}
+.topbar h1{font-size:20px;display:flex;align-items:center;gap:8px;color:#4A2040}
 .topbar .btns{display:flex;gap:10px;align-items:center}
-.topbar .btns a,.topbar .btns button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px 14px;font-size:13px;color:rgba(255,255,255,.5);text-decoration:none}
-.inp{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 16px;font-size:14px;color:#fff;font-family:'Fredoka',sans-serif;outline:none}
-.pin-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background:linear-gradient(180deg,#0D0A1A,#1A0A2E)}
-.pin-dot{width:40px;height:40px;border-radius:12px;border:2px solid rgba(255,255,255,.12);transition:all .2s;display:inline-block;margin:0 6px}
-.pin-dot.on{background:linear-gradient(135deg,#B44BFF,#8B3BCF);border-color:#B44BFF}
-.pin-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:240px;margin:0 auto}
-.pin-btn{width:100%;height:56px;border-radius:16px;font-size:26px;font-weight:600;background:linear-gradient(145deg,#2A1F3D,#1E1433);border:1.5px solid rgba(255,255,255,.1);color:#fff;cursor:pointer;font-family:'Fredoka',sans-serif}
-.voice-opt{display:inline-block;padding:8px 14px;border-radius:12px;font-size:13px;margin:3px;cursor:pointer;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:#fff}
-.voice-opt.on{background:rgba(255,59,139,.15);border-color:#FF3B8B}
+.topbar .btns a,.topbar .btns button{background:rgba(255,255,255,.7);border:1px solid rgba(220,120,170,.15);border-radius:10px;padding:8px 14px;font-size:13px;color:rgba(120,40,80,.5);text-decoration:none}
+.inp{width:100%;background:rgba(255,255,255,.8);border:1.5px solid rgba(220,120,170,.2);border-radius:14px;padding:12px 16px;font-size:14px;color:#4A2040;font-family:'Fredoka',sans-serif;outline:none}
+.pin-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background:linear-gradient(180deg,#FFD6EC,#FFF0F8)}
+.pin-dot{width:40px;height:40px;border-radius:12px;border:2px solid rgba(220,120,170,.2);transition:all .2s;display:inline-block;margin:0 6px}
+.pin-dot.on{background:linear-gradient(135deg,#FF3B8B,#FF6B8B);border-color:#FF3B8B}
+.pin-grid{display:grid;grid-template-columns:repeat(3,76px);gap:12px;justify-content:center;margin:0 auto}
+.pin-btn{width:76px;height:72px;border-radius:20px;font-size:30px;font-weight:700;background:rgba(255,255,255,.85);border:1.5px solid rgba(220,120,170,.18);color:#4A2040;cursor:pointer;font-family:'Fredoka',sans-serif;box-shadow:0 2px 8px rgba(255,105,180,.08)}
+.voice-opt{display:inline-block;padding:8px 14px;border-radius:12px;font-size:13px;margin:3px;cursor:pointer;border:1px solid rgba(220,120,170,.15);background:rgba(255,255,255,.5);color:#4A2040}
+.voice-opt.on{background:rgba(255,59,139,.12);border-color:#FF3B8B;color:#FF3B8B}
 @media(max-width:500px){.stats{grid-template-columns:1fr 1fr}.bar-l{width:65px;font-size:11px}.topbar{flex-direction:column;gap:10px;text-align:center}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 </style>
@@ -70,7 +70,7 @@ const app=document.getElementById("app");
 function showLogin(){
 let pin="";
 function rn(){
-app.innerHTML='<div class="pin-wrap"><div style="font-size:48px;margin-bottom:12px">\u{1F4CA}</div><h2 style="font-size:22px;margin-bottom:6px">Parent Dashboard</h2><p style="color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px">Enter parent PIN</p><div style="text-align:center;margin-bottom:20px">'+[0,1,2,3].map(function(i){return'<div class="pin-dot '+(i<pin.length?"on":"")+'"></div>'}).join("")+'</div><div id="pinErr" style="color:#FF6B6B;font-size:14px;margin-bottom:12px;min-height:20px;text-align:center"></div><div class="pin-grid">'+[1,2,3,4,5,6,7,8,9,"",0,"\u2B05"].map(function(n){return n===""?'<div></div>':'<button class="pin-btn" onclick="pinTap(\''+n+'\')">'+n+'</button>'}).join("")+'</div><a href="/" style="display:inline-block;margin-top:28px;color:rgba(255,255,255,.2);font-size:12px;text-decoration:none">\u2190 Back to Sari\'s Game</a></div>'}
+app.innerHTML='<div class="pin-wrap"><div style="font-size:48px;margin-bottom:12px">\u{1F4CA}</div><h2 style="font-size:22px;margin-bottom:6px">Parent Dashboard</h2><p style="color:rgba(120,40,80,.45);font-size:13px;margin-bottom:24px">Enter parent PIN</p><div style="text-align:center;margin-bottom:20px">'+[0,1,2,3].map(function(i){return'<div class="pin-dot '+(i<pin.length?"on":"")+'"></div>'}).join("")+'</div><div id="pinErr" style="color:#FF6B6B;font-size:14px;margin-bottom:12px;min-height:20px;text-align:center"></div><div class="pin-grid">'+[1,2,3,4,5,6,7,8,9,"",0,"\u2B05"].map(function(n){return n===""?'<div></div>':'<button class="pin-btn" onclick="pinTap(\''+n+'\')">'+n+'</button>'}).join("")+'</div><a href="/" style="display:inline-block;margin-top:28px;color:rgba(120,40,80,.3);font-size:12px;text-decoration:none">\u2190 Back to Sari\'s Game</a></div>'}
 window.pinTap=function(n){
 if(n==="\u2B05"){pin=pin.slice(0,-1);rn();return}
 pin+=n;rn();
@@ -80,11 +80,11 @@ else{document.getElementById("pinErr").textContent="Wrong PIN";document.getEleme
 rn()}
 
 async function loadDashboard(){
-app.innerHTML='<div class="ctr" style="text-align:center;padding:80px;color:rgba(255,255,255,.4)">Loading...</div>';
+app.innerHTML='<div class="ctr" style="text-align:center;padding:80px;color:rgba(120,40,80,.4)">Loading...</div>';
 try{
 var r=await Promise.all([sb.from("progress").select("*").eq("player_id","sari").single(),sb.from("sessions").select("*").eq("player_id","sari").order("created_at",{ascending:false}).limit(100),sb.from("answers").select("*").eq("player_id","sari").order("created_at",{ascending:false}).limit(2000)]);
 var prog=r[0].data,sessions=r[1].data||[],answers=r[2].data||[];
-if(!prog){app.innerHTML='<div class="ctr" style="text-align:center;padding:80px;color:rgba(255,255,255,.4)">No data yet</div>';return}
+if(!prog){app.innerHTML='<div class="ctr" style="text-align:center;padding:80px;color:rgba(120,40,80,.4)">No data yet</div>';return}
 renderDash(prog,sessions,answers);
 }catch(e){app.innerHTML='<div class="ctr" style="text-align:center;padding:80px;color:#FF6B6B">Error: '+e.message+'</div>'}}
 
@@ -96,52 +96,62 @@ var games=[{n:"Sound Match",a:gAvg("sound_correct"),c:"#FF3B8B",e:"\u{1F50A}"},{
 var sorted=games.slice().sort(function(a,b){return b.a-a.a});
 var nextPrize=PRIZES.find(function(pr){return pr.s>p.stars});
 var trend=real.slice(0,20).reverse();
-var wordMap={},famMap={},letterMap={};
+var wordMap={},famMap={},letterMap={},morahMap={};
 answers.forEach(function(a){
 if(a.target_word){if(!wordMap[a.target_word])wordMap[a.target_word]={w:a.target_word,ok:0,total:0};wordMap[a.target_word].total++;if(a.correct)wordMap[a.target_word].ok++}
 if(a.word_family){if(!famMap[a.word_family])famMap[a.word_family]={f:a.word_family,ok:0,total:0};famMap[a.word_family].total++;if(a.correct)famMap[a.word_family].ok++}
-if(a.target_letter&&a.game_mode==="sound"){if(!letterMap[a.target_letter])letterMap[a.target_letter]={l:a.target_letter,ok:0,total:0};letterMap[a.target_letter].total++;if(a.correct)letterMap[a.target_letter].ok++}});
+if(a.target_letter&&a.game_mode==="sound"){if(!letterMap[a.target_letter])letterMap[a.target_letter]={l:a.target_letter,ok:0,total:0};letterMap[a.target_letter].total++;if(a.correct)letterMap[a.target_letter].ok++}
+if(a.game_mode&&a.game_mode.startsWith("morah_")){var mk=a.game_mode.replace("morah_","");if(!morahMap[mk])morahMap[mk]={m:mk,ok:0,total:0};morahMap[mk].total++;if(a.correct)morahMap[mk].ok++}});
 var words=Object.values(wordMap).filter(function(w){return w.total>=2}).sort(function(a,b){return(a.ok/a.total)-(b.ok/b.total)});
 var fams=Object.values(famMap).filter(function(f){return f.total>=3}).sort(function(a,b){return(a.ok/a.total)-(b.ok/b.total)});
 var letters=Object.values(letterMap).filter(function(l){return l.total>=2}).sort(function(a,b){return(a.ok/a.total)-(b.ok/b.total)});
 var mistakes=answers.filter(function(a){return!a.correct}).slice(0,30);
 
-var h='<div class="topbar"><h1>\u{1F31F} Sari\'s Sound Quest</h1><div class="btns"><a href="/">\u{1F3AE} Game</a><button onclick="loadDashboard()">\u{1F504} Refresh</button><button onclick="doLogout()" style="color:#FF6B6B">\u{1F512} Logout</button></div></div><div class="ctr"><div class="tabs"><button class="tab '+(tabView==="overview"?"on":"")+'" onclick="tabView=\'overview\';loadDashboard()">\u{1F4CA} Overview</button><button class="tab '+(tabView==="words"?"on":"")+'" onclick="tabView=\'words\';loadDashboard()">\u{1F4DD} Words</button><button class="tab '+(tabView==="mistakes"?"on":"")+'" onclick="tabView=\'mistakes\';loadDashboard()">\u274C Mistakes</button><button class="tab '+(tabView==="sessions"?"on":"")+'" onclick="tabView=\'sessions\';loadDashboard()">\u{1F4CB} Sessions</button><button class="tab '+(tabView==="settings"?"on":"")+'" onclick="tabView=\'settings\';loadDashboard()">\u2699\uFE0F Settings</button></div>';
+var morahModes=Object.values(morahMap).sort(function(a,b){return b.total-a.total});
+var morahTotal=morahModes.reduce(function(a,m){return a+m.total},0);
+var timerMins=p.timer_seconds?Math.round(p.timer_seconds/60):0;
+var timerToday=p.timer_date===new Date().toISOString().slice(0,10)?timerMins:0;
+
+var h='<div class="topbar"><h1>\u{1F31F} Sari\'s Playhouse</h1><div class="btns"><a href="/">\u{1F3AE} Game</a><button onclick="loadDashboard()">\u{1F504} Refresh</button><button onclick="doLogout()" style="color:#FF6B6B">\u{1F512} Logout</button></div></div><div class="ctr"><div class="tabs"><button class="tab '+(tabView==="overview"?"on":"")+'" onclick="tabView=\'overview\';loadDashboard()">\u{1F4CA} Overview</button><button class="tab '+(tabView==="morah"?"on":"")+'" onclick="tabView=\'morah\';loadDashboard()">\u{1F469}\u200D\u{1F3EB} Morah</button><button class="tab '+(tabView==="words"?"on":"")+'" onclick="tabView=\'words\';loadDashboard()">\u{1F4DD} Words</button><button class="tab '+(tabView==="mistakes"?"on":"")+'" onclick="tabView=\'mistakes\';loadDashboard()">\u274C Mistakes</button><button class="tab '+(tabView==="sessions"?"on":"")+'" onclick="tabView=\'sessions\';loadDashboard()">\u{1F4CB} Sessions</button><button class="tab '+(tabView==="settings"?"on":"")+'" onclick="tabView=\'settings\';loadDashboard()">\u2699\uFE0F Settings</button></div>';
 
 if(tabView==="overview"){
-h+='<div class="stats"><div class="stat"><div class="ic">\u2B50</div><div class="val">'+p.stars+'</div><div class="lbl">Stars</div></div><div class="stat"><div class="ic">\u{1F525}</div><div class="val">'+(p.streak||0)+'</div><div class="lbl">Streak</div></div><div class="stat"><div class="ic">\u{1F4C5}</div><div class="val">'+(p.days_played||0)+'</div><div class="lbl">Days</div></div><div class="stat"><div class="ic">\u2705</div><div class="val">'+(p.correct||0)+'</div><div class="lbl">Correct</div></div><div class="stat"><div class="ic">\u{1F4CA}</div><div class="val">'+avgPct+'%</div><div class="lbl">Avg Score</div></div><div class="stat"><div class="ic">\u{1F4DD}</div><div class="val">'+real.length+'</div><div class="lbl">Quests</div></div></div>';
+h+='<div class="stats"><div class="stat"><div class="ic">\u2B50</div><div class="val">'+p.stars+'</div><div class="lbl">Stars</div></div><div class="stat"><div class="ic">\u{1F525}</div><div class="val">'+(p.streak||0)+'</div><div class="lbl">Streak</div></div><div class="stat"><div class="ic">\u{1F4C5}</div><div class="val">'+(p.days_played||0)+'</div><div class="lbl">Days</div></div><div class="stat"><div class="ic">\u2705</div><div class="val">'+(p.correct||0)+'</div><div class="lbl">Correct</div></div><div class="stat"><div class="ic">\u{1F4CA}</div><div class="val">'+avgPct+'%</div><div class="lbl">Quest Avg</div></div><div class="stat"><div class="ic">\u{1F469}\u200D\u{1F3EB}</div><div class="val">'+morahTotal+'</div><div class="lbl">Morah Qs</div></div><div class="stat"><div class="ic">\u23F1\uFE0F</div><div class="val">'+timerToday+'m</div><div class="lbl">Today</div></div><div class="stat"><div class="ic">\u{1F4DD}</div><div class="val">'+real.length+'</div><div class="lbl">Quests</div></div></div>';
 if(trend.length>1){h+='<div class="sec"><h3>\u{1F4C8} Score Trend</h3><div class="trend">'+trend.map(function(s){var ht=Math.max(3,Math.round(s.total_correct/20*100));return'<div class="trend-b" style="height:'+ht+'%;background:linear-gradient(180deg,#FF3B8B,#B44BFF)" data-t="'+s.session_date+': '+s.total_correct+'/20 ('+Math.round(s.total_correct/20*100)+'%)"></div>'}).join("")+'</div></div>'}
-h+='<div class="sec"><h3>\u{1F3AE} Game Performance</h3>'+sorted.map(function(g){return'<div class="bar-r"><div class="bar-l">'+g.e+' '+g.n+'</div><div class="bar-t"><div class="bar-f" style="width:'+Math.max(2,g.a)+'%;background:'+g.c+'">'+(g.a>15?g.a+"%":"")+'</div></div><div class="bar-p">'+g.a+'%</div></div>'}).join("")+'<div style="margin-top:14px;padding:12px;background:rgba(255,255,255,.04);border-radius:14px;font-size:14px;line-height:1.5">\u{1F4A1} '+(sorted[0].a>0?'<strong style="color:'+sorted[0].c+'">'+sorted[0].n+'</strong> is strongest at '+sorted[0].a+'%.':'Not enough data.')+(sorted[3].a>0&&sorted[3].a<sorted[0].a?' <strong style="color:'+sorted[3].c+'">'+sorted[3].n+'</strong> needs practice at '+sorted[3].a+'%.':'')+'</div></div>';
+h+='<div class="sec"><h3>\u{1F3AE} Game Performance</h3>'+sorted.map(function(g){return'<div class="bar-r"><div class="bar-l">'+g.e+' '+g.n+'</div><div class="bar-t"><div class="bar-f" style="width:'+Math.max(2,g.a)+'%;background:'+g.c+'">'+(g.a>15?g.a+"%":"")+'</div></div><div class="bar-p">'+g.a+'%</div></div>'}).join("")+'<div style="margin-top:14px;padding:12px;background:rgba(255,182,193,.12);border-radius:14px;font-size:14px;line-height:1.5;color:#4A2040">\u{1F4A1} '+(sorted[0].a>0?'<strong style="color:'+sorted[0].c+'">'+sorted[0].n+'</strong> is strongest at '+sorted[0].a+'%.':'Not enough data.')+(sorted[3].a>0&&sorted[3].a<sorted[0].a?' <strong style="color:'+sorted[3].c+'">'+sorted[3].n+'</strong> needs practice at '+sorted[3].a+'%.':'')+'</div></div>';
 if(fams.length){h+='<div class="sec"><h3>\u{1F524} Word Families</h3>'+fams.map(function(f){var pct=Math.round(f.ok/f.total*100);var c=pct>=80?"#00FF88":pct>=60?"#FFD700":"#FF6B6B";return'<div class="bar-r"><div class="bar-l" style="font-weight:600">-'+f.f+'</div><div class="bar-t"><div class="bar-f" style="width:'+Math.max(2,pct)+'%;background:'+c+'">'+(pct>15?pct+"%":"")+'</div></div><div class="bar-p" style="color:'+c+'">'+f.ok+'/'+f.total+'</div></div>'}).join("")+'</div>'}
-if(nextPrize){h+='<div class="sec"><h3>\u{1F381} Next Prize</h3><div style="display:flex;align-items:center;gap:14px"><div style="font-size:44px">'+nextPrize.e+'</div><div style="flex:1"><div style="font-weight:600;margin-bottom:4px">'+nextPrize.n+'</div><div style="background:rgba(255,255,255,.08);border-radius:10px;height:14px;overflow:hidden"><div style="height:100%;border-radius:10px;background:linear-gradient(90deg,#FF3B8B,#FFD700);width:'+Math.round(p.stars/nextPrize.s*100)+'%"></div></div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px">'+p.stars+'/'+nextPrize.s+' stars</div></div></div></div>'}
+if(nextPrize){h+='<div class="sec"><h3>\u{1F381} Next Prize</h3><div style="display:flex;align-items:center;gap:14px"><div style="font-size:44px">'+nextPrize.e+'</div><div style="flex:1"><div style="font-weight:600;margin-bottom:4px">'+nextPrize.n+'</div><div style="background:rgba(255,182,193,.25);border-radius:10px;height:14px;overflow:hidden"><div style="height:100%;border-radius:10px;background:linear-gradient(90deg,#FF3B8B,#FFD700);width:'+Math.round(p.stars/nextPrize.s*100)+'%"></div></div><div style="font-size:11px;color:rgba(120,40,80,.4);margin-top:3px">'+p.stars+'/'+nextPrize.s+' stars</div></div></div></div>'}
 if(p.stickers&&p.stickers.length){h+='<div class="sec"><h3>\u2728 Stickers ('+p.stickers.length+')</h3><div style="display:flex;flex-wrap:wrap;gap:6px">'+p.stickers.map(function(s){return'<span style="font-size:26px">'+s+'</span>'}).join("")+'</div></div>'}
-h+='<div class="sec"><h3>\u{1F3C6} Prize Progress</h3><div style="display:flex;flex-wrap:wrap;gap:10px">'+PRIZES.map(function(pr){var ok=p.stars>=pr.s;return'<div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,'+(ok?.04:.02)+');border:1px solid rgba(255,255,255,'+(ok?.1:.04)+');border-radius:12px;padding:8px 12px;opacity:'+(ok?1:.35)+'"><span style="font-size:22px">'+(ok?pr.e:"\u{1F512}")+'</span><span style="font-size:12px">'+pr.n+'<br><span style="color:rgba(255,255,255,.3)">'+pr.s+'\u2B50</span></span></div>'}).join("")+'</div></div>'}
+h+='<div class="sec"><h3>\u{1F3C6} Prize Progress</h3><div style="display:flex;flex-wrap:wrap;gap:10px">'+PRIZES.map(function(pr){var ok=p.stars>=pr.s;return'<div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,'+(ok?.85:.5)+');border:1px solid rgba(220,120,170,'+(ok?.2:.08)+');border-radius:12px;padding:8px 12px;opacity:'+(ok?1:.35)+'"><span style="font-size:22px">'+(ok?pr.e:"\u{1F512}")+'</span><span style="font-size:12px">'+pr.n+'<br><span style="color:rgba(120,40,80,.35)">'+pr.s+'\u2B50</span></span></div>'}).join("")+'</div></div>'}
+
+if(tabView==="morah"){
+var MMODE_INFO={sound:{n:"Read Words",e:"\u{1F4D6}",c:"#FF3B8B"},rhyme:{n:"Rhyme Time",e:"\u{1F3B5}",c:"#B44BFF"},numbers:{n:"Numbers",e:"\u{1F522}",c:"#00C2FF"},alefbeis:{n:"Alef-Beis",e:"\u05D0\u05D1",c:"#C4A265"},middos:{n:"Middos",e:"\u{1F49B}",c:"#FFD700"},friends:{n:"Friends",e:"\u{1F91D}",c:"#FF6B9D"},parsha:{n:"Parsha",e:"\u{1F54E}",c:"#C4A265"},brachos:{n:"Brachos",e:"\u{1F34E}",c:"#4CAF50"},riddles:{n:"Riddles",e:"\u{1F9E9}",c:"#FF5252"},imagine:{n:"Imagine",e:"\u{1F3A8}",c:"#E040FB"},world:{n:"Hashem's World",e:"\u{1F30D}",c:"#26C6DA"},sing:{n:"Sing Along",e:"\u{1F3B5}",c:"#FF7043"},book:{n:"Book Time",e:"\u{1F4D6}",c:"#8B4513"}};
+h+='<div class="sec"><h3>\u{1F469}\u200D\u{1F3EB} Morah AI Activity</h3>'+(morahModes.length?morahModes.map(function(m){var info=MMODE_INFO[m.m]||{n:m.m,e:"\u{1F4DA}",c:"#999"};var pct=m.total>0?Math.round(m.ok/m.total*100):0;return'<div class="bar-r"><div class="bar-l">'+info.e+' '+info.n+'</div><div class="bar-t"><div class="bar-f" style="width:'+Math.max(2,pct)+'%;background:'+info.c+'">'+(pct>15?pct+"%":"")+'</div></div><div class="bar-p" style="color:'+info.c+'">'+m.ok+'/'+m.total+'</div></div>'}).join("")+'<div style="margin-top:14px;padding:12px;background:rgba(255,182,193,.12);border-radius:14px;font-size:14px;line-height:1.5;color:#4A2040">\u{1F4A1} '+morahTotal+' total Morah questions answered across '+morahModes.length+' modes.'+(morahModes[0]?' Favorite: <strong style="color:'+(MMODE_INFO[morahModes[0].m]||{c:"#999"}).c+'">'+((MMODE_INFO[morahModes[0].m]||{n:morahModes[0].m}).n)+'</strong> ('+morahModes[0].total+' questions).':'')+'</div>':'<div style="color:rgba(120,40,80,.4)">No Morah sessions yet. Sari can tap any mode on the home screen!</div>')+'</div>'}
 
 if(tabView==="words"){
-h+='<div class="sec"><h3>\u{1F4DD} Word Accuracy (2+ attempts)</h3>'+(words.length?'<table class="tbl"><tr><th>Word</th><th>Family</th><th>Correct</th><th>Total</th><th>Rate</th></tr>'+words.map(function(w){var pct=Math.round(w.ok/w.total*100);var cls=pct>=80?"good":pct>=60?"mid":"bad";var fam=answers.find(function(a){return a.target_word===w.w});return'<tr><td style="font-weight:600;text-transform:uppercase">'+w.w+'</td><td>-'+(fam?fam.word_family||"?":"?")+'</td><td>'+w.ok+'</td><td>'+w.total+'</td><td class="'+cls+'">'+pct+'%</td></tr>'}).join("")+'</table>':'<div style="color:rgba(255,255,255,.4)">Not enough data</div>')+'</div>';
+h+='<div class="sec"><h3>\u{1F4DD} Word Accuracy (2+ attempts)</h3>'+(words.length?'<table class="tbl"><tr><th>Word</th><th>Family</th><th>Correct</th><th>Total</th><th>Rate</th></tr>'+words.map(function(w){var pct=Math.round(w.ok/w.total*100);var cls=pct>=80?"good":pct>=60?"mid":"bad";var fam=answers.find(function(a){return a.target_word===w.w});return'<tr><td style="font-weight:600;text-transform:uppercase">'+w.w+'</td><td>-'+(fam?fam.word_family||"?":"?")+'</td><td>'+w.ok+'</td><td>'+w.total+'</td><td class="'+cls+'">'+pct+'%</td></tr>'}).join("")+'</table>':'<div style="color:rgba(120,40,80,.4)">Not enough data</div>')+'</div>';
 if(letters.length){h+='<div class="sec"><h3>\u{1F50A} Letter Sound Accuracy</h3><table class="tbl"><tr><th>Letter</th><th>Correct</th><th>Total</th><th>Rate</th></tr>'+letters.map(function(l){var pct=Math.round(l.ok/l.total*100);var cls=pct>=80?"good":pct>=60?"mid":"bad";return'<tr><td style="font-weight:700;font-size:18px;text-transform:uppercase">'+l.l+'</td><td>'+l.ok+'</td><td>'+l.total+'</td><td class="'+cls+'">'+pct+'%</td></tr>'}).join("")+'</table></div>'}}
 
 if(tabView==="mistakes"){
-h+='<div class="sec"><h3>\u274C Recent Mistakes</h3>'+(mistakes.length?'<table class="tbl"><tr><th>Date</th><th>Game</th><th>Word</th><th>Picked</th><th>Correct</th></tr>'+mistakes.map(function(a){var me=a.game_mode==="sound"?"\u{1F50A}":a.game_mode==="rhyme"?"\u{1F3B5}":a.game_mode==="blend"?"\u{1F680}":"\u{1F528}";return'<tr><td style="font-size:12px">'+a.session_date+'</td><td>'+me+'</td><td style="text-transform:uppercase;font-weight:600">'+(a.target_word||a.target_letter||"-")+'</td><td class="bad" style="text-transform:uppercase">'+(a.user_answer||"-")+'</td><td class="good" style="text-transform:uppercase">'+(a.correct_answer||"-")+'</td></tr>'}).join("")+'</table>':'<div style="color:rgba(255,255,255,.4)">No mistakes yet!</div>')+'</div>';
+h+='<div class="sec"><h3>\u274C Recent Mistakes</h3>'+(mistakes.length?'<table class="tbl"><tr><th>Date</th><th>Game</th><th>Word</th><th>Picked</th><th>Correct</th></tr>'+mistakes.map(function(a){var me=a.game_mode==="sound"?"\u{1F50A}":a.game_mode==="rhyme"?"\u{1F3B5}":a.game_mode==="blend"?"\u{1F680}":"\u{1F528}";return'<tr><td style="font-size:12px">'+a.session_date+'</td><td>'+me+'</td><td style="text-transform:uppercase;font-weight:600">'+(a.target_word||a.target_letter||"-")+'</td><td class="bad" style="text-transform:uppercase">'+(a.user_answer||"-")+'</td><td class="good" style="text-transform:uppercase">'+(a.correct_answer||"-")+'</td></tr>'}).join("")+'</table>':'<div style="color:rgba(120,40,80,.4)">No mistakes yet!</div>')+'</div>';
 var trouble=words.filter(function(w){return Math.round(w.ok/w.total*100)<60});
-if(trouble.length){h+='<div class="sec"><h3>\u26A0\uFE0F Trouble Words (&lt;60%)</h3><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">'+trouble.map(function(w){return'<div style="background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.3);border-radius:14px;padding:10px 16px;text-align:center"><div style="font-size:20px;font-weight:700;text-transform:uppercase;color:#FF6B6B">'+w.w+'</div><div style="font-size:11px;color:rgba(255,255,255,.4)">'+w.ok+'/'+w.total+' ('+Math.round(w.ok/w.total*100)+'%)</div></div>'}).join("")+'</div></div>'}}
+if(trouble.length){h+='<div class="sec"><h3>\u26A0\uFE0F Trouble Words (&lt;60%)</h3><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">'+trouble.map(function(w){return'<div style="background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.3);border-radius:14px;padding:10px 16px;text-align:center"><div style="font-size:20px;font-weight:700;text-transform:uppercase;color:#FF6B6B">'+w.w+'</div><div style="font-size:11px;color:rgba(120,40,80,.4)">'+w.ok+'/'+w.total+' ('+Math.round(w.ok/w.total*100)+'%)</div></div>'}).join("")+'</div></div>'}}
 
 if(tabView==="sessions"){
-h+='<div class="sec"><h3>\u{1F4CB} All Sessions</h3>'+(real.length?real.slice(0,25).map(function(s){var pct=Math.round(s.total_correct/20*100);var c=pct>=80?"#00FF88":pct>=60?"#FFD700":"#FF6B6B";return'<div class="sess"><div class="dt">'+s.session_date+'</div><div class="sc" style="color:'+c+'">'+s.total_correct+'/20</div><div class="bd"><span class="ch" style="background:rgba(255,59,139,.15);color:#FF3B8B">\u{1F50A}'+(s.sound_correct||0)+'/5</span><span class="ch" style="background:rgba(180,75,255,.15);color:#B44BFF">\u{1F3B5}'+(s.rhyme_correct||0)+'/5</span><span class="ch" style="background:rgba(0,194,255,.15);color:#00C2FF">\u{1F680}'+(s.blend_correct||0)+'/5</span><span class="ch" style="background:rgba(255,149,0,.15);color:#FF9500">\u{1F528}'+(s.build_correct||0)+'/5</span></div><div style="font-size:12px;color:rgba(255,215,0,.6)">+'+s.stars_earned+'\u2B50</div></div>'}).join(""):'<div style="color:rgba(255,255,255,.4)">No sessions yet</div>')+'</div>'}
+h+='<div class="sec"><h3>\u{1F4CB} All Sessions</h3>'+(real.length?real.slice(0,25).map(function(s){var pct=Math.round(s.total_correct/20*100);var c=pct>=80?"#00FF88":pct>=60?"#FFD700":"#FF6B6B";return'<div class="sess"><div class="dt">'+s.session_date+'</div><div class="sc" style="color:'+c+'">'+s.total_correct+'/20</div><div class="bd"><span class="ch" style="background:rgba(255,59,139,.15);color:#FF3B8B">\u{1F50A}'+(s.sound_correct||0)+'/5</span><span class="ch" style="background:rgba(180,75,255,.15);color:#B44BFF">\u{1F3B5}'+(s.rhyme_correct||0)+'/5</span><span class="ch" style="background:rgba(0,194,255,.15);color:#00C2FF">\u{1F680}'+(s.blend_correct||0)+'/5</span><span class="ch" style="background:rgba(255,149,0,.15);color:#FF9500">\u{1F528}'+(s.build_correct||0)+'/5</span></div><div style="font-size:12px;color:rgba(200,60,120,.5)">+'+s.stars_earned+'\u2B50</div></div>'}).join(""):'<div style="color:rgba(120,40,80,.4)">No sessions yet</div>')+'</div>'}
 
 if(tabView==="settings"){
 var ck=localStorage.getItem("sq_xi_key")||"";
 var cv=localStorage.getItem("sq_xi_voice")||"21m00Tcm4TlvDq8ikWAM";
 var sp=localStorage.getItem("sq_sari_pin")||"1234";
 var pp=localStorage.getItem("sq_parent_pin")||"8613";
-h+='<div class="sec"><h3>\u{1F510} PIN Codes</h3><div style="margin-bottom:14px"><div style="font-size:13px;color:rgba(255,255,255,.4);margin-bottom:6px">Sari\'s PIN</div><input class="inp" id="sariPin" value="'+sp+'" maxlength="4"></div><div><div style="font-size:13px;color:rgba(255,255,255,.4);margin-bottom:6px">Parent PIN</div><input class="inp" id="parentPin" value="'+pp+'" maxlength="4"></div></div>';
-h+='<div class="sec"><h3>\u{1F399}\uFE0F Voice (ElevenLabs)</h3><div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px">Free at elevenlabs.io \u2014 paste API key for human-quality voice</div><input class="inp" id="xiKey" value="'+ck+'" placeholder="ElevenLabs API Key" style="margin-bottom:12px"><div style="font-size:13px;color:rgba(255,255,255,.4);margin-bottom:8px">Voice</div><div>'+Object.entries(XI_VOICES).map(function(e){return'<span class="voice-opt '+(e[1]===cv?"on":"")+'" onclick="pickVoice(\''+e[1]+'\',this)">'+e[0]+'</span>'}).join("")+'</div><div style="font-size:11px;color:rgba(255,255,255,.25);margin-top:8px">Free: ~10 quests/mo \u00B7 $5/mo for 30k+ chars</div></div>';
-h+='<div class="sec"><h3>\u{1F9E0} AI Tutor (Morah)</h3><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:5px;background:#00FF88"></div><span style="font-size:14px">Powered by Claude</span></div><div style="font-size:12px;color:rgba(255,255,255,.3)">API key is set in Vercel \u2192 Settings \u2192 Environment Variables</div><div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:2px">Works automatically on every device</div></div>';
-h+='<div class="sec"><h3>\u{1F4CA} Database</h3><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:5px;background:#00FF88"></div><span style="font-size:14px">Connected</span></div><div style="font-size:12px;color:rgba(255,255,255,.3)">All data syncs automatically across devices</div></div>';
-h+='<div class="sec"><h3>\u{1F5D1}\uFE0F Reset Progress</h3><div style="font-size:13px;color:rgba(255,255,255,.4);margin-bottom:12px">Resets all stars, stickers, streak to zero. Cannot be undone.</div><button onclick="if(confirm(\'Reset ALL progress? Cannot be undone.\'))resetProgress()" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:14px;padding:12px 24px;font-size:14px;color:#FF6B6B">\u{1F5D1}\uFE0F Reset All</button></div>';
-h+='<button onclick="saveSettings()" style="background:linear-gradient(135deg,#00FF88,#00CC66);border-radius:18px;padding:16px 36px;font-size:18px;font-weight:700;color:#0D0A1A;width:100%;margin-bottom:20px">\u{1F4BE} Save Settings</button>'}
+h+='<div class="sec"><h3>\u{1F510} PIN Codes</h3><div style="margin-bottom:14px"><div style="font-size:13px;color:rgba(120,40,80,.4);margin-bottom:6px">Sari\'s PIN</div><input class="inp" id="sariPin" value="'+sp+'" maxlength="4"></div><div><div style="font-size:13px;color:rgba(120,40,80,.4);margin-bottom:6px">Parent PIN</div><input class="inp" id="parentPin" value="'+pp+'" maxlength="4"></div></div>';
+h+='<div class="sec"><h3>\u{1F399}\uFE0F Voice (ElevenLabs)</h3><div style="font-size:12px;color:rgba(120,40,80,.4);margin-bottom:10px">Free at elevenlabs.io \u2014 paste API key for human-quality voice</div><input class="inp" id="xiKey" value="'+ck+'" placeholder="ElevenLabs API Key" style="margin-bottom:12px"><div style="font-size:13px;color:rgba(120,40,80,.4);margin-bottom:8px">Voice</div><div>'+Object.entries(XI_VOICES).map(function(e){return'<span class="voice-opt '+(e[1]===cv?"on":"")+'" onclick="pickVoice(\''+e[1]+'\',this)">'+e[0]+'</span>'}).join("")+'</div><div style="font-size:11px;color:rgba(120,40,80,.25);margin-top:8px">Free: ~10 quests/mo \u00B7 $5/mo for 30k+ chars</div></div>';
+h+='<div class="sec"><h3>\u{1F9E0} AI Tutor (Morah)</h3><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:5px;background:#00FF88"></div><span style="font-size:14px">Powered by Claude</span></div><div style="font-size:12px;color:rgba(120,40,80,.3)">API key is set in Vercel \u2192 Settings \u2192 Environment Variables</div><div style="font-size:12px;color:rgba(120,40,80,.3);margin-top:2px">Works automatically on every device</div></div>';
+h+='<div class="sec"><h3>\u{1F4CA} Database</h3><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:5px;background:#00FF88"></div><span style="font-size:14px">Connected</span></div><div style="font-size:12px;color:rgba(120,40,80,.3)">All data syncs automatically across devices</div></div>';
+h+='<div class="sec"><h3>\u{1F5D1}\uFE0F Reset Progress</h3><div style="font-size:13px;color:rgba(120,40,80,.4);margin-bottom:12px">Resets all stars, stickers, streak to zero. Cannot be undone.</div><button onclick="if(confirm(\'Reset ALL progress? Cannot be undone.\'))resetProgress()" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:14px;padding:12px 24px;font-size:14px;color:#FF6B6B">\u{1F5D1}\uFE0F Reset All</button></div>';
+h+='<button onclick="saveSettings()" style="background:linear-gradient(135deg,#FF69B4,#FF3B8B);border-radius:18px;padding:16px 36px;font-size:18px;font-weight:700;color:#fff;width:100%;margin-bottom:20px">\u{1F4BE} Save Settings</button>'}
 
-h+='<div style="text-align:center;padding:16px;color:rgba(255,255,255,.12);font-size:11px">Updated: '+new Date().toLocaleString()+'</div></div>';
+h+='<div style="text-align:center;padding:16px;color:rgba(120,40,80,.2);font-size:11px">Updated: '+new Date().toLocaleString()+'</div></div>';
 app.innerHTML=h}
 
 window.pickVoice=function(id,el){document.querySelectorAll(".voice-opt").forEach(function(e){e.classList.remove("on")});el.classList.add("on");el.dataset.vid=id};
@@ -153,7 +163,7 @@ if(xk)localStorage.setItem("sq_xi_key",xk.value);
 var sel=document.querySelector(".voice-opt.on");
 if(sel){var idx=Array.from(document.querySelectorAll(".voice-opt")).indexOf(sel);var vid=Object.values(XI_VOICES)[idx];if(vid)localStorage.setItem("sq_xi_voice",vid)}
 alert("\u2705 Settings saved!")};
-window.resetProgress=async function(){try{await sb.from("progress").update({stars:0,correct:0,played:0,streak:0,stickers:[],stories_unlocked:[],last_date:null,days_played:0}).eq("player_id","sari");await sb.from("sessions").delete().eq("player_id","sari");await sb.from("answers").delete().eq("player_id","sari");localStorage.removeItem("sq6");alert("\u2705 Reset!");loadDashboard()}catch(e){alert("Error: "+e.message)}};
+window.resetProgress=async function(){try{await sb.from("progress").update({stars:0,correct:0,played:0,streak:0,stickers:[],stories_unlocked:[],last_date:null,days_played:0,timer_date:null,timer_seconds:0}).eq("player_id","sari");await sb.from("sessions").delete().eq("player_id","sari");await sb.from("answers").delete().eq("player_id","sari");localStorage.removeItem("sq6");alert("\u2705 Reset!");loadDashboard()}catch(e){alert("Error: "+e.message)}};
 window.doLogout=function(){tabView="overview";window.location.href="/"};
 showLogin();
 </script>
