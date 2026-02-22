@@ -78,9 +78,9 @@ const {useState,useEffect,useRef}=React;
 
 // ── WORDS ──
 const WDS=[
-{w:"cat",i:"🐱",f:"at"},{w:"bat",i:"🦇",f:"at"},{w:"hat",i:"🎩",f:"at"},{w:"mat",i:"🧹",f:"at"},{w:"sat",i:"💺",f:"at"},{w:"rat",i:"🐀",f:"at"},{w:"pat",i:"👋",f:"at"},
+{w:"cat",i:"🐱",f:"at"},{w:"bat",i:"🦇",f:"at"},{w:"hat",i:"🎩",f:"at"},{w:"mat",i:"🟫",f:"at"},{w:"sat",i:"💺",f:"at"},{w:"rat",i:"🐀",f:"at"},{w:"pat",i:"👋",f:"at"},
 {w:"dog",i:"🐶",f:"og"},{w:"log",i:"🪵",f:"og"},{w:"hog",i:"🐷",f:"og"},{w:"fog",i:"🌫️",f:"og"},{w:"jog",i:"🏃",f:"og"},
-{w:"pig",i:"🐷",f:"ig"},{w:"big",i:"🏔️",f:"ig"},{w:"dig",i:"⛏️",f:"ig"},{w:"wig",i:"💇",f:"ig"},{w:"fig",i:"🍇",f:"ig"},
+{w:"pig",i:"🐷",f:"ig"},{w:"big",i:"🏔️",f:"ig"},{w:"dig",i:"⛏️",f:"ig"},{w:"wig",i:"💇",f:"ig"},{w:"fig",i:"🌿",f:"ig"},
 {w:"sun",i:"☀️",f:"un"},{w:"run",i:"🏃",f:"un"},{w:"fun",i:"🎉",f:"un"},{w:"bun",i:"🍔",f:"un"},
 {w:"cup",i:"☕",f:"up"},{w:"pup",i:"🐶",f:"up"},
 {w:"bed",i:"🛏️",f:"ed"},{w:"red",i:"🔴",f:"ed"},
@@ -91,22 +91,22 @@ const WDS=[
 {w:"sit",i:"🪑",f:"it"},{w:"hit",i:"💥",f:"it"},{w:"bit",i:"🍪",f:"it"},{w:"fit",i:"💪",f:"it"},
 {w:"van",i:"🚐",f:"an"},{w:"can",i:"🥫",f:"an"},{w:"man",i:"🧑",f:"an"},{w:"fan",i:"🌀",f:"an"},{w:"pan",i:"🍳",f:"an"},{w:"ran",i:"🏃",f:"an"},
 {w:"bug",i:"🐛",f:"ug"},{w:"hug",i:"🤗",f:"ug"},{w:"mug",i:"☕",f:"ug"},{w:"rug",i:"🟫",f:"ug"},{w:"tug",i:"🚢",f:"ug"},
-{w:"hop",i:"🐇",f:"op"},{w:"pop",i:"🎈",f:"op"},{w:"mop",i:"🧹",f:"op"},{w:"top",i:"🔝",f:"op"},
+{w:"hop",i:"🐇",f:"op"},{w:"pop",i:"🎈",f:"op"},{w:"mop",i:"🪣",f:"op"},{w:"top",i:"🔝",f:"op"},
 ];
 const LS={a:"aah",b:"buh",c:"kuh",d:"duh",e:"eh",f:"fuh",g:"guh",h:"huh",i:"ih",j:"juh",k:"kuh",l:"luh",m:"muh",n:"nuh",o:"aww",p:"puh",r:"ruh",s:"sss",t:"tuh",u:"uh",v:"vuh",w:"wuh",x:"ks",y:"yuh",z:"zzz"};
 const AZ="abcdefghijklmnopqrstuvwxyz".split("");
 
-const CHEERS=["Mommy loves you SO much!","Abba is SO proud of you!","Mommy and Abba are cheering!","Mommy says you're amazing!","Abba says that's his girl!","Mommy is jumping up and down!","Abba says wow, Sari, wow!","Bubby Feig is SO proud!","Bubby says that's my granddaughter!","Bubby is shepping nachas!","Bubby Feig is clapping for you!","Kira next door says wow!","Kira is cheering for you!","Kira says you're so smart!","Abby says amazing!","Cousin Ahuvah is cheering!","Cousin Ahuvah says wow Sari!","Baby Talia is clapping for you!","Talia says yay big sister!","Mordechai Shapiro says incredible!","Uncle Moishy is dancing!","Zisha says you're a star!","Daniel Tiger says great job!","Ugga Mugga Sari!","Superstar Sari!","Uncle Aryeh says you're the best!","Rivkah and Asher are cheering!","Cousin Chayala says wow!","Aunt Michal is SO proud!"];
-const TRIES=["Almost! Mommy says try again!","So close! Abba believes in you!","Bubby says you're getting it!","Kira says you'll get the next one!","Abby is cheering you on!","Cousin Ahuvah says you can do it!","Baby Talia says try again!","Bubby says winners keep going!","So close Sari!"];
+const CHEERS=["Mommy loves you SO much!","Daddy is SO proud of you!","Mommy and Daddy are cheering!","Mommy says you're amazing!","Daddy says that's his girl!","Mommy is jumping up and down!","Daddy says wow, Sari, wow!","Bubby Feig is SO proud!","Bubby says that's my granddaughter!","Bubby is shepping nachas!","Bubby Feig is clapping for you!","Kira next door says wow!","Kira is cheering for you!","Kira says you're so smart!","Abby says amazing!","Cousin Ahuvah is cheering!","Cousin Ahuvah says wow Sari!","Baby Talia is clapping for you!","Talia says yay big sister!","Mordechai Shapiro says incredible!","Uncle Moishy is dancing!","Zisha says you're a star!","Daniel Tiger says great job!","Ugga Mugga Sari!","Superstar Sari!","Uncle Aryeh says you're the best!","Rivkah and Asher are cheering!","Cousin Chayala says wow!","Aunt Michal is SO proud!"];
+const TRIES=["Almost! Mommy says try again!","So close! Daddy believes in you!","Bubby says you're getting it!","Kira says you'll get the next one!","Abby is cheering you on!","Cousin Ahuvah says you can do it!","Baby Talia says try again!","Bubby says winners keep going!","So close Sari!"];
 const STIX=["⭐","🌟","💫","✨","🦄","🌈","🦋","🎀","💎","👑","🌸","🍭","🧁","🎠","🐬","🦩","🐯","🍕","🍦","🌭","🎵","💕","🐱","🐶","🎈","🍪","🌺"];
 
 // ── FUNNY STORIES (read aloud as prizes!) ──
 const STORIES=[
 {id:"pizza-fish",title:"Sari and the Pizza Fish",emoji:"🍕🐟",text:"Once upon a time, Sari went swimming and found a fish wearing a tiny pizza hat. The fish said, Excuse me, do you know where the pizza shop is? I'm SO hungry! Sari laughed and said, Fish don't eat pizza! The fish looked sad. So Sari brought the fish a pizza, and all the other fish came to watch. Now every Friday, Sari delivers pizza to the fish pond. Bubby says it's the funniest thing she's ever seen. The end!"},
 {id:"kira-cloud",title:"Kira's Cloud Ride",emoji:"☁️✨",text:"One morning, Sari and Kira looked up and saw a cloud shaped like a giant donut. I bet we could ride that, said Kira. So they climbed up a really tall ladder made of rainbows. The cloud was super soft and fluffy! They rode it all the way to Bais Yaakov. Their teacher said, Girls, why are you wet? Because we rode a cloud, Morah! The whole class wanted cloud rides after that. The end!"},
-{id:"talia-words",title:"Baby Talia's First Word",emoji:"👶💬",text:"Baby Talia was sitting in her high chair when she looked at Sari and said her very first word. Everyone got quiet. Talia opened her mouth and said... PIZZA! Abba laughed so hard milk came out of his nose. Mommy said, Just like your big sister! Bubby called everyone on the phone. My granddaughter said pizza! Then Talia said her second word... MORE PIZZA! The end!"},
+{id:"talia-words",title:"Baby Talia's First Word",emoji:"👶💬",text:"Baby Talia was sitting in her high chair when she looked at Sari and said her very first word. Everyone got quiet. Talia opened her mouth and said... PIZZA! Daddy laughed so hard milk came out of his nose. Mommy said, Just like your big sister! Bubby called everyone on the phone. My granddaughter said pizza! Then Talia said her second word... MORE PIZZA! The end!"},
 {id:"tiger-school",title:"Daniel Tiger Visits Bais Yaakov",emoji:"🐯🏫",text:"Daniel Tiger showed up at Bais Yaakov one day wearing a backpack. Hi! I'm here to learn! he said. But Daniel Tiger, you're a tiger! said the teacher. Daniel sat at Sari's desk and tried to hold a pencil. His paws were too big! He tried to eat lunch but his sandwich was way too small. At recess he was the BEST at tag because nobody could catch a tiger. Ugga mugga, Sari! said Daniel Tiger. Best school day ever! The end!"},
-{id:"hat-party",title:"The Silly Hat Party",emoji:"🎩🎉",text:"Sari found a magic hat in the closet. When she put it on, it turned into a crown! When Abba put it on, it turned into a giant banana! When Mommy put it on, it turned into a birthday cake with candles! Bubby put it on and it turned into a hat made of candy. When baby Talia grabbed it, the hat turned into a tiny hat for a tiny baby and everyone said awwww. Kira came over and the hat turned into TWO hats so they could match. Best hat ever! The end!"},
+{id:"hat-party",title:"The Silly Hat Party",emoji:"🎩🎉",text:"Sari found a magic hat in the closet. When she put it on, it turned into a crown! When Daddy put it on, it turned into a giant banana! When Mommy put it on, it turned into a birthday cake with candles! Bubby put it on and it turned into a hat made of candy. When baby Talia grabbed it, the hat turned into a tiny hat for a tiny baby and everyone said awwww. Kira came over and the hat turned into TWO hats so they could match. Best hat ever! The end!"},
 {id:"swimming-mermaid",title:"Sari the Mermaid",emoji:"🧜‍♀️🏊",text:"Sari was swimming when she noticed her feet felt funny. She looked down and saw a sparkly mermaid tail! Cool! she said, and dove under the water. She could breathe underwater! The fish from the pizza story swam over. Hey Sari! Want to see our house? The fish lived in a tiny city at the bottom of the pool with tiny roads and a tiny pizza shop. Sari ate the world's smallest pizza. When she got out of the pool, her legs came back. But she found a tiny seashell in her pocket that whispered, Come back soon! The end!"},
 ];
 
@@ -123,7 +123,7 @@ const PRIZES=[
 {id:9,s:530,e:"📖",n:"Daniel Tiger at School",t:"story",sid:"tiger-school"},
 {id:10,s:590,e:"📖",n:"The Silly Hat Party",t:"story",sid:"hat-party"},
 {id:11,s:650,e:"📖",n:"Sari the Mermaid",t:"story",sid:"swimming-mermaid"},
-{id:12,s:720,e:"💕",n:"Date with Mommy & Abba!",t:"real"},
+{id:12,s:720,e:"💕",n:"Date with Mommy & Daddy!",t:"real"},
 ];
 
 const STG=[{id:"sound",em:"🔊",nm:"Sound Match",cl:"#FF3B8B"},{id:"rhyme",em:"🎵",nm:"Rhyme Rocket",cl:"#B44BFF"},{id:"blend",em:"🚀",nm:"Blend Blaster",cl:"#00C2FF"},{id:"build",em:"🔨",nm:"Word Builder",cl:"#FF9500"}];
@@ -385,7 +385,7 @@ q.m==="sound"&&React.createElement(SoundG,{q,onA}),q.m==="rhyme"&&React.createEl
 // ═══ QUEST DONE ═══
 const QDone=({res,earned,ns,prize,streak,onHome})=>{const ok=res.filter(Boolean).length;const pct=Math.round(ok/20*100);const[cf,setCf]=useState(false);
 useEffect(()=>{setCf(true);setTimeout(()=>setCf(false),5000);
-const fam=pct>=80?pick(["Mommy and Abba are SO proud!","Bubby can't believe it!","Kira is amazed!"]):pct>=60?pick(["Abba says wow!","Mommy is happy!","Bubby is clapping!"]):pick(["Mommy says keep going!","Abba believes in you!"]);
+const fam=pct>=80?pick(["Mommy and Daddy are SO proud!","Bubby can't believe it!","Kira is amazed!"]):pct>=60?pick(["Daddy says wow!","Mommy is happy!","Bubby is clapping!"]):pick(["Mommy says keep going!","Daddy believes in you!"]);
 setTimeout(()=>say((pct===100?"Perfect! ":"Great job Sari! ")+fam+" You earned "+earned+" stars!"+(streak>1?" "+streak+" days in a row!":"")),700)},[]);
 return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,background:BG}},
 React.createElement(Glow),React.createElement(Conf,{on:cf,mega:pct>=80}),
@@ -403,7 +403,7 @@ ns&&React.createElement("div",{style:{display:"inline-flex",alignItems:"center",
 prize&&React.createElement("div",{style:{background:"linear-gradient(145deg,rgba(255,59,139,.18),rgba(180,75,255,.08))",border:"2px solid #FF3B8B",borderRadius:22,padding:"20px 24px",marginBottom:20}},
 React.createElement("div",{style:{fontSize:13,color:"#FF3B8B",fontWeight:600,letterSpacing:1}},"🎉 NEW PRIZE! 🎉"),
 React.createElement("div",{style:{fontSize:48,margin:"8px 0"}},prize.e),React.createElement("div",{style:{fontSize:19,fontWeight:700}},prize.n),
-prize.t==="real"&&React.createElement("div",{style:{fontSize:12,color:"rgba(120,40,80,.5)",marginTop:4}},"Show Abba to redeem! 🎟️"),
+prize.t==="real"&&React.createElement("div",{style:{fontSize:12,color:"rgba(120,40,80,.5)",marginTop:4}},"Show Daddy to redeem! 🎟️"),
 prize.t==="story"&&React.createElement("div",{style:{fontSize:12,color:"#B44BFF",marginTop:4}},"📖 A new story to listen to!")),
 React.createElement("button",{onClick:()=>{say("See you tomorrow!");setTimeout(onHome,600)},style:{background:"linear-gradient(135deg,#FF3B8B,#FF6B8B)",borderRadius:22,padding:"18px 44px",fontSize:"clamp(18px,5vw,22px)",fontWeight:700,boxShadow:"0 6px 25px rgba(255,59,139,.3)"}},"🏠 Done!")))};
 
@@ -419,34 +419,183 @@ prog.stk&&prog.stk.length>0&&React.createElement("div",{style:{background:"rgba(
 React.createElement("div",{style:{fontSize:13,color:"rgba(120,40,80,.5)",marginBottom:8}},"🏆 Stickers ("+prog.stk.length+")"),
 React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:6}},...prog.stk.map((s,i)=>React.createElement("span",{key:i,style:{fontSize:24}},s)))),
 React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:12}},...PRIZES.map((p,i)=>{const ok=prog.stars>=p.s;
-return React.createElement("button",{key:p.id,onClick:()=>{if(ok&&p.t==="story"){const st=STORIES.find(s=>s.id===p.sid);if(st)onStory(st)}else say(ok?(p.n+(p.t==="real"?" Show Abba!":"")):(p.n+" Need "+p.s+" stars"))},
+return React.createElement("button",{key:p.id,onClick:()=>{if(ok&&p.t==="story"){const st=STORIES.find(s=>s.id===p.sid);if(st)onStory(st)}else say(ok?(p.n+(p.t==="real"?" Show Daddy!":"")):(p.n+" Need "+p.s+" stars"))},
 style:{background:ok?"linear-gradient(145deg,rgba(255,215,0,.1),rgba(255,59,139,.06))":"rgba(255,255,255,.025)",border:ok?"1.5px solid rgba(255,215,0,.25)":"1px solid rgba(255,255,255,.75)",borderRadius:20,padding:"14px 18px",display:"flex",alignItems:"center",gap:12,opacity:ok?1:.4,animation:`slideUp .3s ease-out ${i*.05}s both`,width:"100%",textAlign:"left"}},
 React.createElement("div",{style:{fontSize:"clamp(30px,8vw,42px)"}},ok?p.e:"🔒"),
 React.createElement("div",{style:{flex:1}},React.createElement("div",{style:{fontSize:15,fontWeight:600}},p.n),
-React.createElement("div",{style:{fontSize:11,color:"rgba(120,40,80,.45)"}},ok?(p.t==="real"?"Show Abba! 🎟️":p.t==="story"?"📖 Tap to listen!":"Collected!"):p.s+" stars")),
+React.createElement("div",{style:{fontSize:11,color:"rgba(120,40,80,.45)"}},ok?(p.t==="real"?"Show Daddy! 🎟️":p.t==="story"?"📖 Tap to listen!":"Collected!"):p.s+" stars")),
 ok&&p.t==="story"&&React.createElement("div",{style:{fontSize:18}},"▶️"))}))))};
 
+// ═══ JEWISH CALENDAR 5786 (2025-2026) ═══
+const PARSHA_5786=[
+["2025-10-18","Bereishis"],["2025-10-25","Noach"],["2025-11-01","Lech Lecha"],["2025-11-08","Vayeira"],
+["2025-11-15","Chayei Sarah"],["2025-11-22","Toldos"],["2025-11-29","Vayeitzei"],["2025-12-06","Vayishlach"],
+["2025-12-13","Vayeishev"],["2025-12-20","Mikeitz"],["2025-12-27","Vayigash"],["2026-01-03","Vayechi"],
+["2026-01-10","Shemos"],["2026-01-17","Va'eira"],["2026-01-24","Bo"],["2026-01-31","Beshalach"],
+["2026-02-07","Yisro"],["2026-02-14","Mishpatim"],["2026-02-21","Terumah"],["2026-02-28","Tetzaveh"],
+["2026-03-07","Ki Sisa"],["2026-03-14","Vayakhel-Pekudei"],["2026-03-21","Vayikra"],["2026-03-28","Tzav"],
+["2026-04-04","Pesach"],["2026-04-11","Shmini"],["2026-04-18","Tazria-Metzora"],["2026-04-25","Acharei Mos-Kedoshim"],
+["2026-05-02","Emor"],["2026-05-09","Behar-Bechukosai"],["2026-05-16","Bamidbar"],["2026-05-23","Shavuos"],
+["2026-05-30","Naso"],["2026-06-06","Beha'aloscha"],["2026-06-13","Shelach"],["2026-06-20","Korach"],
+["2026-06-27","Chukas-Balak"],["2026-07-04","Pinchas"],["2026-07-11","Mattos-Masei"],
+["2026-07-18","Devarim"],["2026-07-25","Va'eschanan"],["2026-08-01","Eikev"],["2026-08-08","Re'eh"],
+["2026-08-15","Shoftim"],["2026-08-22","Ki Seitzei"],["2026-08-29","Ki Savo"],["2026-09-05","Nitzavim-Vayelech"],
+["2026-09-12","Rosh Hashana"],
+["2026-09-19","Haazinu"]
+];
+const JEWISH_HOLIDAYS=[
+{d:"2026-02-02",n:"Tu B'Shvat",days:1,pre:5},
+{d:"2025-12-14",n:"Chanukah",days:8,pre:7},
+{d:"2026-03-03",n:"Purim",days:1,pre:14},
+{d:"2026-04-02",n:"Pesach",days:8,pre:21},
+{d:"2026-05-05",n:"Lag B'Omer",days:1,pre:3},
+{d:"2026-05-22",n:"Shavuos",days:2,pre:14},
+{d:"2026-07-23",n:"Tisha B'Av",days:1,pre:3},
+{d:"2026-09-12",n:"Rosh Hashana",days:2,pre:14}
+];
+const getParsha=()=>{
+const now=new Date();const dow=now.getDay();
+// Find upcoming Shabbos (Saturday=6)
+const daysToShab=(6-dow+7)%7||7;
+const shab=new Date(now);shab.setDate(shab.getDate()+(dow===6?0:daysToShab));
+// Use LOCAL date (not UTC) to avoid timezone issues in EST
+const shabStr=shab.getFullYear()+"-"+String(shab.getMonth()+1).padStart(2,"0")+"-"+String(shab.getDate()).padStart(2,"0");
+// If today is Sunday-Friday, this week's parsha is the upcoming Shabbos
+// If today is Shabbos, use today
+for(let i=0;i<PARSHA_5786.length;i++){
+if(PARSHA_5786[i][0]===shabStr)return PARSHA_5786[i][1];
+if(PARSHA_5786[i][0]>shabStr)return PARSHA_5786[i>0?i-1:0][1];
+}
+return PARSHA_5786[PARSHA_5786.length-1][1];
+};
+const getHolidayContext=()=>{
+const today=td();const todayD=new Date(today+"T12:00:00");
+let ctx=[];
+for(const h of JEWISH_HOLIDAYS){
+const hDate=new Date(h.d+"T12:00:00");
+const hEnd=new Date(hDate);hEnd.setDate(hEnd.getDate()+h.days);
+const preStart=new Date(hDate);preStart.setDate(preStart.getDate()-h.pre);
+if(todayD>=preStart&&todayD<=hEnd){
+const daysUntil=Math.ceil((hDate-todayD)/(1000*60*60*24));
+if(todayD>=hDate&&todayD<=hEnd)ctx.push({name:h.n,status:"today",daysUntil:0});
+else ctx.push({name:h.n,status:"upcoming",daysUntil});
+}
+}
+return ctx;
+};
+const getDateContext=()=>{
+const d=new Date();const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Shabbos"];
+const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const dayName=days[d.getDay()];const parsha=getParsha();const holidays=getHolidayContext();
+let ctx=`Today is ${dayName}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}. This week's Parsha is ${parsha}.`;
+if(holidays.length>0){
+for(const h of holidays){
+if(h.status==="today")ctx+=` Today is ${h.name}!`;
+else if(h.daysUntil<=3)ctx+=` ${h.name} is in ${h.daysUntil} day${h.daysUntil===1?"":"s"}! Very exciting!`;
+else ctx+=` ${h.name} is coming up in ${h.daysUntil} days!`;
+}
+}
+if(d.getDay()===5)ctx+=" Today is Erev Shabbos!";
+if(d.getDay()===6)ctx+=" Today is Shabbos Kodesh!";
+return ctx;
+};
+const getHolidayPromptExtra=()=>{
+const holidays=getHolidayContext();
+if(!holidays.length)return"";
+let extra="";
+for(const h of holidays){
+if(h.name==="Purim")extra+=`
+PURIM IS ${h.daysUntil<=0?"TODAY":"COMING IN "+h.daysUntil+" DAYS"}! Purim themes to weave in:
+- The story of Megillas Esther: Achashverosh, Esther, Mordechai, Haman
+- 4 Mitzvos of Purim: Megillah reading, Mishloach Manos (food gifts), Matanos La'Evyonim (gifts to poor), Seudas Purim (festive meal)
+- Dressing up in costumes! Ask what Sari is dressing up as
+- Hamantaschen (triangle cookies), groggers (noisemakers)
+- "V'nahafoch hu" — everything turned upside down! Haman's evil plan was reversed!
+- Songs: "Chag Purim", "LaYehudim", "Mishenichnas Adar marbim b'simcha"
+- Shabbos Zachor: the special maftir reading before Purim about remembering Amalek
+- "When Adar comes in, we increase in SIMCHA (happiness)!"
+Reference: making mishloach manos with Mommy, dressing up with Kira, Purim seudah with the family, giving groggers at Megillah reading`;
+if(h.name==="Pesach")extra+=`
+PESACH IS ${h.daysUntil<=0?"NOW":"COMING IN "+h.daysUntil+" DAYS"}! Pesach themes:
+- Seder night: 4 cups, 4 questions (Ma Nishtana), matzah, maror, charoses
+- Story of Yetzias Mitzrayim, Moshe, the 10 Makkos, Krias Yam Suf
+- Cleaning for Pesach (no chametz!), searching for chametz with a candle
+- Songs: Dayenu, Chad Gadya, Ma Nishtana, Avadim Hayinu
+- Matzah = the bread of freedom (didn't have time to rise!)`;
+if(h.name==="Shavuos")extra+=`
+SHAVUOS IS ${h.daysUntil<=0?"NOW":"COMING IN "+h.daysUntil+" DAYS"}! Shavuos themes:
+- Matan Torah at Har Sinai — Hashem gave us the Torah!
+- The 10 Commandments, staying up to learn Torah
+- Eating milchigs (dairy): cheesecake, blintzes, ice cream
+- Decorating with flowers and greenery
+- Megillas Rus (Ruth) — a story of chesed and loyalty`;
+if(h.name==="Chanukah")extra+=`
+CHANUKAH IS ${h.daysUntil<=0?"NOW":"COMING IN "+h.daysUntil+" DAYS"}! Chanukah themes:
+- The Maccabees, the miracle of the oil lasting 8 nights
+- Lighting the menorah: shamash + 1 candle more each night (8 on last night)
+- Dreidel (Nun Gimmel Hey Shin = Nes Gadol Haya Sham), latkes, sufganiyos (donuts)
+- Songs: Maoz Tzur, Chanukah Oh Chanukah, I Have a Little Dreidel
+- Al Hanisim in davening — thanking Hashem for the miracles`;
+if(h.name==="Tu B'Shvat")extra+=`
+TU B'SHVAT IS ${h.daysUntil<=0?"TODAY":"COMING IN "+h.daysUntil+" DAYS"}! Tu B'Shvat themes:
+- The birthday of the trees! The "New Year for Trees"
+- We eat special fruits, especially the 7 species of Eretz Yisrael: wheat, barley, grapes, figs, pomegranates, olives, dates
+- Planting trees in Eretz Yisrael
+- "Man is like a tree of the field" — just like trees need roots, water and sunshine, WE need Torah, mitzvos, and Hashem!
+- Try a NEW fruit you never tasted and say Shehechiyanu!
+- Talk about Hashem's amazing nature and how trees give us fruit, shade, and oxygen`;
+if(h.name==="Lag B'Omer")extra+=`
+LAG B'OMER IS ${h.daysUntil<=0?"TODAY":"COMING IN "+h.daysUntil+" DAYS"}! Lag B'Omer themes:
+- The 33rd day of counting the Omer (between Pesach and Shavuos)
+- Rabbi Shimon bar Yochai (Rashbi) — wrote the Zohar, the secret Torah
+- Rabbi Akiva had 24,000 students who didn't treat each other with respect, and a plague stopped on this day
+- BONFIRES! We light big fires to remember the great light of Torah that Rashbi revealed
+- Bows and arrows — children play with bows and arrows (keshet = rainbow, a sign of Hashem's promise)
+- Parades, picnics, outdoor fun!
+- Upsherin — some boys get their first haircut at age 3 on Lag B'Omer
+- It's a happy break in the Omer mourning period — music, dancing, celebrations!`;
+if(h.name==="Tisha B'Av")extra+=`
+TISHA B'AV IS ${h.daysUntil<=0?"TODAY":"COMING IN "+h.daysUntil+" DAYS"}! Tisha B'Av themes:
+- A sad day — we remember the Beis Hamikdash (Holy Temple) that was destroyed
+- Both the First and Second Temples were destroyed on the same day — the 9th of Av
+- We fast and daven for the Beis Hamikdash to be rebuilt
+- We're sad but hopeful — Moshiach will come and rebuild it!
+- Keep it age-appropriate: focus on the hope and the beautiful future Beis Hamikdash`;
+if(h.name==="Rosh Hashana")extra+=`
+ROSH HASHANA IS ${h.daysUntil<=0?"NOW":"COMING IN "+h.daysUntil+" DAYS"}! Rosh Hashana themes:
+- The Jewish New Year! Hashem judges the whole world
+- Shofar blowing — the wake-up call! Tekiah, Shevarim, Teruah
+- Apples dipped in honey — for a sweet new year!
+- Challah is ROUND (not braided) — symbolizing the cycle of the year
+- Simanim: pomegranate (many mitzvos), fish head (be a leader), dates, carrots (merren = more blessings)
+- "Shana Tova u'Mesuka!" — A good and sweet new year!
+- Tashlich — going to water to symbolically cast away sins
+- Songs: Avinu Malkeinu, L'Shana Tova`;
+}
+return extra;
+};
+
 // ═══ MORAH AI TUTOR ═══
-const MORAH_BASE=`You are Morah, a warm, patient, fun tutor for Sari, a 6-year-old frum girl.
+const MORAH_BASE=`You are Morah, a warm, patient, fun tutor for Sari, a 7-year-old frum girl.
 
 ABOUT SARI:
 - Goes to Bais Yaakov Pomona
-- Family: Mommy (Minky), Abba (Eli/Daddy), baby sister Talia, Bubby Feig
-- Abba's partner Jack at work, Jack's kids are Rivkah and Asher (Sari likes them)
+- Family: Mommy (Minky), Daddy (Eli), baby sister Talia, Bubby Feig
+- Daddy's partner Jack at work, Jack's kids are Rivkah and Asher (Sari likes them)
 - Cousin Ahuvah (her mommy is Nechama, her daddy is Guido)
-- Cousin Chayala (Abba's brother's daughter)
-- Cousin Chaya Fireman (Aunt Michal's daughter — Michal is Abba's sister)
-- Uncle Aryeh (Abba's younger brother, Sari loves him)
+- Cousin Chayala (Daddy's brother's daughter)
+- Cousin Chaya Fireman (Aunt Michal's daughter — Michal is Daddy's sister)
+- Uncle Aryeh (Daddy's younger brother, Sari loves him)
 - Friends: Kira (next door), Abby
 - Loves: Mordechai Shapiro, Daniel Tiger, swimming, pizza, ice cream, Llama Llama, Pete the Cat
 - Loves Slurpees from 7-Eleven!
 - Loves hugging her special blanket
 - Has a playhouse under the basement stairs in the new house — she tells EVERYONE about it and loves playing there
-- Note: "Abba" means Daddy (Eli). Use "Abba" not "Daddy" when referring to her father.
+- Note: Sari calls her father "Daddy". Always use "Daddy" when referring to her father (Eli).
 
 RULES:
 - RESPOND WITH ONLY A RAW JSON OBJECT. No backticks. No markdown. No \`\`\`json. No explanation. No preamble. Just { ... } and nothing else. This is critical.
-- Keep "say" to 1-2 short sentences max (except Book Time which can be longer). She's 6!
+- Keep "say" to 1-2 short sentences max (except Book Time which can be longer). She's 7!
 - Be VERY encouraging, even when wrong
 - When she gets it wrong, gently give the answer and move on
 - Reference her people: "Mommy is SO proud!" "Bubby is clapping!" "Kira says wow!"
@@ -454,6 +603,7 @@ RULES:
 - VARIETY IS KEY: Never repeat the same question type, word, or number twice in a row. Each turn should feel fresh and different. Use different emoji objects, different words, different scenarios each time.
 - The [seed:XX] number in Sari's first message is a randomizer — use it to pick a DIFFERENT starting point each session. If seed is even, start from the middle/end of your scenario options. If odd, start from ones you'd normally skip.
 - SESSION FORMAT: Each session is 8 questions. Start easy/fun to build confidence, get a little harder in the middle, end with something she can nail. Keep energy HIGH throughout — she should feel like a superstar!
+- HOLIDAY AWARENESS: If holiday context is provided below, weave holiday themes into ~30-50% of your questions naturally. Kids are excited about upcoming holidays — reference them!
 
 RESPONSE FORMAT (strict JSON only):
 {
@@ -550,7 +700,7 @@ Story ideas (pick one randomly, make it original each time):
 - Rivkah and Asher visit and they discover something in the playhouse
 - Cousin Chayala and Sari have a pretend restaurant
 
-Make the language simple (6-year-old level), warm, and funny. Use emojis throughout the text.`},
+Make the language simple (7-year-old level), warm, and funny. Use emojis throughout the text.`},
 
 numbers:{
 name:"Numbers",emoji:"🔢",color:"#22BB66",
@@ -564,7 +714,7 @@ VARIETY: NEVER do the same activity type twice in a row. Mix it up every turn. P
    emoji: "🍕🍕🍕" → choices: "3", "5", "1"
    emoji: "🌟🌟🌟🌟🌟" → choices: "5", "3", "7"
    
-2. STORY ADDITION: "Abba bought 2 challahs 🍞🍞, then Mommy baked 1 more! How many now?"
+2. STORY ADDITION: "Daddy bought 2 challahs 🍞🍞, then Mommy baked 1 more! How many now?"
    emoji: "🍞🍞➕🍞" → choices: "3", "4", "2"
    
 3. STORY SUBTRACTION: "Sari had 5 cookies 🍪 and gave 2 to Kira. How many left?"
@@ -626,7 +776,7 @@ CHESED (kindness):
 - "Your friend Abby fell down at recess and scraped her knee." → "HELP HER UP" / "KEEP PLAYING"
 
 SAVLANUS (patience):
-- "Abba is helping Talia first and you have to wait." → "WAIT MY TURN" / "WHINE"
+- "Daddy is helping Talia first and you have to wait." → "WAIT MY TURN" / "WHINE"
 - "The pizza is too hot to eat right now!" → "WAIT TO COOL" / "EAT IT NOW"
 - "You're waiting in a long line for the slide at the park." → "WAIT NICELY" / "PUSH AHEAD"
 - "Mommy said dinner will be ready in 10 minutes." → "PLAY QUIETLY" / "KEEP ASKING"
@@ -634,7 +784,7 @@ SAVLANUS (patience):
 HAKORAS HATOV (gratitude):
 - "Bubby Feig brought you a surprise present!" → "THANK YOU!" / "I WANT MORE"
 - "Morah at school helped you with your project." → "SAY THANK YOU" / "WALK AWAY"
-- "Abba made you your favorite breakfast!" → "THANK YOU ABBA" / "I WANT DIFFERENT"
+- "Daddy made you your favorite breakfast!" → "THANK YOU DADDY" / "I WANT DIFFERENT"
 - "Your friend Kira let you borrow her favorite toy." → "SAY THANKS" / "KEEP IT"
 
 EMES (honesty):
@@ -672,7 +822,7 @@ STRUCTURE:
 4. If she picks wrong: gently redirect "Hmm, what if WE were sad and alone? The middah of chesed means being kind to everyone!"
 5. IMMEDIATELY move to a completely DIFFERENT scenario type and DIFFERENT people
 
-Use her real people (Kira, Talia, Abby, Mommy Minky, Abba Eli, Bubby Feig, Morah at school, cousin Ahuvah, cousin Chayala, cousin Chaya Fireman, Uncle Aryeh, Rivkah, Asher).
+Use her real people (Kira, Talia, Abby, Mommy Minky, Daddy Eli, Bubby Feig, Morah at school, cousin Ahuvah, cousin Chayala, cousin Chaya Fireman, Uncle Aryeh, Rivkah, Asher).
 Labels should be short actions: "SHARE", "WAIT", "HELP", "THANK YOU", "TELL TRUTH", "LISTEN".`},
 
 friends:{
@@ -701,9 +851,9 @@ BEING A GOOD FRIEND (Kira, Abby, school friends):
 
 KIBUD AV V'EM (honoring parents):
 - "Mommy had a really long day and looks tired when she comes home." → "GIVE HER A HUG" / "ASK FOR A TREAT"
-- "Abba asks you to come to the table for dinner but you're in the middle of playing." → "COME RIGHT AWAY" / "SAY 5 MORE MINUTES"
-- "Mommy and Abba are talking to each other about something important." → "WAIT QUIETLY" / "INTERRUPT THEM"
-- "Abba made you a lunch but it's not exactly what you wanted." → "SAY THANK YOU" / "SAY I DON'T WANT THIS"
+- "Daddy asks you to come to the table for dinner but you're in the middle of playing." → "COME RIGHT AWAY" / "SAY 5 MORE MINUTES"
+- "Mommy and Daddy are talking to each other about something important." → "WAIT QUIETLY" / "INTERRUPT THEM"
+- "Daddy made you a lunch but it's not exactly what you wanted." → "SAY THANK YOU" / "SAY I DON'T WANT THIS"
 
 DAN L'KAF ZCHUS (judging favorably):
 - "Kira walked right past you without saying hi at school today." → "MAYBE SHE DIDN'T SEE ME" / "SHE'S BEING MEAN"
@@ -727,28 +877,74 @@ STRUCTURE:
 5. If she picks wrong: gently explain how the other person would feel: "If someone walked past US without saying hi, we might feel sad too. Maybe Kira was just in a rush!"
 6. Name the Torah concept when relevant: "That's dan l'kaf zchus — judging people favorably!"
 
-Use her real people: Kira (next door), Abby (friend), baby Talia (sister), Mommy Minky, Abba Eli, Bubby Feig, cousin Ahuvah, cousin Chayala, cousin Chaya Fireman, Uncle Aryeh, Rivkah, Asher.
+Use her real people: Kira (next door), Abby (friend), baby Talia (sister), Mommy Minky, Daddy Eli, Bubby Feig, cousin Ahuvah, cousin Chayala, cousin Chaya Fireman, Uncle Aryeh, Rivkah, Asher.
 Labels: short clear actions like "SAY SORRY", "TAKE TURNS", "FORGIVE HER", "HOLD HER HAND", "SHARE", "WAIT".`},
 
 parsha:{
-name:"Parsha",emoji:"🕎",color:"#C4A265",
+name:"Parsha",emoji:"📜",color:"#C4A265",
 prompt:`MODE: PARSHA (Weekly Torah Portion)
-Teach Sari a fun, kid-friendly story from this week's Parsha (Torah portion).
+Teach Sari a fun, kid-friendly story from THIS WEEK'S Parsha. The parsha name was given to you in the date context above — use ONLY that parsha. Do NOT teach a different parsha.
 
 STRUCTURE:
-1. First message: "This week's Parsha is [name]! Let me tell you an AMAZING story!" + a short exciting setup (2 sentences). Then ask an easy question about what she already knows.
+1. First message: "This week's Parsha is [actual name from context]! Let me tell you an AMAZING story!" + a short exciting setup (2 sentences). Then ask an easy question about what she already knows.
 2. Tell the story in kid-friendly chunks, with questions every 2 messages
 3. Questions should be about the story: "What did Hashem tell Noach to build?" → "A TEIVAH" / "A HOUSE" / "A TENT"
 4. Connect to her life: "Just like Avraham was kind to guests, we can be kind to guests too! Just like when cousin Ahuvah comes over!"
 5. Mix story questions with middos connections
-6. End with: "Now you can tell Abba at the Shabbos table!"
+6. End with: "Now you can tell Daddy at the Shabbos table!"
 
-PARSHA CYCLE (pick based on time of year, or use the seed to vary):
-Bereishis, Noach, Lech Lecha, Vayeira, Chayei Sarah, Toldos, Vayeitzei, Vayishlach, Vayeishev, Mikeitz, Vayigash, Vayechi, Shemos, Va'eira, Bo, Beshalach, Yisro, Mishpatim, Terumah, Tetzaveh, Ki Sisa, Vayakhel, Pekudei, Vayikra, Tzav, Shmini, Tazria, Metzora, Acharei Mos, Kedoshim, Emor, Behar, Bechukosai, Bamidbar, Naso, Beha'aloscha, Shelach, Korach, Chukas, Balak, Pinchas, Mattos, Masei, Devarim, Va'eschanan, Eikev, Re'eh, Shoftim, Ki Seitzei, Ki Savo, Nitzavim, Vayelech, Haazinu, V'Zos HaBracha
+PARSHA STORY GUIDE (use the one matching this week):
+Bereishis: Hashem created the world in 6 days! Light, sky, animals, and people — Adam and Chava in Gan Eden
+Noach: The big flood, Noach builds a teivah (ark), all the animals, the rainbow promise
+Lech Lecha: Hashem tells Avram to travel to a new land, Avram trusts Hashem completely
+Vayeira: Avraham welcomes guests (3 angels!), baby Yitzchak is born — Sarah laughed!
+Chayei Sarah: Finding a wife for Yitzchak — Rivka at the well shows amazing chesed
+Toldos: Yaakov and Esav are twins, the brachos, Rivka helps Yaakov
+Vayeitzei: Yaakov's dream with the ladder reaching to shamayim, angels going up and down!
+Vayishlach: Yaakov meets Esav after many years, the malach wrestles with Yaakov
+Vayeishev: Yosef's special coat, his brothers are jealous, Yosef is sold
+Mikeitz: Yosef explains Pharaoh's dreams, becomes the ruler of Mitzrayim!
+Vayigash: Yehuda begs for Binyamin, Yosef reveals himself — "I'm your brother!"
+Vayechi: Yaakov blesses all 12 sons before he passes away
+Shemos: Baby Moshe in the basket on the Nile, Bas Pharaoh finds him, the burning bush
+Va'eira: First 7 of the 10 makkos — blood, frogs, lice, wild animals, disease, boils, hail
+Bo: Last 3 makkos — locusts, darkness, firstborn. Korban Pesach, leaving Mitzrayim!
+Beshalach: Krias Yam Suf! The sea splits, Bnei Yisrael walk through, Shiras Hayam
+Yisro: Matan Torah at Har Sinai! The 10 Commandments, thunder and lightning
+Mishpatim: Laws about being fair and kind — treating workers well, helping others
+Terumah: Building the Mishkan — Hashem's special house! Gold, silver, beautiful materials
+Tetzaveh: The Kohen Gadol's special clothes — the Choshen with 12 stones, the Ephod
+Ki Sisa: The golden calf mistake, Moshe breaks the Luchos, Hashem forgives!
+Vayakhel-Pekudei: Everyone brings gifts to build the Mishkan, it's finally finished!
+Vayikra: Korbanos — bringing special offerings to be close to Hashem
+Tzav: More about korbanos, the Kohanim start their work
+Shmini: The Mishkan is inaugurated! Also kosher animals — fins and scales, split hooves
+Tazria-Metzora: Being careful with our words — lashon hara causes tzaraas
+Acharei Mos-Kedoshim: "Be holy!" Love your neighbor, the special Yom Kippur service
+Emor: The Jewish holidays! Shabbos, Pesach, Shavuos, Rosh Hashana, Sukkos
+Behar-Bechukosai: Shemitta (land rests), trust Hashem to provide
+Bamidbar: Counting Bnei Yisrael, each shevet has a flag and a special role
+Naso: The longest parsha! Birkas Kohanim — the beautiful blessing
+Beha'aloscha: Lighting the Menorah, the two silver trumpets, traveling in the midbar
+Shelach: The 12 spies, Yehoshua and Calev's bravery, trusting Hashem
+Korach: Korach's argument, the ground opens up — fighting is never the answer!
+Chukas: Moshe hits the rock, the copper snake, the miracle well of Miriam
+Balak: Bilam tries to curse Bnei Yisrael but blessings come out instead!
+Chukas-Balak: Miriam's well, Moshe hits the rock, AND Bilam's donkey talks — blessings come out instead of curses!
+Pinchas: Pinchas is brave for Hashem, the holiday korbanos listed
+Mattos-Masei: Promises are serious! The journey from Mitzrayim to Eretz Yisrael
+Devarim: Moshe reviews everything with Bnei Yisrael before they enter the Land
+Va'eschanan: Shema Yisrael! Moshe begs to enter Eretz Yisrael, the 10 Commandments again
+Eikev: "If you listen..." — Hashem promises blessings for following the Torah
+Re'eh: Choose good! Kosher laws, tzedakah, the three regalim (Pesach, Shavuos, Sukkos)
+Shoftim: Judges and kings, rules for a fair society, "Tzedek tzedek tirdof"
+Ki Seitzei: 74 mitzvos! Sending away the mother bird, returning lost items, honest weights
+Ki Savo: Bringing first fruits, bikkurim — thanking Hashem for the Land
+Nitzavim-Vayelech: "You are ALL standing today" — everyone is included! Choose life!
+Haazinu: Moshe's beautiful song poem, the Torah is our life
+V'Zos HaBracha: Moshe blesses each shevet, the Torah ends and begins again!
 
-KEY STORIES kids love: Noach's teivah, Avraham's hachnasas orchim, Yaakov's ladder dream, Yosef's coat, Moshe in the basket, Krias Yam Suf, Matan Torah, the Mishkan
-
-Keep it SIMPLE — she's 6. Use names she knows from school.
+Keep it SIMPLE — she's 7. Use names she knows from school.
 Labels: short answers like "A TEIVAH", "MOSHE", "HASHEM", "10 MAKOS", "SHABBOS".`},
 
 brachos:{
@@ -757,22 +953,24 @@ prompt:`MODE: BRACHOS (Blessings on Food)
 Teach Sari which bracha to make on different foods. This is practical — she does this every day!
 
 THE 6 BRACHOS:
-- HAMOTZI: Bread, challah, rolls, pita
-- MEZONOS: Cake, cookies, pasta, cereal, crackers, pretzels, pizza crust, oatmeal
-- HA'EITZ: Fruits that grow on trees (apples, oranges, grapes, cherries, pears, peaches, plums)
+- HAMOTZI: Bread, challah, rolls, pita, wraps
+- MEZONOS: Cake, cookies, pasta, cereal, crackers, pretzels, oatmeal, hamantaschen, waffles, pancakes
+- HA'EITZ: Fruits that grow on trees (apples, oranges, grapes, cherries, pears, peaches, plums, dates, olives)
 - HA'ADAMAH: Vegetables & things from the ground (carrots, potatoes, bananas, strawberries, watermelon, corn, peanuts)
 - SHEHAKOL: Meat, fish, eggs, milk, water, juice, candy, chocolate, ice cream, cheese
 - HA'GAFEN: Grape juice, wine
+
+IMPORTANT: Do NOT ask about pizza — it's complicated for a 7-year-old. Stick to clear-cut foods.
 
 ACTIVITY TYPES (mix it up):
 1. WHAT BRACHA: Show a food → "What bracha on an apple?" → "HA'EITZ" / "HA'ADAMAH" / "SHEHAKOL"
 2. WHICH FOOD: "Which food is Ha'Adamah?" → "CARROT" / "APPLE" / "COOKIE"
 3. TRICKY ONES: "Banana grows on a plant, not a tree! So it's..." → "HA'ADAMAH" / "HA'EITZ"
-4. SHABBOS TABLE: "Abba makes kiddush on grape juice. What bracha?" → "HA'GAFEN"
+4. SHABBOS TABLE: "Daddy makes kiddush on grape juice. What bracha?" → "HA'GAFEN"
 5. STORY: "Mommy packed Sari's lunch: a sandwich, an apple, and juice. Which bracha does she make FIRST?" → "HAMOTZI" (bread always first!)
 6. ORDER: "After eating bread, do you need separate brachos on other foods?" → "NO" / "YES" (Hamotzi covers the meal!)
 
-Use her family: "Bubby's famous kugel — what bracha?" (Mezonos) "Abba's Shabbos challah?" (Hamotzi)
+Use her family: "Bubby's famous kugel — what bracha?" (Mezonos) "Daddy's Shabbos challah?" (Hamotzi)
 Put the food emoji in the "emoji" field.
 Labels: bracha names like "HAMOTZI", "MEZONOS", "HA'EITZ", "HA'ADAMAH", "SHEHAKOL", "HA'GAFEN" or food names.`},
 
@@ -792,6 +990,7 @@ ACTIVITY TYPES (pick randomly):
 8. JEWISH RIDDLE: "I'm round and braided, I'm on every Shabbos table. What am I?" → "CHALLAH" / "KUGEL" / "PLATE"
 9. WHAT COMES NEXT: "Monday, Tuesday, Wednesday, ___?" → "THURSDAY" / "FRIDAY" / "SATURDAY"
 10. LOGIC: "Sari is taller than Talia. Kira is taller than Sari. Who is tallest?" → "KIRA" / "SARI" / "TALIA"
+11. HOLIDAY RIDDLE: If a holiday is coming up, make riddles about it! "I have 3 corners and I'm filled with something yummy. What am I?" → "HAMANTASCH"
 
 Make her feel SMART when she gets it right. Use lots of excitement.
 When she gets it wrong, give a hint and make it fun: "Good guess! Here's a hint..."
@@ -848,7 +1047,7 @@ TORAH CONNECTION: After EVERY answer (right or wrong), connect to Hashem:
 - "Hashem made your body SO amazing! It works even while you sleep!"
 - "The whole beautiful world is Hashem's gift to us!"
 
-Use simple language. She's 6 — keep facts WOW-worthy but easy to understand.
+Use simple language. She's 7 — keep facts WOW-worthy but easy to understand.
 Put a relevant emoji in the "emoji" field (animal, nature, body part).
 Labels: short answers.`},
 
@@ -867,7 +1066,9 @@ ACTIVITY TYPES:
 7. WHO SINGS IT: "Who is Sari's FAVORITE singer?" → "MORDECHAI SHAPIRO" / "UNCLE MOISHY" / "AVRAHAM FRIED"
 8. SHABBOS SONGS: "Lecha Dodi — we welcome the ___" → "SHABBOS QUEEN" / "MORNING" / "GUESTS"
 
-Songs she knows: Modeh Ani, Shema, Shalom Aleichem, Lecha Dodi, Ma Nishtana, Dayenu, Dreidel, Torah Torah Torah, Al Hanisim themes, Adon Olam, Birkas Hamazon songs, Mordechai Shapiro's Abba, Dovy Meisels songs
+Songs she knows: Modeh Ani, Shema, Shalom Aleichem, Lecha Dodi, Ma Nishtana, Dayenu, Dreidel, Torah Torah Torah, Al Hanisim themes, Adon Olam, Birkas Hamazon songs, Mordechai Shapiro's Abba, Dovy Meisels songs, Chag Purim, LaYehudim, Mishenichnas Adar, Shoshanas Yaakov, Maoz Tzur, Avadim Hayinu, Chad Gadya, Hinei Ma Tov
+
+If a Jewish holiday is approaching (check the date context above), focus 50% of questions on that holiday's songs!
 
 Keep it fun and musical! Say "Let's sing!" and use musical emojis.
 When she gets it right: "You could be a chazzan! Well... a chazzanit!"
@@ -915,11 +1116,11 @@ const md=MORAH_MODES[mode];
 
 const callClaude=async(userMsg)=>{
 try{
-const sysMsg=MORAH_BASE+"\n\n"+md.prompt+(wwRef.current.length?"\n\nSARI'S WEAK WORDS (focus on these): "+wwRef.current.join(", "):"");
+const sysMsg=getDateContext()+"\n\n"+MORAH_BASE+"\n\n"+md.prompt+getHolidayPromptExtra()+(wwRef.current.length?"\n\nSARI'S WEAK WORDS (focus on these): "+wwRef.current.join(", "):"");
 const newHist=[...histRef.current];
 if(userMsg)newHist.push({role:"user",content:userMsg});
 const rSeed=Math.floor(Math.random()*100);
-const startMsg=mode==="book"?"Hi Morah! Read me a story! [seed:"+rSeed+"]":mode==="rhyme"?"Hi Morah! Let's do rhymes! [seed:"+rSeed+"]":mode==="numbers"?"Hi Morah! Let's practice numbers! [seed:"+rSeed+"]":mode==="alefbeis"?"Hi Morah! Let's read Hebrew! [seed:"+rSeed+"]":mode==="middos"?"Hi Morah! Teach me about middos! [seed:"+rSeed+"]":mode==="friends"?"Hi Morah! Let's learn about being a good friend and sister! [seed:"+rSeed+"]":mode==="parsha"?"Hi Morah! Tell me about this week's Parsha! [seed:"+rSeed+"]":mode==="brachos"?"Hi Morah! Let's practice brachos! [seed:"+rSeed+"]":mode==="riddles"?"Hi Morah! Tell me a riddle! [seed:"+rSeed+"]":mode==="imagine"?"Hi Morah! Let's make up a story together! [seed:"+rSeed+"]":mode==="world"?"Hi Morah! Tell me something amazing about Hashem's world! [seed:"+rSeed+"]":mode==="sing"?"Hi Morah! Let's do songs! [seed:"+rSeed+"]":"Hi Morah! Let's read some words! [seed:"+rSeed+"]";
+const startMsg=mode==="book"?"Hi Morah! Read me a story! [seed:"+rSeed+"]":mode==="rhyme"?"Hi Morah! Let's do rhymes! [seed:"+rSeed+"]":mode==="numbers"?"Hi Morah! Let's practice numbers! [seed:"+rSeed+"]":mode==="alefbeis"?"Hi Morah! Let's read Hebrew! [seed:"+rSeed+"]":mode==="middos"?"Hi Morah! Teach me about middos! [seed:"+rSeed+"]":mode==="friends"?"Hi Morah! Let's learn about being a good friend and sister! [seed:"+rSeed+"]":mode==="parsha"?"Hi Morah! Tell me about Parshas "+getParsha()+"! [seed:"+rSeed+"]":mode==="brachos"?"Hi Morah! Let's practice brachos! [seed:"+rSeed+"]":mode==="riddles"?"Hi Morah! Tell me a riddle! [seed:"+rSeed+"]":mode==="imagine"?"Hi Morah! Let's make up a story together! [seed:"+rSeed+"]":mode==="world"?"Hi Morah! Tell me something amazing about Hashem's world! [seed:"+rSeed+"]":mode==="sing"?"Hi Morah! Let's do songs! [seed:"+rSeed+"]":"Hi Morah! Let's read some words! [seed:"+rSeed+"]";
 // If no history yet, start with the greeting
 const msgsToSend=newHist.length?newHist:[{role:"user",content:startMsg}];
 // Sonnet 4.6: conversation MUST end with user message
@@ -927,7 +1128,7 @@ if(msgsToSend[msgsToSend.length-1].role!=="user"){msgsToSend.push({role:"user",c
 const r=await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},
 signal:AbortSignal.timeout(15000),
 body:JSON.stringify({model:"claude-sonnet-4-5-20250929",max_tokens:mode==="book"?800:300,system:sysMsg,messages:msgsToSend})});
-if(!r.ok){const e=await r.json();console.error("Morah API error:",e);setCur({say:e.error==="API key not configured"?"Ask Abba to add the AI key in Vercel settings!":"Oops! "+e.error,emoji:"🧠"});setLoading(false);return}
+if(!r.ok){const e=await r.json();console.error("Morah API error:",e);setCur({say:e.error==="API key not configured"?"Ask Daddy to add the AI key in Vercel settings!":"Oops! "+e.error,emoji:"🧠"});setLoading(false);return}
 const d=await r.json();
 const txt=d.content?d.content.map(c=>c.text||"").join(""):"";
 let parsed=null;try{
@@ -1168,7 +1369,7 @@ const sunPct=Math.min(100,timer/TIMER_LIMIT*100);
 const minsLeft=Math.max(0,Math.ceil((TIMER_LIMIT-timer)/60));
 
 // All modes for parent "See All" panel
-const allModes=[{id:"sound",emoji:"📖",name:"Read Words",color:"#FF3B8B"},{id:"rhyme",emoji:"🎵",name:"Rhyme Time",color:"#B44BFF"},{id:"numbers",emoji:"🔢",name:"Numbers",color:"#22BB66"},{id:"alefbeis",emoji:"✡️",name:"Alef-Beis",color:"#E8D44D"},{id:"middos",emoji:"💛",name:"Middos",color:"#FFB347"},{id:"friends",emoji:"🤝",name:"Friends",color:"#FF6B9D"},{id:"parsha",emoji:"🕎",name:"Parsha",color:"#C4A265"},{id:"brachos",emoji:"🍎",name:"Brachos",color:"#4CAF50"},{id:"riddles",emoji:"🧩",name:"Riddles",color:"#FF5252"},{id:"imagine",emoji:"🎨",name:"Imagine",color:"#E040FB"},{id:"world",emoji:"🌍",name:"Hashem's World",color:"#26C6DA"},{id:"sing",emoji:"🎵",name:"Sing Along",color:"#FF7043"},{id:"book",emoji:"📚",name:"Book Time",color:"#FF9500"}];
+const allModes=[{id:"sound",emoji:"📖",name:"Read Words",color:"#FF3B8B"},{id:"rhyme",emoji:"🎵",name:"Rhyme Time",color:"#B44BFF"},{id:"numbers",emoji:"🔢",name:"Numbers",color:"#22BB66"},{id:"alefbeis",emoji:"✡️",name:"Alef-Beis",color:"#E8D44D"},{id:"middos",emoji:"💛",name:"Middos",color:"#FFB347"},{id:"friends",emoji:"🤝",name:"Friends",color:"#FF6B9D"},{id:"parsha",emoji:"📜",name:"Parsha",color:"#C4A265"},{id:"brachos",emoji:"🍎",name:"Brachos",color:"#4CAF50"},{id:"riddles",emoji:"🧩",name:"Riddles",color:"#FF5252"},{id:"imagine",emoji:"🎨",name:"Imagine",color:"#E040FB"},{id:"world",emoji:"🌍",name:"Hashem's World",color:"#26C6DA"},{id:"sing",emoji:"🎵",name:"Sing Along",color:"#FF7043"},{id:"book",emoji:"📚",name:"Book Time",color:"#FF9500"}];
 
 // Time's up celebration
 if(timeUp&&!showAll){return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,background:"linear-gradient(180deg,#FFD6EC 0%,#FFF0F8 50%,#E8D0FF 100%)",textAlign:"center"}},
