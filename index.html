@@ -248,10 +248,10 @@ React.createElement("p",{style:{color:"rgba(120,40,80,.5)",fontSize:14,marginBot
 React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:12,marginBottom:28}},
 ...[0,1,2,3].map(i=>React.createElement("div",{key:i,style:{width:48,height:48,borderRadius:14,background:i<pin.length?"linear-gradient(135deg,#FF3B8B,#FF6B8B)":"rgba(255,255,255,.75)",border:i<pin.length?"2px solid #FF3B8B":"2px solid rgba(220,120,170,.25)",transition:"all .2s"}}))),
 err&&React.createElement("div",{style:{color:"#FF6B6B",fontSize:15,marginBottom:12,animation:"shake .4s ease"}},err),
-React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,maxWidth:260,margin:"0 auto"}},
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"repeat(3,76px)",gap:14,justifyContent:"center",margin:"0 auto"}},
 ...[1,2,3,4,5,6,7,8,9,"",0,"⬅"].map(n=>
 n===""?React.createElement("div",{key:"empty"}):
-React.createElement("button",{key:n,onClick:()=>n==="⬅"?del():tap(String(n)),style:{width:"100%",height:64,borderRadius:18,fontSize:n==="⬅"?24:28,fontWeight:600,background:n==="⬅"?"rgba(255,255,255,.6)":CD,border:"1.5px solid rgba(220,120,170,.15)"}},n))),
+React.createElement("button",{key:n,onClick:()=>n==="⬅"?del():tap(String(n)),style:{width:76,height:72,borderRadius:20,fontSize:n==="⬅"?26:32,fontWeight:700,background:n==="⬅"?"rgba(255,255,255,.6)":"rgba(255,255,255,.85)",border:"1.5px solid rgba(220,120,170,.18)",boxShadow:"0 2px 8px rgba(255,105,180,.08)",color:"#4A2040"}},n))),
 React.createElement("button",{onClick:()=>{window.location.href="/dashboard"},style:{background:"none",border:"none",color:"rgba(220,120,170,.25)",fontSize:12,marginTop:24,padding:8}},"Parent Dashboard →")
 ))};
 
