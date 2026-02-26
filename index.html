@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
 <link rel="icon" sizes="192x192" href="/icon-192.png">
 <title>Sari's Sound Quest</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{font-family:'Fredoka',sans-serif;background:linear-gradient(180deg,#FFD6EC,#FFF0F8,#FFD6EC);color:#4A2040;overflow-x:hidden;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;overscroll-behavior:none;-webkit-overflow-scrolling:touch;position:fixed;width:100%;height:100%}
@@ -173,7 +173,14 @@ const fbSay=(t,r)=>{if(!window.speechSynthesis)return;const clean=stripEmoji(t);
 setTimeout(()=>{if(!bv)fv();const u=new SpeechSynthesisUtterance(clean);if(bv)u.voice=bv;u.rate=r||.78;u.pitch=1.05;u.volume=1;u.lang="en-US";
 if(speechSynthesis.paused)speechSynthesis.resume();
 speechSynthesis.speak(u)},50)};
-const say=async t=>{fbSay(t,.78)};
+const say=async t=>{const clean=stripEmoji(t);if(!clean)return;
+// Try ElevenLabs first
+try{const ck=clean.slice(0,100);
+if(audioCache.has(ck)){if(curAudio){curAudio.pause();curAudio=null}if(speechSynthesis)speechSynthesis.cancel();const a=new Audio(audioCache.get(ck));curAudio=a;a.play().catch(()=>{});return}
+const r=await fetch("/api/speak",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:clean}),signal:AbortSignal.timeout(5000)});
+if(r.ok){const blob=await r.blob();const url=URL.createObjectURL(blob);audioCache.set(ck,url);if(curAudio){curAudio.pause();curAudio=null}if(speechSynthesis)speechSynthesis.cancel();const a=new Audio(url);curAudio=a;a.play().catch(()=>{});return}
+}catch(e){console.log("XI fallback:",e.message)}
+fbSay(clean,.78)};
 const sayL=async l=>{const p=LS[l]||l;if(!window.speechSynthesis)return;speechSynthesis.cancel();
 setTimeout(()=>{if(!bv)fv();const u=new SpeechSynthesisUtterance(p);if(bv)u.voice=bv;u.rate=.5;u.pitch=1.05;u.volume=1;u.lang="en-US";speechSynthesis.speak(u)},50)};
 const sayW=async w=>{fbSay(w,.68)};
@@ -1001,30 +1008,27 @@ name:"Imagine",emoji:"🎨",color:"#E040FB",
 prompt:`MODE: IMAGINE (Creative Collaborative Storytelling)
 This is DIFFERENT from Book Time. In Book Time, Morah tells the story. In Imagine, SARI creates the story and Morah builds around her choices!
 
-STRUCTURE:
-1. First message: "Let's make a story TOGETHER! You pick and I'll tell it!"
-   Give a fun choice: "Who should our story be about?"
-   Options: "A MAGIC BUNNY" / "PRINCESS SARI" / "A TALKING FISH" / "A BRAVE KITTEN"
-   (all correct:true — she picks the plot!)
+STRUCTURE (7 questions total — you MUST follow this arc):
+Q1: "Let's make a story TOGETHER! Who should our story be about?"
+   → "A MAGIC BUNNY" / "PRINCESS SARI" / "A TALKING FISH" (all correct:true)
+Q2: "Ooh fun! Where should [character] go on an adventure?"
+   → "THE MOON" / "A CASTLE" / "ERETZ YISRAEL" / "PIZZA LAND" (all correct:true)
+Q3: Morah adds 2 fun sentences about the character arriving. Then: "Who does [character] meet there?"
+   → "A FRIENDLY DRAGON" / "A LOST PUPPY" / "A SILLY CLOWN" (all correct:true)
+Q4: Morah adds 2 sentences weaving in the new character. Then: "Oh no! Something happens! What?"
+   → "LOST THE WAY" / "FOUND A TREASURE" / "A BIG STORM" (all correct:true)
+Q5: Morah adds 2-3 exciting sentences about the problem. Then: "How should they fix it?"
+   → "USE MAGIC" / "ASK FOR HELP" / "BE VERY BRAVE" (all correct:true)
+Q6: Morah adds 2-3 sentences about solving the problem. Then: "How should the story end?"
+   → "BIG PARTY" / "FOUND A FRIEND" / "WENT HOME TO FAMILY" (all correct:true)
+Q7: NOW WRITE THE FULL STORY! Weave ALL of Sari's 6 choices into a beautiful 8-12 sentence story.
+   Make it magical, silly, and personal (mention her family/friends naturally).
+   End with: "✨ The End! ✨ Written by SARI!"
+   Give ONE button: "I LOVE MY STORY!" (correct:true)
 
-2. Next: "Where should [character] go?"
-   Options: "THE MOON" / "A CASTLE" / "ERETZ YISRAEL" / "PIZZA LAND"
-   (all correct:true)
-
-3. Then: "Oh no! Something happened! What?"
-   Options: "LOST THE WAY" / "FOUND A TREASURE" / "MET A DRAGON"
-   (all correct:true)
-
-4. Morah weaves a 3-4 sentence paragraph incorporating Sari's choice, then asks the next creative question.
-
-5. After 4-5 choices: "How should the story end?"
-   Options: "HAPPY PARTY" / "FOUND A FRIEND" / "WENT HOME TO FAMILY"
-   (all correct:true)
-
-6. Final message: Wrap up the story beautifully, mention Sari as the author: "And that's the story SARI wrote! You're an amazing author!"
-
-CRITICAL: ALL options should be correct:true since these are creative choices, not right/wrong answers.
-Make it silly, imaginative, and personal. Reference her real life when it fits naturally.
+CRITICAL: ALL options must be correct:true — these are creative choices, not right/wrong.
+CRITICAL: You MUST tell the complete story on Q7. Do NOT ask more questions after Q6.
+Make each buildup snippet (Q3-Q6) only 2-3 sentences — save the big story for the finale!
 Labels: short creative choices, fun and exciting.`},
 
 world:{
@@ -1072,7 +1076,10 @@ If a Jewish holiday is approaching (check the date context above), focus 50% of 
 
 Keep it fun and musical! Say "Let's sing!" and use musical emojis.
 When she gets it right: "You could be a chazzan! Well... a chazzanit!"
-Labels: short answers.`}
+Labels: short answers.`},
+handwriting:{
+name:"Handwriting",emoji:"✏️",color:"#7C3AED",
+prompt:`MODE: HANDWRITING — this mode routes to standalone practice, not MorahChat.`}
 };
 
 const MorahMenu=({onPick,onBack,questDone})=>{
@@ -1084,8 +1091,8 @@ if(data){const map={};data.forEach(a=>{if(a.target_word){const w=a.target_word.t
 const weak=[];Object.entries(map).forEach(([w,s])=>{if(s.total>=2&&s.ok/s.total<0.7)weak.push({word:w,pct:Math.round(s.ok/s.total*100)})});
 weak.sort((a,b)=>a.pct-b.pct);setWw(weak.slice(0,8))}})
 },[]);
-const modes=["sound","rhyme","numbers","alefbeis","middos","friends","parsha","brachos","riddles","imagine","world","sing"];if(questDone)modes.push("book");
-const modeDesc={sound:"Blend & read words",rhyme:"Rhyming words",numbers:"Counting & math",alefbeis:"Nekudos & reading",middos:"Kindness & mitzvos",friends:"Family & friends",parsha:"Weekly Torah story",brachos:"Blessings on food",riddles:"Brain games & fun",imagine:"Create stories",world:"Science & nature",sing:"Songs & music",book:"Story time!"};
+const modes=["sound","rhyme","numbers","alefbeis","handwriting","middos","friends","parsha","brachos","riddles","imagine","world","sing"];if(questDone)modes.push("book");
+const modeDesc={sound:"Blend & read words",rhyme:"Rhyming words",numbers:"Counting & math",alefbeis:"Nekudos & reading",handwriting:"Letter practice",middos:"Kindness & mitzvos",friends:"Family & friends",parsha:"Weekly Torah story",brachos:"Blessings on food",riddles:"Brain games & fun",imagine:"Create stories",world:"Science & nature",sing:"Songs & music",book:"Story time!"};
 return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 16px 40px",background:BG,overflowY:"auto"}},
 React.createElement(Glow),
 React.createElement("div",{style:{zIndex:2,textAlign:"center",maxWidth:400,width:"100%"}},
@@ -1111,7 +1118,7 @@ React.createElement("button",{onClick:onBack,style:{background:"rgba(255,255,255
 const MorahChat=({mode,onBack})=>{
 const[msgs,setMsgs]=useState([]);const[cur,setCur]=useState(null);const[loading,setLoading]=useState(true);const[done,setDone]=useState(false);const[result,setResult]=useState(null);
 const chatRef=useRef(null);const histRef=useRef([]);const qCount=useRef(0);const qCorrect=useRef(0);const initCalled=useRef(false);
-const QLIMIT=(mode==="book"||mode==="imagine")?999:8;
+const QLIMIT=mode==="book"?12:mode==="imagine"?7:8;
 const md=MORAH_MODES[mode];
 
 const callClaude=async(userMsg)=>{
@@ -1218,7 +1225,7 @@ callClaude("Sari tapped: "+opt.label+(opt.correct?" (correct)":" (wrong, the ans
 },opt.correct?1800:2800)};
 
 const tapContinue=()=>{if(speechSynthesis)speechSynthesis.cancel();setMsgs(m=>[...m,{role:"morah",text:cur.say,emoji:cur.emoji}]);setLoading(true);setCur(null);
-callClaude(mode==="book"?"Sari tapped Keep Going. Continue the story with a full paragraph (3-5 sentences). Remember: most messages should be story, only pause for interaction every 2-3 paragraphs.":"Sari wants to continue")};
+callClaude(mode==="book"?"Sari tapped Keep Going. Continue the story with a full paragraph (3-5 sentences). Remember: most messages should be story, only pause for interaction every 2-3 paragraphs.":mode==="imagine"?"Sari wants to continue building the story! Ask the next creative question.":"Sari wants to continue")};
 
 // Done celebration screen
 if(done){const pct=QLIMIT>0?Math.round(qCorrect.current/QLIMIT*100):100;
@@ -1240,7 +1247,7 @@ React.createElement("div",{style:{zIndex:2,display:"flex",alignItems:"center",ga
 React.createElement("button",{onClick:()=>{if(speechSynthesis)speechSynthesis.cancel();if(curAudio){curAudio.pause();curAudio=null}onBack()},style:{background:"rgba(220,120,170,.18)",borderRadius:14,width:44,height:44,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}},"🏠"),
 React.createElement("div",{style:{display:"flex",alignItems:"center",gap:8,flex:1}},
 React.createElement("div",{style:{width:40,height:40,borderRadius:20,background:"linear-gradient(135deg,#FFD700,#FF9500)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}},"👩‍🏫"),
-React.createElement("div",null,React.createElement("div",{style:{fontSize:16,fontWeight:700}},"Morah"),React.createElement("div",{style:{fontSize:12,color:md.color}},md.emoji," ",md.name,(mode!=="book"&&mode!=="imagine")?" · "+Math.min(qCount.current,QLIMIT)+"/"+QLIMIT:"")))),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:16,fontWeight:700}},"Morah"),React.createElement("div",{style:{fontSize:12,color:md.color}},md.emoji," ",md.name,(mode!=="book")?" · "+Math.min(qCount.current,QLIMIT)+"/"+QLIMIT:"")))),
 // Scrollable content area - messages + buttons together
 React.createElement("div",{ref:chatRef,style:{flex:1,overflowY:"auto",WebkitOverflowScrolling:"touch",padding:"8px 16px",zIndex:2,display:"flex",flexDirection:"column"}},
 // History
@@ -1284,10 +1291,229 @@ React.createElement("span",{style:{flex:1,textAlign:"left"}},opt.label),
 isCorrect&&React.createElement("span",{style:{fontSize:22}},"✅"),
 isWrong&&React.createElement("span",{style:{fontSize:22}},"❌"))}))):
 React.createElement("div",{style:{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}},
-React.createElement("button",{onClick:tapContinue,style:{background:`linear-gradient(135deg,${md.color},${md.color}CC)`,borderRadius:20,padding:"18px 32px",fontSize:18,fontWeight:600,minHeight:56,animation:"popIn .3s ease-out"}},mode==="book"||mode==="imagine"?"Keep going!":"Next!"),
+React.createElement("button",{onClick:tapContinue,style:{background:`linear-gradient(135deg,${md.color},${md.color}CC)`,borderRadius:20,padding:"18px 32px",fontSize:18,fontWeight:600,minHeight:56,animation:"popIn .3s ease-out"}},mode==="book"?"Keep going!":"Next!"),
 React.createElement("button",{onClick:()=>{say("Bye Sari! Great job!");setTimeout(onBack,1500)},style:{background:"rgba(255,255,255,.75)",border:"1px solid rgba(220,120,170,.25)",borderRadius:20,padding:"18px 24px",fontSize:15,minHeight:56}},"Done"))))
 )
 };
+
+// ═══ HANDWRITING — GORELICK METHOD ═══
+const HW_LETTERS=[
+{id:"Cc",l:"c",u:"C",g:"round",o:1,viz:"c is a curvy cookie!",ls:"A little under the broken lines",us:"A little under the attic/broken lines",
+lst:["Up to the broken lines","Around to the left (A, B, C wall)","Down to the first floor and…","A little back up"],
+ust:["Up to the attic/broken lines","Around to the left (A, B, C wall)","Down to the first floor and…","A little back up"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Oo",l:"o",u:"O",g:"round",o:2,viz:"o is a round ball!",ls:"A little under the broken lines",us:"A little under the broken lines",
+lst:["Up to the broken lines","Around to the left (A, B, C wall)","Down to the first floor and…","Close it back up"],
+ust:["Up to the attic/broken lines","Around to the left (A, B, C wall)","Down to the first floor and…","Close it back up"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Aa",l:"a",u:"A",g:"round",o:3,viz:"Lowercase a is an o with a little line!",vizU:"Capital A looks like a mountain with a bridge!",ls:"A little under the broken lines",us:"ON the Attic",
+lst:["Up to the broken lines","Around to the left (A, B, C wall)","Down to the first floor and…","Close it back up"],
+ust:["From the Attic go a little crooked towards the left","Pick up your pencil","Go back to the Attic","A little crooked to the right","And a line in the middle"],
+chk:"Make sure your Capital A is nice and neat — the crooked lines should only be a little crooked!",lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Dd",l:"d",u:"D",g:"round",o:4,viz:"d looks like a shoe with a long leg for dddancing!",why:"We're making a c into a d!",ls:"A little under the broken lines",us:"ON the Attic",
+lst:["Up to the broken lines","Around to the left (A, B, C wall)","Close it back up","Push straight up to the Attic","Follow your line back down"],
+ust:["From the attic straight down to the basement","Pick up your pencil, go back up to the attic","Out a little to the right","In a little to the bottom"],
+cht:"We're making a c into a d!",lz:{t:"attic",b:"first"},uz:{t:"attic",b:"basement"}},
+{id:"Gg",l:"g",u:"G",g:"round",o:5,viz:"g connected to a backward g looks like ggg glasses!",why:"Why does g go into the basement? It needs glasses!",ls:"A little under the broken lines",us:"A little under the attic",
+lst:["Up to the broken lines","Around to the left (A, B, C wall)","Close it up","Push it up","Follow your line down to the basement","Ggg go into the basement!"],
+ust:["Up to the attic","Around to the left (A, B, C wall)","Down to the basement and…","Ggg go up to the broken lines and go in"],lz:{t:"broken",b:"basement"},uz:{t:"attic",b:"basement"}},
+{id:"Qq",l:"q",u:"Q",g:"round",o:6,viz:"q is the qqqueen — her tail flips the other way!",why:"The queen q looks like g but her tail goes right!",ls:"A little under the broken lines",us:"A little under the attic/broken lines",
+lst:["Up to the broken lines","Around to the left (A, B, C wall)","Close it up","Follow your line straight down to the basement","And flick out to the right"],
+ust:["Up to the attic/broken lines","Around to the left (A, B, C wall)","Down to the first floor and…","Close it back up","Pick up your pencil","Make a little line from the bottom going out to the right"],
+chk:"Does the q tail go to the right? Don't mix up q and g!",lz:{t:"broken",b:"basement"},uz:{t:"attic",b:"first"}},
+{id:"Rr",l:"r",u:"R",g:"straight",o:7,viz:"Capital R looks like a rabbit running!",why:"Straight line on the left and our roof towards the rrrright!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines straight down to the first floor","Follow your line back up","STOP before you get to the broken lines","Push out","Push up to the broken lines","And make a round roof"],
+ust:["From the attic straight down to the first floor","Pick up your pencil","Go back up to the attic","Make the Rabbit's face coming in by the broken lines","Push out and make another foot for running"],
+chk:"Is the straight line on the left and the roof on the right?",lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Nn",l:"n",u:"N",g:"straight",o:8,viz:"Lowercase n makes Mr. N's sad face!",vizU:"Capital N — the crooked line is only a little crooked!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines straight down to the first floor","Follow your line back up","STOP before you get to the broken lines","Push out and push up to the broken lines","Make a round roof","Push down to the first floor (to make Mr. N's sad face)"],
+ust:["From the attic straight down to the first floor","Pick up your pencil","Go back up to the attic","Make a line a little crooked down toward the right to the first floor","Straight back up"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Mm",l:"m",u:"M",g:"straight",o:9,viz:"Lowercase m looks like two lips closed to say mmm!",vizU:"Capital M looks like two mountains!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines straight down to the first floor","Follow your line back up","STOP before the broken lines","Push out and up to the broken lines","Round roof and down","Push back up, round roof again, and down to the first floor"],
+ust:["From the attic straight down to the first floor","Pick up your pencil, go back to the attic","A little crooked to the right and down","A little crooked back up","Straight down to the first floor"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Hh",l:"h",u:"H",g:"straight",o:10,viz:"h is a horse with a long neck! hhhh horse!",ls:"ON the Attic (it's a TALL letter!)",us:"ON the Attic",
+lst:["From the attic straight down to the first floor","Follow your line back up","STOP at the broken lines","Push out and up to the broken lines","Round roof and down to the first floor"],
+ust:["From the attic straight down to the first floor","Pick up your pencil","Go back up to the attic on the right side","Straight down to the first floor","Make a line across the broken lines connecting both sides"],lz:{t:"attic",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Bb",l:"b",u:"B",g:"straight",o:11,viz:"b has a big belly — bbb belly!",why:"b starts all the way up in the attic because it has a BIG belly!",ls:"ON the Attic (it's a TALL letter!)",us:"ON the Attic",
+lst:["From the attic straight down to the first floor","Follow your line back up","STOP at the broken lines","Push out and push down — make a nice round belly on the first floor"],
+ust:["From the attic straight down to the first floor","Pick up your pencil","Go back up to the attic","Make one belly by the broken lines","Make another belly by the first floor"],
+chk:"Does your b have a nice round belly? Is the straight line on the left?",lz:{t:"attic",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Kk",l:"k",u:"K",g:"straight",o:12,viz:"K is for King! The king has a straight back!",ls:"ON the Attic (it's a TALL letter!)",us:"ON the Attic",
+lst:["From the attic straight down to the first floor","Pick up your pencil","Put it on the broken lines, a little to the right","Slide in towards the tall line","Push out and kick down to the first floor"],
+ust:["From the attic straight down to the first floor","Pick up your pencil","Put it on the attic, a little to the right","Slide in towards the middle of the tall line","Push out and kick down to the first floor"],
+lz:{t:"attic",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Ll",l:"l",u:"L",g:"special",o:13,viz:"l is a long line that goes all the way down!",ls:"ON the Attic",us:"ON the Attic",
+lst:["From the attic straight down to the first floor"],
+ust:["From the attic straight down to the first floor","Make a line to the right along the first floor"],lz:{t:"attic",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Tt",l:"t",u:"T",g:"special",o:14,viz:"t is for Totty — t stands tall like a Torah!",why:"Where does t start? Not on the attic. Not on the broken lines. A little under the attic — that is very t-ricky!",ls:"A little under the Attic",us:"ON the Attic",
+lst:["Put your pencil a little under the attic","Straight down to the first floor","Pick up your pencil","Make a line across the broken lines"],
+ust:["From the attic straight down to the first floor","Pick up your pencil","Make a long line across the top (the attic)"],
+cht:"Down and across!",lz:{t:"attic",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Pp",l:"p",u:"P",g:"special",o:15,viz:"p is a policeman standing tall — his hat goes above!",why:"p starts on the broken lines and goes DOWN into the basement because the policeman needs to see everything!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines straight down to the basement","Follow your line back up to the broken lines","Push out and make a round belly on the first floor"],
+ust:["From the attic straight down to the first floor","Pick up your pencil","Go back up to the attic","Make one round belly coming in by the broken lines"],
+chk:"Does your p go into the basement? The round part should be between the broken lines and first floor!",lz:{t:"broken",b:"basement"},uz:{t:"attic",b:"first"}},
+{id:"Ii",l:"i",u:"I",g:"special",o:16,viz:"i is a little line with a dot on top — like a little person!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines straight down to the first floor","Pick up your pencil","Put a dot above the broken lines"],
+ust:["From the attic straight down to the first floor","Pick up your pencil","Make a line across the top","Make a line across the bottom"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Uu",l:"u",u:"U",g:"special",o:17,viz:"u is like a cup — uuu you can drink from it!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines straight down","Curve along the first floor","Back up to the broken lines","Straight down to the first floor"],
+ust:["From the attic straight down","Curve along the first floor","Back up to the attic"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Jj",l:"j",u:"J",g:"special",o:18,viz:"j jumps down into the basement — jjj jump!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines straight down to the basement","Curve to the left at the bottom","Pick up your pencil","Put a dot above the broken lines"],
+ust:["From the attic straight down to the first floor","Curve to the left at the bottom"],lz:{t:"broken",b:"basement"},uz:{t:"attic",b:"first"}},
+{id:"Vv",l:"v",u:"V",g:"special",o:19,viz:"v goes down to a point and back up — like a valley!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines slide down to the right","Make a point at the first floor","Slide back up to the broken lines"],
+ust:["From the attic slide down to the right","Make a point at the first floor","Slide back up to the attic"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Ww",l:"w",u:"W",g:"special",o:20,viz:"w is like two v's together — a double valley!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines slide down","Point at the first floor, slide back up","Slide down again, point, slide back up to the broken lines"],
+ust:["From the attic slide down","Point at the first floor, slide back up","Slide down again, point, slide back up to the attic"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Xx",l:"x",u:"X",g:"special",o:21,viz:"x marks the spot — like a treasure map!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines on the left, slide down to the right to the first floor","Pick up your pencil","From the broken lines on the right, slide down to the left to the first floor"],
+ust:["From the attic on the left, slide down to the right to the first floor","Pick up your pencil","From the attic on the right, slide down to the left to the first floor"],
+chk:"Do your two lines cross right in the middle?",lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Yy",l:"y",u:"Y",g:"special",o:22,viz:"y dips down into the basement — yyy why is he always asking questions!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines slide down to the right a little","Make a point in the middle","Slide back up to the broken lines","Now follow your line all the way down to the basement","Curve to the left at the bottom"],
+ust:["From the attic slide down to the right","Stop in the middle","Pick up your pencil","Go back to the attic on the right side","Slide straight down through the middle to the first floor"],lz:{t:"broken",b:"basement"},uz:{t:"attic",b:"first"}},
+{id:"Zz",l:"z",u:"Z",g:"special",o:23,viz:"z zigzags like a bolt of lightning — zzzzap!",ls:"ON the broken lines",us:"ON the Attic",
+lst:["From the broken lines make a straight line to the right","Now slide down to the left all the way to the first floor","Make a straight line to the right along the first floor"],
+ust:["From the attic make a straight line to the right","Now slide down to the left all the way to the first floor","Make a straight line to the right along the first floor"],
+cht:"Across, slide down, across!",lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Ee",l:"e",u:"E",g:"special",o:24,viz:"We're making a line and then a c to turn it into an e!",ls:"Right in the middle of the broken lines and the first floor",us:"ON the Attic",
+lst:["Put your pencil on the dot (in the middle)","Make a little line towards the right","Go up to the broken lines","Around to the left (A, B, C wall)","Down to the first floor and a little back up"],
+ust:["From the attic straight down to the first floor","Three lines to the right:","A long line on the attic","A long line on the first floor","A shorter line by the broken lines"],
+chk:"Did the side of the c touch the line of the e?",cht:"A line and then a c will turn into an e!",lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Ff",l:"f",u:"F",g:"special",o:25,viz:"f is a fff funny letter — it starts in a fff funny place!",why:"Where does f start? On the attic? NO. On the broken lines? NO. A little under the attic. That is very ff funny!",ls:"A little under the Attic",us:"ON the Attic",
+lst:["Put your pencil a little under the attic","Flip up to the attic","Around to the left (A, B, C wall)","Down to the first floor","Pick up your pencil","Make a line in the middle (on the broken lines)"],
+ust:["From the attic straight down to the first floor","Two lines to the right:","A long line on the attic","A shorter line on the broken line"],
+cht:"Flip up, flop down, and a line in the middle!",lz:{t:"attic",b:"first"},uz:{t:"attic",b:"first"}},
+{id:"Ss",l:"s",u:"S",g:"special",o:26,viz:"S is a slithering snake!",ls:"A little under the broken lines",us:"A little under the attic",
+lst:["A little under the broken lines","Up to the broken lines","Around to the left (A, B, C wall)","Come in","Push down"],
+ust:["A little under the attic","Up to the attic","Around to the left (A, B, C wall)","Come in","Push down"],lz:{t:"broken",b:"first"},uz:{t:"attic",b:"first"}}
+];
+const HW_GC={round:{color:"#E040FB",label:"Round"},straight:{color:"#FF3B8B",label:"Straight"},special:{color:"#7C3AED",label:"Special"}};
+const HW_ALPHA=[...HW_LETTERS].sort((a,b)=>a.l.localeCompare(b.l));
+// House SVG for handwriting zones
+const HouseSVG=({zones,ch})=>{const zY={attic:12,broken:38,first:65,basement:90};const tC=zones.t==="attic"?"#EF4444":"#3B82F6";const bC=zones.b==="basement"?"#92400E":"#22C55E";
+return React.createElement("svg",{width:80,height:100,viewBox:"0 0 80 100",style:{flexShrink:0}},
+React.createElement("line",{x1:5,y1:12,x2:75,y2:12,stroke:"#EF4444",strokeWidth:1.5}),
+React.createElement("line",{x1:5,y1:38,x2:75,y2:38,stroke:"#3B82F6",strokeWidth:1.5,strokeDasharray:"4 3"}),
+React.createElement("line",{x1:5,y1:65,x2:75,y2:65,stroke:"#22C55E",strokeWidth:1.5}),
+React.createElement("line",{x1:5,y1:90,x2:75,y2:90,stroke:"#92400E",strokeWidth:1.5}),
+React.createElement("text",{x:78,y:16,fontSize:6,fill:"#EF4444",textAnchor:"end"},"attic"),
+React.createElement("text",{x:78,y:42,fontSize:6,fill:"#3B82F6",textAnchor:"end"},"broken"),
+React.createElement("text",{x:78,y:69,fontSize:6,fill:"#22C55E",textAnchor:"end"},"1st fl"),
+React.createElement("text",{x:78,y:94,fontSize:6,fill:"#92400E",textAnchor:"end"},"base"),
+React.createElement("text",{x:30,y:zY[zones.t]+2,fontSize:38,fill:tC+"40",fontFamily:"'Gaegu',cursive",textAnchor:"middle",dominantBaseline:"hanging"},ch),
+React.createElement("circle",{cx:20,cy:zY[zones.t]-2,r:3,fill:"#EF4444"}))};
+// Drawing canvas for practice
+const DrawCanvas=({clearSig})=>{const cRef=useRef(null);const drawing=useRef(false);
+useEffect(()=>{const c=cRef.current;if(!c)return;const ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);
+// Draw house lines
+ctx.strokeStyle="#EF4444";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,15);ctx.lineTo(300,15);ctx.stroke();
+ctx.strokeStyle="#3B82F6";ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(0,50);ctx.lineTo(300,50);ctx.stroke();ctx.setLineDash([]);
+ctx.strokeStyle="#22C55E";ctx.beginPath();ctx.moveTo(0,85);ctx.lineTo(300,85);ctx.stroke();
+ctx.strokeStyle="#92400E";ctx.beginPath();ctx.moveTo(0,115);ctx.lineTo(300,115);ctx.stroke()
+},[clearSig]);
+const getPos=(e)=>{const r=cRef.current.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top}};
+const start=(e)=>{e.preventDefault();drawing.current=true;const ctx=cRef.current.getContext("2d");ctx.strokeStyle="#4A2040";ctx.lineWidth=3;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();const p=getPos(e);ctx.moveTo(p.x,p.y)};
+const move=(e)=>{e.preventDefault();if(!drawing.current)return;const ctx=cRef.current.getContext("2d");const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke()};
+const end=()=>{drawing.current=false};
+return React.createElement("canvas",{ref:cRef,width:300,height:130,
+onMouseDown:start,onMouseMove:move,onMouseUp:end,onMouseLeave:end,
+onTouchStart:start,onTouchMove:move,onTouchEnd:end,
+style:{width:"100%",height:130,borderRadius:12,border:"2px solid rgba(220,120,170,.25)",background:"#FFFEF8",touchAction:"none"}})};
+// Handwriting practice screen (Layer A — standalone, no AI)
+const Handwriting=({onBack,prog})=>{
+const[sel,setSel]=useState(null);const[upper,setUpper]=useState(false);const[activeStep,setActiveStep]=useState(-1);const[cs,setCs]=useState(0);
+const[done,setDone]=useState(new Set(JSON.parse(localStorage.getItem("hw_done")||"[]")));
+const[sortAZ,setSortAZ]=useState(false);
+const saveDone=(s)=>{setDone(s);localStorage.setItem("hw_done",JSON.stringify([...s]))};
+const L=sel?HW_LETTERS.find(x=>x.id===sel):null;
+const list=sortAZ?HW_ALPHA:HW_LETTERS;
+if(!L)return React.createElement("div",{style:{minHeight:"100dvh",background:BG,padding:"env(safe-area-inset-top) 16px 80px"}},
+React.createElement(Glow),
+React.createElement("div",{style:{position:"relative",zIndex:2}},
+// Header
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:12,padding:"16px 0",marginBottom:8}},
+React.createElement("button",{onClick:onBack,style:{background:"rgba(255,255,255,.75)",border:"1px solid rgba(220,120,170,.25)",borderRadius:14,width:44,height:44,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center"}},"🏠"),
+React.createElement("div",{style:{flex:1}},
+React.createElement("div",{style:{fontSize:22,fontWeight:700}},"✏️ Handwriting"),
+React.createElement("div",{style:{fontSize:13,color:"rgba(120,40,80,.5)"}},done.size+"/26 letters done")),
+React.createElement("button",{onClick:()=>setSortAZ(!sortAZ),style:{background:"rgba(255,255,255,.75)",border:"1px solid rgba(220,120,170,.25)",borderRadius:12,padding:"8px 14px",fontSize:13,fontWeight:600}},sortAZ?"📚 Groups":"🔤 A-Z")),
+// Progress bar
+React.createElement("div",{style:{height:8,borderRadius:4,background:"rgba(255,182,193,.25)",marginBottom:16,overflow:"hidden"}},
+React.createElement("div",{style:{height:"100%",width:(done.size/26*100)+"%",background:"linear-gradient(90deg,#FF69B4,#7C3AED)",borderRadius:4,transition:"width .3s"}})),
+// Letter groups
+(sortAZ?[{label:"A to Z",letters:HW_ALPHA}]:[{label:"🔵 Round Letters (teach first)",g:"round"},{label:"📏 Straight Line Letters",g:"straight"},{label:"✨ Special Letters",g:"special"}]).map((grp,gi)=>{
+const gl=grp.letters||HW_LETTERS.filter(x=>x.g===grp.g);
+return React.createElement("div",{key:gi,style:{marginBottom:20}},
+!sortAZ&&React.createElement("div",{style:{fontSize:13,fontWeight:700,color:HW_GC[grp.g]?.color||"#7C3AED",marginBottom:8}},grp.label),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(64px,1fr))",gap:8}},
+gl.map(L=>React.createElement("button",{key:L.id,onClick:()=>{setSel(L.id);setActiveStep(-1);setCs(c=>c+1);say("Let's write the letter "+L.l+"!")},
+style:{background:done.has(L.id)?"linear-gradient(135deg,#22C55E20,#22C55E10)":"rgba(255,255,255,.85)",border:done.has(L.id)?"2px solid #22C55E":"1.5px solid rgba(220,120,170,.2)",borderRadius:14,padding:"10px 4px",textAlign:"center",transition:"all .2s"}},
+React.createElement("div",{style:{fontSize:28,fontWeight:700,fontFamily:"'Gaegu',cursive",color:HW_GC[L.g].color}},L.l),
+React.createElement("div",{style:{fontSize:20,fontWeight:700,fontFamily:"'Gaegu',cursive",color:"rgba(120,40,80,.4)"}},L.u),
+done.has(L.id)&&React.createElement("div",{style:{fontSize:10}},"✅")))))
+})));
+// Letter detail view
+const steps=upper?L.ust:L.lst;
+return React.createElement("div",{style:{minHeight:"100dvh",background:BG,padding:"env(safe-area-inset-top) 12px 80px"}},
+React.createElement(Glow),
+React.createElement("div",{style:{position:"relative",zIndex:2,maxWidth:440,margin:"0 auto"}},
+// Header
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:10,padding:"12px 0",marginBottom:8}},
+React.createElement("button",{onClick:()=>setSel(null),style:{background:"rgba(255,255,255,.75)",border:"1px solid rgba(220,120,170,.25)",borderRadius:14,width:44,height:44,fontSize:18,display:"flex",alignItems:"center",justifyContent:"center"}},"←"),
+React.createElement("div",{style:{fontSize:48,fontWeight:700,fontFamily:"'Gaegu',cursive",color:HW_GC[L.g].color}},upper?L.u:L.l),
+React.createElement("div",{style:{flex:1}},
+React.createElement("div",{style:{fontSize:20,fontWeight:700}},"Letter "+L.u+L.l),
+React.createElement("div",{style:{fontSize:12,color:"rgba(120,40,80,.5)"}},HW_GC[L.g].label+" letter · #"+L.o)),
+// lowercase/uppercase toggle
+React.createElement("button",{onClick:()=>{setUpper(!upper);setActiveStep(-1)},style:{background:upper?"linear-gradient(135deg,#FF3B8B,#FF69B4)":"rgba(255,255,255,.75)",color:upper?"#fff":"#4A2040",border:"1px solid rgba(220,120,170,.25)",borderRadius:12,padding:"8px 12px",fontSize:13,fontWeight:700}},upper?"A":"a")),
+// Visualize
+React.createElement("div",{onClick:()=>say(upper&&L.vizU?L.vizU:L.viz),style:{background:"rgba(255,255,255,.85)",borderRadius:14,padding:14,marginBottom:10,border:"1.5px solid rgba(220,120,170,.2)"}},
+React.createElement("div",{style:{fontSize:10,fontWeight:700,color:HW_GC[L.g].color,textTransform:"uppercase",letterSpacing:1,marginBottom:4}},"💭 Visualize — tap to hear!"),
+React.createElement("div",{style:{fontSize:15,color:"#4A2040",fontStyle:"italic"}},upper&&L.vizU?L.vizU:L.viz)),
+// Why (if exists)
+L.why&&React.createElement("div",{onClick:()=>say(L.why),style:{background:"rgba(255,255,200,.5)",borderRadius:14,padding:14,marginBottom:10,border:"1.5px solid rgba(220,180,60,.2)"}},
+React.createElement("div",{style:{fontSize:10,fontWeight:700,color:"#D97706",textTransform:"uppercase",letterSpacing:1,marginBottom:4}},"❓ Why?"),
+React.createElement("div",{style:{fontSize:14,color:"#78350F"}},L.why)),
+// Starting position + House SVG
+React.createElement("div",{style:{background:"rgba(255,255,255,.85)",borderRadius:14,padding:14,marginBottom:10,border:"1.5px solid rgba(220,120,170,.2)",display:"flex",alignItems:"center",gap:12}},
+React.createElement("div",{style:{flex:1}},
+React.createElement("div",{style:{fontSize:10,fontWeight:700,color:"#EF4444",textTransform:"uppercase",letterSpacing:1,marginBottom:4}},"📍 Where do we start?"),
+React.createElement("div",{style:{fontSize:18,fontWeight:700,fontFamily:"'Gaegu',cursive"}},upper?L.us:L.ls)),
+React.createElement(HouseSVG,{zones:upper?L.uz:L.lz,ch:upper?L.u:L.l})),
+// Steps
+React.createElement("div",{style:{background:"rgba(255,255,255,.85)",borderRadius:14,padding:14,marginBottom:10,border:"1.5px solid rgba(220,120,170,.2)"}},
+React.createElement("div",{style:{display:"flex",alignItems:"center",marginBottom:8}},
+React.createElement("div",{style:{flex:1,fontSize:10,fontWeight:700,color:"#7C3AED",textTransform:"uppercase",letterSpacing:1}},"📝 Instructions — tap each step"),
+React.createElement("button",{onClick:()=>{let t="Let's write "+( upper?"capital "+L.u:"lowercase "+L.l)+". ";steps.forEach((s,i)=>{t+="Step "+(i+1)+". "+s+". "});say(t)},
+style:{background:"linear-gradient(135deg,#7C3AED,#FF3B8B)",color:"#fff",border:"none",borderRadius:10,padding:"6px 12px",fontSize:12,fontWeight:700}},"🔊 Listen All")),
+steps.map((s,i)=>{const ac=i===activeStep;const pa=i<activeStep;
+return React.createElement("div",{key:i,onClick:()=>{setActiveStep(i===activeStep?-1:i);say("Step "+(i+1)+". "+s)},
+style:{display:"flex",alignItems:"flex-start",gap:8,padding:"8px",marginBottom:2,borderRadius:10,cursor:"pointer",background:ac?HW_GC[L.g].color+"18":"transparent",border:ac?"2px solid "+HW_GC[L.g].color+"40":"2px solid transparent",transition:"all .15s"}},
+React.createElement("div",{style:{minWidth:26,height:26,borderRadius:"50%",background:pa?"#22C55E":ac?HW_GC[L.g].color:"rgba(220,120,170,.15)",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700}},pa?"✓":(i+1)),
+React.createElement("div",{style:{fontSize:15,lineHeight:1.5,fontWeight:ac?700:400,flex:1}},s))})),
+// Chant
+L.cht&&React.createElement("div",{onClick:()=>say(L.cht),style:{background:"linear-gradient(135deg,#7C3AED,#FF3B8B)",borderRadius:14,padding:14,marginBottom:10,textAlign:"center"}},
+React.createElement("div",{style:{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.6)",textTransform:"uppercase",letterSpacing:1,marginBottom:4}},"🎵 Chant — tap to hear!"),
+React.createElement("div",{style:{fontSize:20,color:"#fff",fontWeight:700,fontFamily:"'Gaegu',cursive"}},L.cht)),
+// Check
+L.chk&&React.createElement("div",{style:{background:"rgba(200,255,200,.4)",borderRadius:14,padding:14,marginBottom:10,border:"1.5px solid rgba(34,197,94,.2)"}},
+React.createElement("div",{style:{fontSize:10,fontWeight:700,color:"#22C55E",textTransform:"uppercase",letterSpacing:1,marginBottom:4}},"✅ Check your letter"),
+React.createElement("div",{style:{fontSize:14,color:"#14532D"}},L.chk)),
+// Drawing canvas
+React.createElement("div",{style:{background:"rgba(255,255,255,.85)",borderRadius:14,padding:14,marginBottom:10,border:"1.5px solid rgba(220,120,170,.2)"}},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},
+React.createElement("div",{style:{fontSize:10,fontWeight:700,color:"#FF3B8B",textTransform:"uppercase",letterSpacing:1}},"✏️ Practice here"),
+React.createElement("button",{onClick:()=>setCs(c=>c+1),style:{background:"rgba(255,105,180,.1)",border:"1px solid rgba(255,105,180,.2)",borderRadius:8,padding:"4px 12px",fontSize:12,fontWeight:600,color:"#FF3B8B"}},"Clear")),
+React.createElement(DrawCanvas,{clearSig:cs})),
+// Next letter button
+React.createElement("button",{onClick:()=>{const s=new Set(done);s.add(L.id);saveDone(s);say("Great job! Let's do the next letter!");
+const i=list.findIndex(x=>x.id===L.id);if(i<list.length-1)setSel(list[i+1].id);else{setSel(null);say("You did ALL the letters! Amazing!")}
+setActiveStep(-1);setCs(c=>c+1)},
+style:{width:"100%",border:"none",borderRadius:14,padding:16,fontSize:18,fontWeight:700,color:"#fff",
+background:done.has(L.id)?"linear-gradient(135deg,#22C55E,#16A34A)":"linear-gradient(135deg,"+HW_GC[L.g].color+",#FF3B8B)",marginBottom:16}},
+done.has(L.id)?"✅ Done! Next Letter →":"I Did It! ⭐ Next Letter →")))};
 
 // ═══ HOME — SARI'S PLAYHOUSE ═══
 // Daily rotation: pick 4 modes based on date
@@ -1304,21 +1530,21 @@ riddles:{obj:"🧩",spot:"Puzzle",where:"floor-right"},
 imagine:{obj:"🖍️",spot:"Crayons",where:"art-corner"},
 world:{obj:"🌎",spot:"Globe",where:"desk-right"},
 sing:{obj:"🎹",spot:"Piano",where:"floor-left"},
-book:{obj:"📖",spot:"Storybook",where:"nook"}
+book:{obj:"📖",spot:"Storybook",where:"nook"},
+handwriting:{obj:"✏️",spot:"Pencil Cup",where:"desk-right"}
 };
-const MODE_CATS={learning:["sound","rhyme","numbers","alefbeis"],jewish:["middos","friends","parsha","brachos","sing"],fun:["riddles","imagine","world"]};
+const MODE_CATS={learning:["sound","rhyme","numbers","alefbeis","handwriting"],jewish:["middos","friends","parsha","brachos","sing"],fun:["riddles","imagine","world"]};
 const getDailyModes=(dateStr,questDone)=>{
 // Better hash: multiply by primes for each category
 let h=0;for(let i=0;i<dateStr.length;i++)h=((h<<5)-h)+dateStr.charCodeAt(i);h=Math.abs(h);
 const pickFrom=(arr,seed)=>arr[Math.abs(seed)%arr.length];
-const m1=pickFrom(MODE_CATS.learning,h*7);
+// Handwriting always gets a slot. Pick 1 from learning (excluding handwriting), 1 jewish, 1 fun
+const learningNoHW=MODE_CATS.learning.filter(m=>m!=="handwriting");
+const m1=pickFrom(learningNoHW,h*7);
 const m2=pickFrom(MODE_CATS.jewish,h*13+3);
 const m3=pickFrom(MODE_CATS.fun,h*19+7);
-// Wildcard: pick from all, avoid duplicates
-const all=[...MODE_CATS.learning,...MODE_CATS.jewish,...MODE_CATS.fun].filter(m=>m!==m1&&m!==m2&&m!==m3);
-const m4=pickFrom(all,h*31+11);
-const result=[m1,m2,m3,m4];
-if(questDone&&!result.includes("book")){result[3]="book"}
+const result=[m1,m2,m3,"handwriting"];
+if(questDone&&!result.includes("book")){result[2]="book"}
 return result};
 
 // 20-minute timer helper
@@ -1369,7 +1595,7 @@ const sunPct=Math.min(100,timer/TIMER_LIMIT*100);
 const minsLeft=Math.max(0,Math.ceil((TIMER_LIMIT-timer)/60));
 
 // All modes for parent "See All" panel
-const allModes=[{id:"sound",emoji:"📖",name:"Read Words",color:"#FF3B8B"},{id:"rhyme",emoji:"🎵",name:"Rhyme Time",color:"#B44BFF"},{id:"numbers",emoji:"🔢",name:"Numbers",color:"#22BB66"},{id:"alefbeis",emoji:"✡️",name:"Alef-Beis",color:"#E8D44D"},{id:"middos",emoji:"💛",name:"Middos",color:"#FFB347"},{id:"friends",emoji:"🤝",name:"Friends",color:"#FF6B9D"},{id:"parsha",emoji:"📜",name:"Parsha",color:"#C4A265"},{id:"brachos",emoji:"🍎",name:"Brachos",color:"#4CAF50"},{id:"riddles",emoji:"🧩",name:"Riddles",color:"#FF5252"},{id:"imagine",emoji:"🎨",name:"Imagine",color:"#E040FB"},{id:"world",emoji:"🌍",name:"Hashem's World",color:"#26C6DA"},{id:"sing",emoji:"🎵",name:"Sing Along",color:"#FF7043"},{id:"book",emoji:"📚",name:"Book Time",color:"#FF9500"}];
+const allModes=[{id:"sound",emoji:"📖",name:"Read Words",color:"#FF3B8B"},{id:"rhyme",emoji:"🎵",name:"Rhyme Time",color:"#B44BFF"},{id:"numbers",emoji:"🔢",name:"Numbers",color:"#22BB66"},{id:"alefbeis",emoji:"✡️",name:"Alef-Beis",color:"#E8D44D"},{id:"middos",emoji:"💛",name:"Middos",color:"#FFB347"},{id:"friends",emoji:"🤝",name:"Friends",color:"#FF6B9D"},{id:"parsha",emoji:"📜",name:"Parsha",color:"#C4A265"},{id:"brachos",emoji:"🍎",name:"Brachos",color:"#4CAF50"},{id:"riddles",emoji:"🧩",name:"Riddles",color:"#FF5252"},{id:"imagine",emoji:"🎨",name:"Imagine",color:"#E040FB"},{id:"world",emoji:"🌍",name:"Hashem's World",color:"#26C6DA"},{id:"sing",emoji:"🎵",name:"Sing Along",color:"#FF7043"},{id:"book",emoji:"📚",name:"Book Time",color:"#FF9500"},{id:"handwriting",emoji:"✏️",name:"Handwriting",color:"#7C3AED"}];
 
 // Time's up celebration
 if(timeUp&&!showAll){return React.createElement("div",{style:{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,background:"linear-gradient(180deg,#FFD6EC 0%,#FFF0F8 50%,#E8D0FF 100%)",textAlign:"center"}},
@@ -1496,8 +1722,9 @@ if(np)setTimeout(()=>say("New prize! "+np.n),900)};
 useEffect(()=>{syncCloud(setProg)},[]);
 
 if(scr==="login")return React.createElement(PinLogin,{onLogin:handleLogin});
-if(scr==="home")return React.createElement(Home,{prog,onQ:()=>setScr("quest"),onP:()=>setScr("prizes"),onMorah:m=>{setMorahMode(m);setScr("morahchat")}});
-if(scr==="morahmenu")return React.createElement(MorahMenu,{questDone:prog.last===td(),onPick:m=>{setMorahMode(m);setScr("morahchat")},onBack:()=>setScr("home")});
+if(scr==="home")return React.createElement(Home,{prog,onQ:()=>setScr("quest"),onP:()=>setScr("prizes"),onMorah:m=>{if(m==="handwriting"){setScr("handwriting");return}setMorahMode(m);setScr("morahchat")}});
+if(scr==="morahmenu")return React.createElement(MorahMenu,{questDone:prog.last===td(),onPick:m=>{if(m==="handwriting"){setScr("handwriting");return}setMorahMode(m);setScr("morahchat")},onBack:()=>setScr("home")});
+if(scr==="handwriting")return React.createElement(Handwriting,{onBack:()=>setScr("home"),prog});
 if(scr==="morahchat"&&morahMode)return React.createElement(MorahChat,{mode:morahMode,onBack:()=>setScr("home")});
 if(scr==="quest")return React.createElement(Quest,{onDone:finish,onBack:()=>setScr("home")});
 if(scr==="done")return React.createElement(QDone,{res:qr,earned:earn,ns,prize:prz,streak:prog.streak,onHome:()=>setScr("home")});
