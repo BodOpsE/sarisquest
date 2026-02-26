@@ -292,7 +292,7 @@ React.createElement("button",{onClick:()=>sayL(q.letter),style:{background:"line
 React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"clamp(12px,3vw,18px)",maxWidth:320,margin:"0 auto"}},
 ...q.opts.map((l,i)=>{const isC=l===q.letter,isS=l===sel;let bg=CD,bd="2.5px solid rgba(220,120,170,.25)",an=`popIn .3s ease-out ${i*.09}s both`;
 if(res!==null&&isC){bg="linear-gradient(145deg,#22BB66,#1FA055)";bd="2.5px solid #22BB66"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B,#FF4444)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
-return React.createElement("button",{key:l+i,onClick:()=>tap(l),style:{width:"100%",height:"clamp(74px,19vw,92px)",borderRadius:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(32px,9vw,44px)",fontWeight:700,textTransform:"uppercase",background:bg,border:bd,cursor:sel?"default":"pointer",animation:an}},l.toUpperCase())})),
+return React.createElement("button",{key:l+i,onClick:()=>tap(l),style:{width:"100%",height:"clamp(74px,19vw,92px)",borderRadius:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(32px,9vw,44px)",fontWeight:700,textTransform:"uppercase",background:bg,border:bd,color:(res!==null&&(isC||isS))?"#fff":"#4A2040",cursor:sel?"default":"pointer",animation:an}},l.toUpperCase())})),
 msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#22BB66":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
 
 const RhymeG=({q,onA})=>{const[sel,setSel]=useState(null);const[res,setRes]=useState(null);const[msg,setMsg]=useState("");
@@ -309,7 +309,7 @@ React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:14,m
 ...q.opts.map((x,i)=>{const isC=x.w===q.correct.w,isS=x.w===sel;let bg=CD,bd="2.5px solid rgba(220,120,170,.15)",an=`popIn .3s ease-out ${i*.1}s both`;
 if(res!==null&&isC){bg="linear-gradient(145deg,#22BB6622,#1FA05511)";bd="2.5px solid #22BB66"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B22,#FF444411)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
 return React.createElement("button",{key:x.w,onClick:()=>tap(x),style:{background:bg,border:bd,borderRadius:20,padding:"clamp(14px,3vw,18px) 20px",display:"flex",alignItems:"center",gap:14,cursor:sel?"default":"pointer",animation:an}},
-React.createElement("span",{style:{fontSize:"clamp(32px,9vw,42px)"}},x.i),React.createElement("span",{style:{fontSize:"clamp(22px,6vw,28px)",fontWeight:600,textTransform:"uppercase"}},x.w))})),
+React.createElement("span",{style:{fontSize:"clamp(32px,9vw,42px)"}},x.i),React.createElement("span",{style:{fontSize:"clamp(22px,6vw,28px)",fontWeight:600,textTransform:"uppercase",color:"#4A2040"}},x.w))})),
 msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#22BB66":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
 
 const BlendG=({q,onA})=>{const[ph,setPh]=useState("bl");const[sel,setSel]=useState(null);const[res,setRes]=useState(null);const[msg,setMsg]=useState("");
@@ -329,12 +329,12 @@ ph==="pk"&&React.createElement("div",{style:{display:"flex",flexDirection:"colum
 ...q.opts.map((x,i)=>{const isC=x.w===q.target.w,isS=x.w===sel;let bg=CD,bd="2.5px solid rgba(220,120,170,.15)",an=`popIn .3s ease-out ${i*.1}s both`;
 if(res!==null&&isC){bg="linear-gradient(145deg,#22BB6622,#1FA05511)";bd="2.5px solid #22BB66"}if(isS&&!res){bg="linear-gradient(145deg,#FF6B6B22,#FF444411)";bd="2.5px solid #FF6B6B";an="shake .4s ease"}
 return React.createElement("button",{key:x.w,onClick:()=>tap(x),style:{background:bg,border:bd,borderRadius:20,padding:"clamp(14px,3vw,18px) 20px",display:"flex",alignItems:"center",gap:14,cursor:sel?"default":"pointer",animation:an}},
-React.createElement("span",{style:{fontSize:"clamp(32px,9vw,42px)"}},x.i),React.createElement("span",{style:{fontSize:"clamp(22px,6vw,28px)",fontWeight:600,textTransform:"uppercase"}},x.w))})),
+React.createElement("span",{style:{fontSize:"clamp(32px,9vw,42px)"}},x.i),React.createElement("span",{style:{fontSize:"clamp(22px,6vw,28px)",fontWeight:600,textTransform:"uppercase",color:"#4A2040"}},x.w))})),
 msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#22BB66":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
 
 const BuildG=({q,onA})=>{const[blt,setBlt]=useState([]);const[usd,setUsd]=useState(new Set());const[res,setRes]=useState(null);const[msg,setMsg]=useState("");
 useEffect(()=>{setBlt([]);setUsd(new Set());setRes(null);setMsg("");setTimeout(()=>{say("Build the word! Listen!");setTimeout(()=>sayW(q.target.w),2800)},400)},[q]);
-const tap=(l,idx)=>{if(res!==null||usd.has(idx))return;const nb=[...blt,l];const nu=new Set(usd);nu.add(idx);setBlt(nb);setUsd(nu);sayL(l);
+const tap=(l,idx)=>{if(res!==null||usd.has(idx))return;const nb=[...blt,l];const nu=new Set(usd);nu.add(idx);setBlt(nb);setUsd(nu);fbSay(l.toUpperCase(),.75);
 if(nb.length===q.target.w.length){const built=nb.join("");const ok=built===q.target.w;setRes(ok);const m=ok?("Yes! "+q.target.w+"! "+pick(CHEERS)):("The word was "+q.target.w+". "+pick(TRIES));setMsg(m);setTimeout(()=>say(m),300);
 setTimeout(()=>onA(ok,{mode:"build",tw:q.target.w,fam:q.target.f,ok,ua:built,ca:q.target.w}),ok?1800:2800)}};
 const undo=()=>{if(!blt.length||res!==null)return;const ll=blt[blt.length-1];const su=[...usd].sort((a,b)=>b-a);const rm=su.find(i=>q.tiles[i]===ll);const nu=new Set(usd);if(rm!==undefined)nu.delete(rm);setBlt(blt.slice(0,-1));setUsd(nu)};
@@ -346,7 +346,7 @@ React.createElement("span",{style:{fontSize:"clamp(44px,12vw,56px)"}},q.target.i
 React.createElement("div",{style:{display:"flex",justifyContent:"center",gap:"clamp(8px,2vw,12px)",marginBottom:26}},
 ...Array.from({length:q.target.w.length}).map((_,i)=>React.createElement("div",{key:i,style:{width:"clamp(56px,15vw,70px)",height:"clamp(62px,17vw,78px)",borderRadius:18,background:blt[i]?"linear-gradient(145deg,#FF950028,#FF950010)":"rgba(255,255,255,.6)",border:blt[i]?"2.5px solid #FF9500":"2.5px dashed rgba(220,120,170,.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(30px,8vw,38px)",fontWeight:700,textTransform:"uppercase",animation:blt[i]?"popIn .2s ease-out":undefined}},blt[i]||""))),
 React.createElement("div",{style:{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:"clamp(8px,2vw,12px)",maxWidth:400,margin:"0 auto",marginBottom:18}},
-...q.tiles.map((l,i)=>{const u=usd.has(i);return React.createElement("button",{key:i,onClick:()=>tap(l,i),style:{width:"clamp(56px,15vw,68px)",height:"clamp(56px,15vw,68px)",borderRadius:18,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(26px,7vw,34px)",fontWeight:700,textTransform:"uppercase",background:u?"rgba(120,40,80,.5)":CD,border:u?"2.5px solid rgba(255,255,255,.6)":"2.5px solid rgba(220,120,170,.2)",color:u?"rgba(220,120,170,.25)":"white",cursor:u||res!==null?"default":"pointer",animation:`popIn .2s ease-out ${i*.05}s both`}},l.toUpperCase())})),
+...q.tiles.map((l,i)=>{const u=usd.has(i);return React.createElement("button",{key:i,onClick:()=>tap(l,i),style:{width:"clamp(56px,15vw,68px)",height:"clamp(56px,15vw,68px)",borderRadius:18,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(26px,7vw,34px)",fontWeight:700,textTransform:"uppercase",background:u?"rgba(120,40,80,.12)":"linear-gradient(145deg,#FF950018,#FF950008)",border:u?"2.5px solid rgba(220,120,170,.15)":"2.5px solid #FF950044",color:u?"rgba(120,40,80,.2)":"#FF9500",cursor:u||res!==null?"default":"pointer",animation:`popIn .2s ease-out ${i*.05}s both`}},l.toUpperCase())})),
 blt.length>0&&res===null&&React.createElement("button",{onClick:undo,style:{background:"rgba(255,255,255,.6)",border:"1px solid rgba(220,120,170,.25)",borderRadius:14,padding:"10px 24px",color:"rgba(120,40,80,.6)",fontSize:15}},"⬅️ Undo"),
 msg&&React.createElement("div",{style:{marginTop:20,fontSize:16,fontWeight:600,animation:"bounceIn .3s ease-out",color:res?"#22BB66":"#FF6B6B",padding:"0 12px",lineHeight:1.4}},msg))};
 
